@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Spotifine</string>
+    <string name="playlists">ПЛЕЙЛИСТЫ</string>
+    <string name="Artists">ИСПОЛНИТЕЛИ</string>
+    <string name="albums">АЛЬБОМЫ</string>
+    <string name="translate">ПЕРЕВЕСТИ</string>
+    <string name="album_сover">Обложка альбома</string>
+</resources>
