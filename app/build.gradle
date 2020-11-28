@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -39,8 +40,6 @@ dependencies {
     // All other dependencies for your app should also be here:
     implementation 'androidx.browser:browser:1.2.0'
     implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation project(':spotify-auth')
-    implementation project(':spotify-app-remote')
     implementation "com.google.code.gson:gson:2.8.5"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -53,4 +52,12 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
+    implementation project(':spotify-auth')
+    implementation project(':spotify-app-remote')
+
+    def room_version = "2.2.5"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }

@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
          // Check if result comes from the correct activity
          if (requestCode == REQUEST_CODE) {
              val response: AuthorizationResponse? = AuthorizationClient.getResponse(resultCode, intent)
-             Log.d("aaaaaaaaaaaaaaaa",  response?.accessToken.toString())
+             Log.d("aaaaaaaaaaaaaaaa", response?.accessToken.toString())
              when (response?.type) {
                  AuthorizationResponse.Type.TOKEN -> {
                      Log.d("aaaaa2222222",  response.state?: "null")
