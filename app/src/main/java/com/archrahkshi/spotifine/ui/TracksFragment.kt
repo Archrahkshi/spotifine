@@ -9,7 +9,7 @@ import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.Track
 import com.archrahkshi.spotifine.data.TracksAdapter
 import com.archrahkshi.spotifine.data.URL
-import kotlinx.android.synthetic.main.fragment_lyrics.*
+import kotlinx.android.synthetic.main.fragment_tracks.*
 
 class TracksFragment : Fragment() {
     override fun onCreateView(
@@ -23,7 +23,7 @@ class TracksFragment : Fragment() {
         val url = this.arguments?.getString(URL)
         val tracks = listOf<Track>()// TODO: URL-запрос и вывод конкретного плейлиста/альбома по url
 
-        recyclerView.adapter = TracksAdapter(tracks) {
+        recyclerViewTracks.adapter = TracksAdapter(tracks) {
             // TODO
         }
     }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.*
-import kotlinx.android.synthetic.main.fragment_lyrics.*
+import kotlinx.android.synthetic.main.fragment_library_lists.*
 
 class LibraryListsFragment<ListType> : Fragment() {
     override fun onCreateView(
@@ -20,7 +20,7 @@ class LibraryListsFragment<ListType> : Fragment() {
 
         val libraryLists = listOf<ListType>() // TODO
 
-        recyclerView.adapter = LibraryListsAdapter(libraryLists) {
+        recyclerViewLists.adapter = LibraryListsAdapter(libraryLists) {
             fragmentManager?.beginTransaction()?.replace(
                 R.id.frameLayoutLibrary,
                 when (it) {
