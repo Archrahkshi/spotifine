@@ -13,13 +13,15 @@ import kotlinx.android.synthetic.main.fragment_library_lists.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
-class LibraryListsFragment<ListType>(override val coroutineContext: CoroutineContext = Dispatchers.IO ) : Fragment(), CoroutineScope {
-    private fun getJsonStringFromHttpGet(url: String) : String? {
+class LibraryListsFragment<ListType>(override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate) :
+    Fragment(), CoroutineScope {
+    private fun getJsonStringFromHttpGet(url: String): String? {
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(url)
@@ -48,47 +50,58 @@ class LibraryListsFragment<ListType>(override val coroutineContext: CoroutineCon
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+    
         val flag = arguments?.getString("flag") ?: "no flag"
         Log.wtf("flag", flag)
-
+    
         val parser = JsonParser()
-        fun libraryListCreation() = when(flag){
-            "playlist" -> {
-
-                val playlistJson = getJsonStringFromHttpGet("https://api.spotify.com/v1/me/playlists")
-                Log.wtf("json", playlistJson)
-                val jsonTree = parser.parse(playlistJson)
-                val libraryLists = mutableListOf<Playlist>()
-                if (jsonTree.isJsonObject) {
-                    val jsonObject = jsonTree.asJsonObject
-                    Log.wtf("trackUri", jsonObject["items"].asJsonArray[0].asJsonObject["tracks"].asJsonObject["href"].toString())
-                    val playlistsNumber = jsonObject["total"].asInt
-                    Log.wtf("total", playlistsNumber.toString())
-                    if (playlistsNumber > 0){
-                        for (i in 0 until playlistsNumber) {
-                            val path =  jsonObject["items"].asJsonArray[i]
-                            val name = path.asJsonObject["name"].toString().removePrefix("\"").removeSuffix("\"")
-                            val size = path.asJsonObject["tracks"].asJsonObject["total"].asInt
-                            val url = path.asJsonObject["tracks"].asJsonObject["href"].toString().removePrefix("\"").removeSuffix("\"")
-                            libraryLists.add(Playlist(0, name, size, url))
+        suspend fun libraryListCreation() = withContext(Dispatchers.IO) {
+            when (flag) {
+                "playlist" -> {
+        
+                    val playlistJson =
+                        getJsonStringFromHttpGet("https://api.spotify.com/v1/me/playlists")
+                    Log.wtf("json", playlistJson)
+                    val jsonTree = parser.parse(playlistJson)
+                    val libraryLists = mutableListOf<Playlist>()
+                    if (jsonTree.isJsonObject) {
+                        val jsonObject = jsonTree.asJsonObject
+                        Log.wtf(
+                            "trackUri",
+                            jsonObject["items"].asJsonArray[0].asJsonObject["tracks"].asJsonObject["href"].toString()
+                        )
+                        val playlistsNumber = jsonObject["total"].asInt
+                        Log.wtf("total", playlistsNumber.toString())
+                        if (playlistsNumber > 0) {
+                            for (i in 0 until playlistsNumber) {
+                                val path = jsonObject["items"].asJsonArray[i]
+                                val name =
+                                    path.asJsonObject["name"].toString().removeSurrounding("\"")
+                                val size = path.asJsonObject["tracks"].asJsonObject["total"].asInt
+                                val url =
+                                    path.asJsonObject["tracks"].asJsonObject["href"].toString()
+                                        .removeSurrounding("\"")
+                                libraryLists.add(Playlist(0, name, size, url))
+                            }
                         }
                     }
+                    libraryLists
                 }
-                libraryLists
+                "artist" -> {
+                    val libraryLists = mutableListOf<Artist>()
+                    libraryLists
+                }
+                "album" -> {
+                    val libraryLists = mutableListOf<Album>()
+                    libraryLists
+                }
+                else -> {
+                    val libraryLists = mutableListOf<Artist>()
+                    libraryLists
+                }
             }
-            "artist" -> {
-                val libraryLists = mutableListOf<Artist>()
-                libraryLists
-            }
-            "album" -> {
-                val libraryLists = mutableListOf<Album>()
-                libraryLists}
-            else -> {
-                val libraryLists = mutableListOf<Artist>()
-                libraryLists}
         }
-
+    
         launch {
             val libraryLists = libraryListCreation()
             Log.wtf("librarylist", libraryLists.first().toString())
@@ -98,7 +111,7 @@ class LibraryListsFragment<ListType>(override val coroutineContext: CoroutineCon
                     R.id.frameLayoutLibrary,
                     when (it) {
                         is Playlist -> TracksFragment().apply {
-
+            
                             arguments = Bundle().apply {
                                 putString(URL, it.url)
                             }

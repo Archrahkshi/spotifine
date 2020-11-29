@@ -16,13 +16,13 @@ class TracksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_tracks, container, false)
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        
         val url = this.arguments?.getString(URL)
         val tracks = listOf<Track>()// TODO: URL-запрос и вывод конкретного плейлиста/альбома по url
-
+        
         recyclerViewTracks.adapter = TracksAdapter(tracks) {
             // TODO
         }

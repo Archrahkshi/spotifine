@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class Playlist(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-
+    
     val name: String,
     val size: Int,
     val url: String,
@@ -19,7 +19,7 @@ data class Playlist(
 data class Artist(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-
+    
     val name: String,
     val url: String,
 )
@@ -28,7 +28,7 @@ data class Artist(
 data class Album(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-
+    
     val name: String,
     val artist: String,
     val url: String,
@@ -38,7 +38,7 @@ data class Album(
 data class Track(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-
+    
     val name: String,
     val artist: String,
     val duration: Long,
