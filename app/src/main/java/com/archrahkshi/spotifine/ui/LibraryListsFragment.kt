@@ -84,7 +84,7 @@ class LibraryListsFragment(
                     // список альбомов исполнителя ?: пользователя
                     arguments?.getString(URL) ?: "following?type=artist",
                     accessToken
-                )["items"].asJsonArray.forEach {
+                )["artists"].asJsonObject["items"].asJsonArray.forEach {
                     val item = it.asJsonObject
                     libraryLists.add(
                         Artist(
@@ -99,10 +99,15 @@ class LibraryListsFragment(
                 val libraryLists = mutableListOf<Album>()
                 getJsonFromApi("albums", accessToken)["items"].asJsonArray.forEach {
                     val album = it.asJsonObject["album"].asJsonObject
+                    val artists = album["artists"].asJsonArray
+                    var artistsNames = ""
+                    for (i in artists){
+                        artistsNames += i.asJsonObject["name"].asString
+                    }
                     libraryLists.add(
                         Album(
                             name = album["name"].asString,
-                            artists = album["artists"].asJsonArray.joinToString(),
+                            artists = artistsNames,
                             url = album["href"].asString
                         )
                     )

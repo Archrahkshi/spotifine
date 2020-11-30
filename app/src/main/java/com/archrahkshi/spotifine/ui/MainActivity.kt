@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     private val CLIENT_ID = "fbe0ec189f0247f99909e75530bac38e"
     private val REDIRECT_URI = "http://localhost:8888/callback/"
     private val REQUEST_CODE = 1337
-    //private val SCOPES = "user-library-read"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
                 AuthorizationResponse.Type.TOKEN,
                 REDIRECT_URI
             ).apply {
-                setScopes(arrayOf("streaming"))
+                setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
             }.build()
         )
     }
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                     })
                     //startActivity(Intent(this, TestActivity::class.java))
                 }
-                AuthorizationResponse.Type.ERROR -> Log.wtf("Token", "error")
+                AuthorizationResponse.Type.ERROR -> Log.wtf("Token", response?.error)
                 else -> Log.wtf("Token", "bullshit")
             }
         }
