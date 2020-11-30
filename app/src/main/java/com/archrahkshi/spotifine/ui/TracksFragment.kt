@@ -20,24 +20,26 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.ExperimentalTime
 
 class TracksFragment(override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate) : Fragment(), CoroutineScope {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_tracks, container, false)
     
+    @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //val token = this.arguments?.getString(ACCESS_TOKEN)
         val url = this.arguments?.getString(URL).toString()
         val image = this.arguments?.getString(IMAGE).toString()
-        textView.text = this.arguments?.getString(NAME).toString()
-
+        textViewHeaderLine1.text = this.arguments?.getString(NAME).toString()
+        
         Glide
             .with(this)
             .load(image)
             .into(imageView2)
-
+        
         launch {
             recyclerViewTracks.adapter = TracksAdapter(
                 createTrackLists(url, token)
@@ -67,23 +69,22 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
             null
         }
     ).asJsonObject
-
-    private suspend fun createTrackLists(url: String, accessToken: String?) = withContext(Dispatchers.IO){
+    
+    private suspend fun createTrackLists(
+        url: String,
+        accessToken: String?
+    ) = withContext(Dispatchers.IO) {
         val tracks = mutableListOf<Track>()
         val json = getJsonFromApi(url, token)
-        when(json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(5)){
+        when (json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(5)) {
             "album" -> {
-                json["items"].asJsonArray.forEach {
-                    val item = it.asJsonObject
-                    val artists = item["artists"].asJsonArray
-                    var artistsNames = ""
-                    for (i in artists){
-                        artistsNames += "${i.asJsonObject["name"].asString}, "
-                    }
+                json["items"].asJsonArray.forEach { element ->
+                    val item = element.asJsonObject
                     tracks.add(
                         Track(
                             name = item["name"].asString,
-                            artist = artistsNames.removeSuffix(", "),
+                            artist = item["artists"].asJsonArray
+                                .joinToString { it.asJsonObject["name"].asString },
                             duration = item["duration_ms"].asLong,
                             id = item["id"].asString
                         )
@@ -92,17 +93,13 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
                 tracks
             }
             "playl" -> {
-                json["items"].asJsonArray.forEach {
-                    val item = it.asJsonObject["track"].asJsonObject
-                    val artists = item["artists"].asJsonArray
-                    var artistsNames = ""
-                    for (i in artists){
-                        artistsNames += "${i.asJsonObject["name"].asString}, "
-                    }
+                json["items"].asJsonArray.forEach { element ->
+                    val item = element.asJsonObject["track"].asJsonObject
                     tracks.add(
                         Track(
                             name = item["name"].asString,
-                            artist = artistsNames.removeSuffix(", "),
+                            artist = item["artists"].asJsonArray
+                                .joinToString { it.asJsonObject["name"].asString },
                             duration = item["duration_ms"].asLong,
                             id = item["id"].asString
                         )
@@ -110,11 +107,7 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
                 }
                 tracks
             }
-            else -> {
-                tracks
-            }
-
+            else -> tracks
         }
-
     }
 }

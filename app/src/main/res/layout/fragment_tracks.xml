@@ -1,67 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:fillViewport="true"
         android:padding="4dp">
 
     <LinearLayout
-            android:id="@+id/linearLayoutHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:contentDescription="@string/album_сover"
-                tools:src="@tools:sample/backgrounds/scenic"
-                tools:srcCompat="@tools:sample/avatars" />
+            android:orientation="vertical">
 
         <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingStart="4dp"
-                tools:ignore="RtlSymmetry">
+                android:id="@+id/linearLayoutHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/black"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    tools:text="Album Name" />
+            <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:contentDescription="@string/album_сover"
+                    tools:src="@tools:sample/backgrounds/scenic"
+                    tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textSize="18sp"
-                    tools:text="Artist Name" />
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="4dp"
+                    tools:ignore="RtlSymmetry">
 
-            <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textSize="18sp"
-                    tools:text="Year · Track Count" />
+                <TextView
+                        android:id="@+id/textViewHeaderLine1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="2"
+                        android:textColor="@android:color/black"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        tools:text="Album Name" />
+
+                <TextView
+                        android:id="@+id/textViewHeaderLine2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:textSize="18sp"
+                        tools:text="Artist Name" />
+
+                <TextView
+                        android:id="@+id/textViewHeaderLine3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:textSize="18sp"
+                        tools:text="Year · Track Count" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewTracks"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_track" />
-</LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTracks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_track" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

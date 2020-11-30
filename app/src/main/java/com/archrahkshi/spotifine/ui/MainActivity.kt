@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                     })
                     //startActivity(Intent(this, TestActivity::class.java))
                 }
-                AuthorizationResponse.Type.ERROR -> Log.wtf("Token", response?.error)
+                AuthorizationResponse.Type.ERROR -> Log.wtf("Token", response.error)
                 else -> Log.wtf("Token", "bullshit")
             }
         }
