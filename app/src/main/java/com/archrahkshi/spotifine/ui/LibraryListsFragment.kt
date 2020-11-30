@@ -73,6 +73,7 @@ class LibraryListsFragment(
                     val tracks = item["tracks"].asJsonObject
                     libraryLists.add(
                         Playlist(
+                            image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
                             name = item["name"].asString,
                             size = tracks["total"].asInt,
                             url = tracks["href"].asString
@@ -84,13 +85,13 @@ class LibraryListsFragment(
             ARTISTS -> {
                 val libraryLists = mutableListOf<Artist>()
                 getJsonFromApi(
-                    // список альбомов исполнителя ?: пользователя
                      "me/following?type=artist",
                     accessToken
                 )["artists"].asJsonObject["items"].asJsonArray.forEach {
                     val item = it.asJsonObject
                     libraryLists.add(
                         Artist(
+                            image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
                             name = item["name"].asString,
                             url = "artists/${item["id"].asString}"
                         )
@@ -111,6 +112,7 @@ class LibraryListsFragment(
                             }
                             libraryLists.add(
                                 Album(
+                                    image = it.asJsonObject["images"].asJsonArray[1].asJsonObject["url"].asString,
                                     name = it.asJsonObject["name"].asString,
                                     artists = artistsNames.removeSuffix(", "),
                                     url = "${it.asJsonObject["href"].asString}/tracks"
@@ -130,6 +132,7 @@ class LibraryListsFragment(
                             }
                             libraryLists.add(
                                 Album(
+                                    image = album["images"].asJsonArray[1].asJsonObject["url"].asString,
                                     name = album["name"].asString,
                                     artists = artistsNames.removeSuffix(", "),
                                     url = album["tracks"].asJsonObject["href"].asString

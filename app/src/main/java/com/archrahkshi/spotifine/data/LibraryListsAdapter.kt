@@ -3,9 +3,12 @@ package com.archrahkshi.spotifine.data
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_library_list.view.*
+
 
 class LibraryListsAdapter<ListType>(
     private val libraryLists: List<ListType>,
@@ -28,6 +31,8 @@ class LibraryListsAdapter<ListType>(
         private val textViewListName = view.textViewListName
         private val textViewListInfo = view.textViewListInfo
         private val layoutItemList = view.layoutLibraryList
+        private val imageViewListPic = view.imageViewListPic
+        private val viewTest = view
         
         fun bind(listType: ListType, clickListener: (ListType) -> Unit) {
             textViewListName.text = when (listType) {
@@ -42,6 +47,24 @@ class LibraryListsAdapter<ListType>(
                 is Album -> listType.artists
                 else -> ""
             }
+            when(listType){
+                is Playlist -> {
+                    Glide.with(viewTest)
+                        .load(listType.image)
+                        .into(imageViewListPic)
+                }
+                is Artist -> {
+                    Glide.with(viewTest)
+                        .load(listType.image)
+                        .into(imageViewListPic)
+                }
+                is Album -> {
+                    Glide.with(viewTest)
+                        .load(listType.image)
+                        .into(imageViewListPic)
+                }
+            }
+
             layoutItemList.setOnClickListener { clickListener(listType) }
         }
     }
