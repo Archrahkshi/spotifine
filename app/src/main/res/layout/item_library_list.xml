@@ -27,7 +27,9 @@
                 android:id="@+id/textViewListName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -37,7 +39,9 @@
                 android:id="@+id/textViewListInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 tools:text="Playlist Size/Artist" />
     </LinearLayout>
 </LinearLayout>

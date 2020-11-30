@@ -73,24 +73,26 @@ class LibraryListsFragment(
         when (arguments?.getString(LIST_TYPE)) {
             PLAYLISTS -> {
                 val libraryLists = mutableListOf<Playlist>()
-                getJsonFromApi("me/playlists", accessToken)["items"].asJsonArray.forEach {
-                    val item = it.asJsonObject
-                    val tracks = item["tracks"].asJsonObject
-                    libraryLists.add(
-                        Playlist(
-                            image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
-                            name = item["name"].asString,
-                            size = tracks["total"].asInt,
-                            url = tracks["href"].asString
+                getJsonFromApi("me/playlists", accessToken)["items"].asJsonArray
+                    .forEach {
+                        val item = it.asJsonObject
+                        val tracks = item["tracks"].asJsonObject
+                        libraryLists.add(
+                            Playlist(
+                                image = item["images"].asJsonArray.first().asJsonObject["url"].asString,
+                                name = item["name"].asString,
+                                size = tracks["total"].asInt,
+                                url = tracks["href"].asString
+                            )
                         )
-                    )
-                }
-                libraryLists
+                    }
+//                val favorites = Playlist()
+                /*favorites + */libraryLists
             }
             ARTISTS -> {
                 val libraryLists = mutableListOf<Artist>()
                 getJsonFromApi(
-                     "me/following?type=artist",
+                    "me/following?type=artist",
                     accessToken
                 )["artists"].asJsonObject["items"].asJsonArray.forEach {
                     val item = it.asJsonObject
@@ -106,51 +108,50 @@ class LibraryListsFragment(
             }
             ALBUMS -> {
                 val libraryLists = mutableListOf<Album>()
-                val json =  getJsonFromApi("${arguments?.getString(URL) ?: "me"}/albums", token)
-                when(json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(2)){
+                val json = getJsonFromApi(
+                    "${arguments?.getString(URL) ?: "me"}/albums",
+                    token
+                )
+                val items = json["items"].asJsonArray
+                when (
+                    json["href"]
+                        .asString
+                        .removePrefix("https://api.spotify.com/v1/")
+                        .take(2)
+                ) {
                     "ar" -> {
-                        json["items"].asJsonArray.forEach {
-                            val artists = it.asJsonObject["artists"].asJsonArray
-                            var artistsNames = ""
-                            for (i in artists){
-                                artistsNames += "${i.asJsonObject["name"].asString}, "
-                            }
+                        items.forEach { element ->
+                            val item = element.asJsonObject
                             libraryLists.add(
                                 Album(
-                                    image = it.asJsonObject["images"].asJsonArray[1].asJsonObject["url"].asString,
-                                    name = it.asJsonObject["name"].asString,
-                                    artists = artistsNames.removeSuffix(", "),
-                                    url = "${it.asJsonObject["href"].asString}/tracks"
+                                    image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
+                                    name = item["name"].asString,
+                                    artists = item["artists"].asJsonArray
+                                        .joinToString { it.asJsonObject["name"].asString },
+                                    url = "${item["href"].asString}/tracks"
                                 )
                             )
                         }
-                        Log.wtf("Album", libraryLists.joinToString())
+                        Log.wtf("Album (artist)", libraryLists.joinToString())
                         libraryLists
                     }
                     "me" -> {
-                        json["items"].asJsonArray.forEach {
-                            val album = it.asJsonObject["album"].asJsonObject
-                            val artists = album["artists"].asJsonArray
-                            var artistsNames = ""
-                            for (i in artists){
-                                artistsNames += "${i.asJsonObject["name"].asString}, "
-                            }
+                        items.forEach { element ->
+                            val album = element.asJsonObject["album"].asJsonObject
                             libraryLists.add(
                                 Album(
                                     image = album["images"].asJsonArray[1].asJsonObject["url"].asString,
                                     name = album["name"].asString,
-                                    artists = artistsNames.removeSuffix(", "),
+                                    artists = album["artists"].asJsonArray
+                                        .joinToString { it.asJsonObject["name"].asString },
                                     url = album["tracks"].asJsonObject["href"].asString
                                 )
                             )
-
                         }
-                        Log.wtf("Album", libraryLists.joinToString())
+                        Log.wtf("Album (me)", libraryLists.joinToString())
                         libraryLists
                     }
-                    else -> {
-                        libraryLists
-                    }
+                    else -> libraryLists
                 }
             }
             else -> null

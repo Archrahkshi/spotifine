@@ -44,8 +44,12 @@ class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
         val lyrics = if (isLyricsTranslated) lyricsTranslated else lyricsOriginal
     
         val detectedLanguage = "..." // TODO
-        val toRussian = "$detectedLanguage > ${R.string.russian}"
-        buttonTranslate.text = if (isLyricsTranslated) toRussian else R.string.translate.toString()
+        val toRussian = "$detectedLanguage > ${resources.getString(R.string.russian)}"
+        buttonTranslate.text =
+            if (isLyricsTranslated)
+                toRussian
+            else
+                resources.getString(R.string.translate)
     
         buttonTranslate.setOnClickListener {
             isLyricsTranslated = !isLyricsTranslated
