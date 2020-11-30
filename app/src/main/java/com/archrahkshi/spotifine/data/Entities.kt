@@ -37,10 +37,9 @@ data class Album(
 @Entity
 data class Track(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
-    
+    var id: String,
     val name: String,
     val artist: String,
     val duration: Long,
-    val url: String,
+    //val url: String,
 )

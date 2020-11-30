@@ -6,9 +6,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.ACCESS_TOKEN
+import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+
 
 var token = ""
 
@@ -16,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private val CLIENT_ID = "fbe0ec189f0247f99909e75530bac38e"
     private val REDIRECT_URI = "http://localhost:8888/callback/"
     private val REQUEST_CODE = 1337
+    private var mSpotifyAppRemote: SpotifyAppRemote? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +37,6 @@ class MainActivity : AppCompatActivity() {
             }.build()
         )
     }
-    
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         

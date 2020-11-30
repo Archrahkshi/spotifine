@@ -43,7 +43,9 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
                 createTrackLists(url, token)
             ) {
                 Log.i("Track", it.toString())
-                startActivity(Intent(activity, PlayerActivity::class.java))
+                startActivity(Intent(activity, PlayerActivity::class.java).apply {
+                   putExtra(ID, it.id)
+                })
             }
         }
     }
@@ -82,7 +84,7 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
                             name = item["name"].asString,
                             artist = artistsNames.removeSuffix(", "),
                             duration = item["duration_ms"].asLong,
-                            url = item["href"].asString
+                            id = item["id"].asString
                         )
                     )
                 }
@@ -101,7 +103,7 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
                             name = item["name"].asString,
                             artist = artistsNames.removeSuffix(", "),
                             duration = item["duration_ms"].asLong,
-                            url = item["href"].asString
+                            id = item["id"].asString
                         )
                     )
                 }
