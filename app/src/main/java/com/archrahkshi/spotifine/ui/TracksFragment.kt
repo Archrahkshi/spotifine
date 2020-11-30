@@ -8,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.Track
-import com.archrahkshi.spotifine.data.TracksAdapter
-import com.archrahkshi.spotifine.data.URL
-import com.archrahkshi.spotifine.data.ACCESS_TOKEN
+import com.archrahkshi.spotifine.data.*
+import com.bumptech.glide.Glide
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_tracks.*
 import kotlinx.coroutines.CoroutineScope
@@ -32,13 +30,13 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
         super.onViewCreated(view, savedInstanceState)
         //val token = this.arguments?.getString(ACCESS_TOKEN)
         val url = this.arguments?.getString(URL).toString()
-        /*val tracks = listOf<Track>(
-            Track(id = 0, name = "Sample Track 1", "Sample Artist 1", 10000, "sample_url_1"),
-            Track(id = 1, name = "Sample Track 2", "Sample Artist 2", 20000, "sample_url_2"),
-            Track(id = 2, name = "Sample Track 3", "Sample Artist 3", 30000, "sample_url_3")
-        ) // TODO: URL-запрос и вывод конкретного списка треков по url*/
+        val image = this.arguments?.getString(IMAGE).toString()
+        textView.text = this.arguments?.getString(NAME).toString()
 
-
+        Glide
+            .with(this)
+            .load(image)
+            .into(imageView2)
 
         launch {
             recyclerViewTracks.adapter = TracksAdapter(

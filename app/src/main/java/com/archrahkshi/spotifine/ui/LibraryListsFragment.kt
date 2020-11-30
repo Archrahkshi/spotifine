@@ -41,6 +41,8 @@ class LibraryListsFragment(
                         is Playlist -> TracksFragment().apply {
                             arguments = Bundle().apply {
                                 putString(URL, it.url)
+                                putString(IMAGE, it.image)
+                                putString(NAME, it.name)
                                 //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
                             }
                         }
@@ -48,12 +50,15 @@ class LibraryListsFragment(
                             arguments = Bundle().apply {
                                 putString(LIST_TYPE, ALBUMS)
                                 putString(URL, it.url)
+                                putString(IMAGE, it.image)
                                 //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
                             }
                         }
                         is Album -> TracksFragment().apply {
                             arguments = Bundle().apply {
                                 putString(URL, it.url)
+                                putString(IMAGE, it.image)
+                                putString(NAME, it.name)
                                 //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
                             }
                         }
