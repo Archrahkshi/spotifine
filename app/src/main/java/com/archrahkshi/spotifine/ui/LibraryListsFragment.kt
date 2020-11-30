@@ -41,17 +41,20 @@ class LibraryListsFragment(
                         is Playlist -> TracksFragment().apply {
                             arguments = Bundle().apply {
                                 putString(URL, it.url)
+                                //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
                             }
                         }
                         is Artist -> LibraryListsFragment().apply {
                             arguments = Bundle().apply {
                                 putString(LIST_TYPE, ALBUMS)
                                 putString(URL, it.url)
+                                //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
                             }
                         }
                         is Album -> TracksFragment().apply {
                             arguments = Bundle().apply {
                                 putString(URL, it.url)
+                                //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
                             }
                         }
                         else -> null // TODO: разобраться с sealed классами и убрать этот костыль
@@ -102,13 +105,13 @@ class LibraryListsFragment(
                     val artists = album["artists"].asJsonArray
                     var artistsNames = ""
                     for (i in artists){
-                        artistsNames += i.asJsonObject["name"].asString
+                        artistsNames += "${i.asJsonObject["name"].asString}, "
                     }
                     libraryLists.add(
                         Album(
                             name = album["name"].asString,
-                            artists = artistsNames,
-                            url = album["href"].asString
+                            artists = artistsNames.removeSuffix(", "),
+                            url = album["tracks"].asJsonObject["href"].asString
                         )
                     )
                 }

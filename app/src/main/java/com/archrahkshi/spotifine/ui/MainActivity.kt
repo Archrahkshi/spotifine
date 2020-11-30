@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             val response: AuthorizationResponse? =
                 AuthorizationClient.getResponse(resultCode, intent)
             val accessToken = response?.accessToken
+            token = accessToken.toString()
             Log.i("Access token", accessToken.toString())
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
