@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.PlayerActivity">
-
-    <FrameLayout
-        android:id="@+id/frameLayoutPlayer"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:orientation="vertical"
+        tools:context=".ui.PlayerActivity">
+
+    <FrameLayout
+            android:id="@+id/frameLayoutPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:layout_weight="1">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

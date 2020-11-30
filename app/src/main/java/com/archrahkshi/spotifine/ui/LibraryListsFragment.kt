@@ -19,105 +19,33 @@ import okhttp3.Request
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
-class LibraryListsFragment<ListType>(override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate) :
-    Fragment(), CoroutineScope {
-    private fun getJsonStringFromHttpGet(url: String): String? {
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $token")
-            .header("Accept", "application/json")
-            .header("Content-Type", "application/json")
-            .build()
-        return try {
-            val responses = client.newCall(request).execute()
-            responses.body?.string().toString()
-        } catch (e: IOException) {
-            null
-        }
-    }
-/*    private inline fun <reified T> checkType() =  when (T::class){
-        Playlist::class -> "playlist"
-        Artist::class -> "artist"
-        Album::class -> "album"
-        else -> "another"
-    }*/
+class LibraryListsFragment(
+    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
+) : Fragment(), CoroutineScope {
+    
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_library_lists, container, false)
-
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    
-        val flag = arguments?.getString("flag") ?: "no flag"
-        Log.wtf("flag", flag)
-    
-        val parser = JsonParser()
-        suspend fun libraryListCreation() = withContext(Dispatchers.IO) {
-            when (flag) {
-                "playlist" -> {
         
-                    val playlistJson =
-                        getJsonStringFromHttpGet("https://api.spotify.com/v1/me/playlists")
-                    Log.wtf("json", playlistJson)
-                    val jsonTree = parser.parse(playlistJson)
-                    val libraryLists = mutableListOf<Playlist>()
-                    if (jsonTree.isJsonObject) {
-                        val jsonObject = jsonTree.asJsonObject
-                        Log.wtf(
-                            "trackUri",
-                            jsonObject["items"].asJsonArray[0].asJsonObject["tracks"].asJsonObject["href"].toString()
-                        )
-                        val playlistsNumber = jsonObject["total"].asInt
-                        Log.wtf("total", playlistsNumber.toString())
-                        if (playlistsNumber > 0) {
-                            for (i in 0 until playlistsNumber) {
-                                val path = jsonObject["items"].asJsonArray[i]
-                                val name =
-                                    path.asJsonObject["name"].toString().removeSurrounding("\"")
-                                val size = path.asJsonObject["tracks"].asJsonObject["total"].asInt
-                                val url =
-                                    path.asJsonObject["tracks"].asJsonObject["href"].toString()
-                                        .removeSurrounding("\"")
-                                libraryLists.add(Playlist(0, name, size, url))
-                            }
-                        }
-                    }
-                    libraryLists
-                }
-                "artist" -> {
-                    val libraryLists = mutableListOf<Artist>()
-                    libraryLists
-                }
-                "album" -> {
-                    val libraryLists = mutableListOf<Album>()
-                    libraryLists
-                }
-                else -> {
-                    val libraryLists = mutableListOf<Artist>()
-                    libraryLists
-                }
-            }
-        }
-    
         launch {
-            val libraryLists = libraryListCreation()
-            Log.wtf("librarylist", libraryLists.first().toString())
-            recyclerViewLists.adapter = LibraryListsAdapter(libraryLists) {
-                Log.wtf("it", it.toString())
+            recyclerViewLists.adapter = LibraryListsAdapter(
+                createLibraryLists(arguments?.getString(ACCESS_TOKEN))!!
+            ) {
+                Log.i("Item clicked", it.toString())
                 fragmentManager?.beginTransaction()?.replace(
                     R.id.frameLayoutLibrary,
                     when (it) {
                         is Playlist -> TracksFragment().apply {
-            
                             arguments = Bundle().apply {
                                 putString(URL, it.url)
                             }
                         }
-                        is Artist -> LibraryListsFragment<Album>().apply {
+                        is Artist -> LibraryListsFragment().apply {
                             arguments = Bundle().apply {
+                                putString(LIST_TYPE, ALBUMS)
                                 putString(URL, it.url)
                             }
                         }
@@ -130,15 +58,76 @@ class LibraryListsFragment<ListType>(override val coroutineContext: CoroutineCon
                     }!!
                 )?.addToBackStack(null)?.commit()
             }
-
-
-            //val listOfRequests = listOf("https://api.spotify.com/v1/me/playlists", "https://api.spotify.com/v1/me/albums", "https://api.spotify.com/v1/me/artists")
-
-
         }
-
-        //val libraryLists = listOf<ListType>() // TODO
-
-
     }
+    
+    private suspend fun createLibraryLists(accessToken: String?) = withContext(Dispatchers.IO) {
+        when (arguments?.getString(LIST_TYPE)) {
+            PLAYLISTS -> {
+                val libraryLists = mutableListOf<Playlist>()
+                getJsonFromApi("playlists", accessToken)["items"].asJsonArray.forEach {
+                    val item = it.asJsonObject
+                    val tracks = item["tracks"].asJsonObject
+                    libraryLists.add(
+                        Playlist(
+                            name = item["name"].asString,
+                            size = tracks["total"].asInt,
+                            url = tracks["href"].asString
+                        )
+                    )
+                }
+                libraryLists
+            }
+            ARTISTS -> {
+                val libraryLists = mutableListOf<Artist>()
+                getJsonFromApi(
+                    // список альбомов исполнителя ?: пользователя
+                    arguments?.getString(URL) ?: "following?type=artist",
+                    accessToken
+                )["items"].asJsonArray.forEach {
+                    val item = it.asJsonObject
+                    libraryLists.add(
+                        Artist(
+                            name = item["name"].asString,
+                            url = item["href"].asString
+                        )
+                    )
+                }
+                libraryLists
+            }
+            ALBUMS -> {
+                val libraryLists = mutableListOf<Album>()
+                getJsonFromApi("albums", accessToken)["items"].asJsonArray.forEach {
+                    val album = it.asJsonObject["album"].asJsonObject
+                    libraryLists.add(
+                        Album(
+                            name = album["name"].asString,
+                            artists = album["artists"].asJsonArray.joinToString(),
+                            url = album["href"].asString
+                        )
+                    )
+                }
+                libraryLists
+            }
+            else -> null
+        }
+    }
+    
+    private fun getJsonFromApi(requestPostfix: String, accessToken: String?) = JsonParser().parse(
+        try {
+            OkHttpClient().newCall(
+                Request.Builder()
+                    .url("https://api.spotify.com/v1/me/$requestPostfix")
+                    .header("Authorization", "Bearer $accessToken")
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .build()
+            ).execute().body?.string().also {
+                Log.i("JSON string", it ?: "no JSON string")
+            }
+        } catch (e: IOException) {
+            Log.wtf("getJsonFromApi", e)
+            null
+        }
+    ).asJsonObject
 }

@@ -30,7 +30,7 @@ data class Album(
     var id: Int = 0,
     
     val name: String,
-    val artist: String,
+    val artists: String,
     val url: String,
 )
 

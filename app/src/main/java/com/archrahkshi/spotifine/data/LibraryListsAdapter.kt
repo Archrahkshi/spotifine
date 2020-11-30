@@ -11,10 +11,8 @@ class LibraryListsAdapter<ListType>(
     private val libraryLists: List<ListType>,
     private val clickListener: (ListType) -> Unit
 ) : RecyclerView.Adapter<LibraryListsAdapter.ViewHolder<ListType>>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ) = ViewHolder<ListType>(
+    
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder<ListType>(
         LayoutInflater
             .from(parent.context)
             .inflate(R.layout.item_library_list, parent, false)
@@ -41,7 +39,7 @@ class LibraryListsAdapter<ListType>(
             textViewListInfo.text = when (listType) {
                 is Playlist -> listType.size.toString() // TODO: поменять
                 is Artist -> ""
-                is Album -> listType.artist
+                is Album -> listType.artists
                 else -> ""
             }
             layoutItemList.setOnClickListener { clickListener(listType) }

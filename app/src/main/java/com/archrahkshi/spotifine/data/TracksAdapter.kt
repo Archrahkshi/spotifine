@@ -12,13 +12,8 @@ class TracksAdapter(
     private val tracks: List<Track>,
     private val clickListener: (Track) -> Unit
 ) : RecyclerView.Adapter<TracksAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ) = ViewHolder(
-        LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_track, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
     )
     
     override fun getItemCount() = tracks.size
