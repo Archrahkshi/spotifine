@@ -53,7 +53,7 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
         try {
             OkHttpClient().newCall(
                 Request.Builder()
-                    .url("$url")
+                    .url(url)
                     .header("Authorization", "Bearer $accessToken")
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
@@ -69,22 +69,51 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
 
     private suspend fun createTrackLists(url: String, accessToken: String?) = withContext(Dispatchers.IO){
         val tracks = mutableListOf<Track>()
-        getJsonFromApi(url, token)["items"].asJsonArray.forEach {
-            val item = it.asJsonObject
-            val artists = item["artists"].asJsonArray
-            var artistsNames = ""
-            for (i in artists){
-                artistsNames += "${i.asJsonObject["name"].asString}, "
+        val json = getJsonFromApi(url, token)
+        when(json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(5)){
+            "album" -> {
+                json["items"].asJsonArray.forEach {
+                    val item = it.asJsonObject
+                    val artists = item["artists"].asJsonArray
+                    var artistsNames = ""
+                    for (i in artists){
+                        artistsNames += "${i.asJsonObject["name"].asString}, "
+                    }
+                    tracks.add(
+                        Track(
+                            name = item["name"].asString,
+                            artist = artistsNames.removeSuffix(", "),
+                            duration = item["duration_ms"].asLong,
+                            url = item["href"].asString
+                        )
+                    )
+                }
+                tracks
             }
-            tracks.add(
-                Track(
-                    name = item["name"].asString,
-                    artist = artistsNames.removeSuffix(", "),
-                    duration = item["duration_ms"].asLong,
-                    url = item["href"].asString
-                )
-            )
+            "playl" -> {
+                json["items"].asJsonArray.forEach {
+                    val item = it.asJsonObject["track"].asJsonObject
+                    val artists = item["artists"].asJsonArray
+                    var artistsNames = ""
+                    for (i in artists){
+                        artistsNames += "${i.asJsonObject["name"].asString}, "
+                    }
+                    tracks.add(
+                        Track(
+                            name = item["name"].asString,
+                            artist = artistsNames.removeSuffix(", "),
+                            duration = item["duration_ms"].asLong,
+                            url = item["href"].asString
+                        )
+                    )
+                }
+                tracks
+            }
+            else -> {
+                tracks
+            }
+
         }
-        tracks
+
     }
 }

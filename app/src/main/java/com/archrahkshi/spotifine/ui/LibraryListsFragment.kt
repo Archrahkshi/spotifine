@@ -68,7 +68,7 @@ class LibraryListsFragment(
         when (arguments?.getString(LIST_TYPE)) {
             PLAYLISTS -> {
                 val libraryLists = mutableListOf<Playlist>()
-                getJsonFromApi("playlists", accessToken)["items"].asJsonArray.forEach {
+                getJsonFromApi("me/playlists", accessToken)["items"].asJsonArray.forEach {
                     val item = it.asJsonObject
                     val tracks = item["tracks"].asJsonObject
                     libraryLists.add(
@@ -85,14 +85,14 @@ class LibraryListsFragment(
                 val libraryLists = mutableListOf<Artist>()
                 getJsonFromApi(
                     // список альбомов исполнителя ?: пользователя
-                    arguments?.getString(URL) ?: "following?type=artist",
+                     "me/following?type=artist",
                     accessToken
                 )["artists"].asJsonObject["items"].asJsonArray.forEach {
                     val item = it.asJsonObject
                     libraryLists.add(
                         Artist(
                             name = item["name"].asString,
-                            url = item["href"].asString
+                            url = "artists/${item["id"].asString}"
                         )
                     )
                 }
@@ -100,22 +100,50 @@ class LibraryListsFragment(
             }
             ALBUMS -> {
                 val libraryLists = mutableListOf<Album>()
-                getJsonFromApi("albums", accessToken)["items"].asJsonArray.forEach {
-                    val album = it.asJsonObject["album"].asJsonObject
-                    val artists = album["artists"].asJsonArray
-                    var artistsNames = ""
-                    for (i in artists){
-                        artistsNames += "${i.asJsonObject["name"].asString}, "
+                val json =  getJsonFromApi("${arguments?.getString(URL) ?: "me"}/albums", token)
+                when(json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(2)){
+                    "ar" -> {
+                        json["items"].asJsonArray.forEach {
+                            val artists = it.asJsonObject["artists"].asJsonArray
+                            var artistsNames = ""
+                            for (i in artists){
+                                artistsNames += "${i.asJsonObject["name"].asString}, "
+                            }
+                            libraryLists.add(
+                                Album(
+                                    name = it.asJsonObject["name"].asString,
+                                    artists = artistsNames.removeSuffix(", "),
+                                    url = "${it.asJsonObject["href"].asString}/tracks"
+                                )
+                            )
+                        }
+                        Log.wtf("Album", libraryLists.joinToString())
+                        libraryLists
                     }
-                    libraryLists.add(
-                        Album(
-                            name = album["name"].asString,
-                            artists = artistsNames.removeSuffix(", "),
-                            url = album["tracks"].asJsonObject["href"].asString
-                        )
-                    )
+                    "me" -> {
+                        json["items"].asJsonArray.forEach {
+                            val album = it.asJsonObject["album"].asJsonObject
+                            val artists = album["artists"].asJsonArray
+                            var artistsNames = ""
+                            for (i in artists){
+                                artistsNames += "${i.asJsonObject["name"].asString}, "
+                            }
+                            libraryLists.add(
+                                Album(
+                                    name = album["name"].asString,
+                                    artists = artistsNames.removeSuffix(", "),
+                                    url = album["tracks"].asJsonObject["href"].asString
+                                )
+                            )
+
+                        }
+                        Log.wtf("Album", libraryLists.joinToString())
+                        libraryLists
+                    }
+                    else -> {
+                        libraryLists
+                    }
                 }
-                libraryLists
             }
             else -> null
         }
@@ -125,7 +153,7 @@ class LibraryListsFragment(
         try {
             OkHttpClient().newCall(
                 Request.Builder()
-                    .url("https://api.spotify.com/v1/me/$requestPostfix")
+                    .url("https://api.spotify.com/v1/$requestPostfix")
                     .header("Authorization", "Bearer $accessToken")
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
