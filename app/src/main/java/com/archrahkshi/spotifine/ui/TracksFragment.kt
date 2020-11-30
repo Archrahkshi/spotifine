@@ -45,6 +45,7 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
                 Log.i("Track", it.toString())
                 startActivity(Intent(activity, PlayerActivity::class.java).apply {
                    putExtra(ID, it.id)
+                    putExtra(DURATION, it.duration)
                 })
             }
         }
