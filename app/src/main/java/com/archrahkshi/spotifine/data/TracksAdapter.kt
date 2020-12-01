@@ -5,7 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
-import kotlinx.android.synthetic.main.item_track.view.*
+import kotlinx.android.synthetic.main.item_track.view.layoutItemList
+import kotlinx.android.synthetic.main.item_track.view.textViewTrackArtist
+import kotlinx.android.synthetic.main.item_track.view.textViewTrackDuration
+import kotlinx.android.synthetic.main.item_track.view.textViewTrackName
 import kotlin.time.ExperimentalTime
 import kotlin.time.milliseconds
 
@@ -37,9 +40,9 @@ class TracksAdapter(
             textViewTrackDuration.text = track.duration.milliseconds.toComponents { HH, mm, ss, _ ->
                 var duration = ""
                 if (HH > 0) duration += "$HH:"
-                if (duration.isNotEmpty() && mm < 9) duration += '0'
+                if (duration.isNotEmpty() && mm < ONE_DIGIT) duration += '0'
                 duration += "$mm:"
-                if (duration.isNotEmpty() && ss < 9) duration += '0'
+                if (duration.isNotEmpty() && ss < ONE_DIGIT) duration += '0'
                 "$duration$ss"
             }
             layoutItemList.setOnClickListener { clickListener(track) }

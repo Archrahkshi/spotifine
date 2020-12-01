@@ -8,10 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.*
+import com.archrahkshi.spotifine.data.ACCESS_TOKEN
+import com.archrahkshi.spotifine.data.ALBUM_FROM_PLAYLIST_DISTINCTION
+import com.archrahkshi.spotifine.data.DURATION
+import com.archrahkshi.spotifine.data.ID
+import com.archrahkshi.spotifine.data.IMAGE
+import com.archrahkshi.spotifine.data.NAME
+import com.archrahkshi.spotifine.data.Track
+import com.archrahkshi.spotifine.data.TracksAdapter
+import com.archrahkshi.spotifine.data.URL
 import com.bumptech.glide.Glide
 import com.google.gson.JsonParser
-import kotlinx.android.synthetic.main.fragment_tracks.*
+import kotlinx.android.synthetic.main.fragment_tracks.imageViewHeader
+import kotlinx.android.synthetic.main.fragment_tracks.recyclerViewTracks
+import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,7 +92,12 @@ class TracksFragment(
     ) = withContext(Dispatchers.IO) {
         val tracks = mutableListOf<Track>()
         val json = getJsonFromApi(url, accessToken)
-        when (json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(5)) {
+        when (
+            json["href"]
+                .asString
+                .removePrefix("https://api.spotify.com/v1/")
+                .take(ALBUM_FROM_PLAYLIST_DISTINCTION)
+        ) {
             "album" -> {
                 json["items"].asJsonArray.forEach { element ->
                     val item = element.asJsonObject

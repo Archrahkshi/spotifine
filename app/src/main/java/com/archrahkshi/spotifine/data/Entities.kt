@@ -3,8 +3,6 @@ package com.archrahkshi.spotifine.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// TODO: при необходимости - добавить поля
-
 @Entity
 data class Playlist(
     @PrimaryKey(autoGenerate = true)

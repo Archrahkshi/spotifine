@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.item_library_list.view.*
+import kotlinx.android.synthetic.main.item_library_list.view.imageViewListPic
+import kotlinx.android.synthetic.main.item_library_list.view.layoutLibraryList
+import kotlinx.android.synthetic.main.item_library_list.view.textViewListInfo
+import kotlinx.android.synthetic.main.item_library_list.view.textViewListName
 
 class LibraryListsAdapter<ListType>(
     private val libraryLists: List<ListType>,
@@ -26,10 +29,11 @@ class LibraryListsAdapter<ListType>(
     }
 
     class ViewHolder<ListType>(view: View) : RecyclerView.ViewHolder(view) {
-        private val textViewListName = view.textViewListName
-        private val textViewListInfo = view.textViewListInfo
-        private val layoutItemList = view.layoutLibraryList
         private val imageViewListPic = view.imageViewListPic
+        private val layoutItemList = view.layoutLibraryList
+        private val textViewListInfo = view.textViewListInfo
+        private val textViewListName = view.textViewListName
+        private val resources = view.context.resources
         private val viewTest = view
 
         fun bind(listType: ListType, clickListener: (ListType) -> Unit) {
@@ -40,7 +44,10 @@ class LibraryListsAdapter<ListType>(
                 else -> null
             }
             textViewListInfo.text = when (listType) {
-                is Playlist -> listType.size.toString() // TODO: поменять
+                is Playlist -> {
+                    val size = listType.size
+                    "$size ${setWordTracks(size)}"
+                }
                 is Artist -> ""
                 is Album -> listType.artists
                 else -> null
@@ -55,5 +62,16 @@ class LibraryListsAdapter<ListType>(
             ).into(imageViewListPic)
             layoutItemList.setOnClickListener { clickListener(listType) }
         }
+
+        private fun setWordTracks(size: Int) = resources.getString(
+            with(size.toString()) {
+                when {
+                    endsWith('1') -> R.string.tracks_singular
+                    endsWith('2') || endsWith('3') || endsWith('4') ->
+                        R.string.tracks_paucal
+                    else -> R.string.tracks_plural
+                }
+            }
+        )
     }
 }

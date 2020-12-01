@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
-import kotlinx.android.synthetic.main.item_lyrics_line.view.*
+import kotlinx.android.synthetic.main.item_lyrics_line.view.textViewLyricsLine
 
 class LyricsAdapter(
     private val lines: List<String>

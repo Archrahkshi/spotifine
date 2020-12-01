@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.LyricsAdapter
-import kotlinx.android.synthetic.main.fragment_lyrics.*
+import kotlinx.android.synthetic.main.fragment_lyrics.buttonTranslate
+import kotlinx.android.synthetic.main.fragment_lyrics.recyclerViewLyrics
 
 class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
 

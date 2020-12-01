@@ -7,9 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.*
+import com.archrahkshi.spotifine.data.ACCESS_TOKEN
+import com.archrahkshi.spotifine.data.ALBUMS
+import com.archrahkshi.spotifine.data.ARTISTS
+import com.archrahkshi.spotifine.data.ARTIST_FROM_ME_DISTINCTION
+import com.archrahkshi.spotifine.data.Album
+import com.archrahkshi.spotifine.data.Artist
+import com.archrahkshi.spotifine.data.FROM_ARTIST
+import com.archrahkshi.spotifine.data.FROM_ME
+import com.archrahkshi.spotifine.data.IMAGE
+import com.archrahkshi.spotifine.data.LIST_TYPE
+import com.archrahkshi.spotifine.data.LibraryListsAdapter
+import com.archrahkshi.spotifine.data.NAME
+import com.archrahkshi.spotifine.data.PLAYLISTS
+import com.archrahkshi.spotifine.data.Playlist
+import com.archrahkshi.spotifine.data.URL
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import kotlinx.android.synthetic.main.fragment_library_lists.*
+import kotlinx.android.synthetic.main.fragment_library_lists.recyclerViewLists
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,14 +81,16 @@ class LibraryListsFragment(
                                 putString(ACCESS_TOKEN, accessToken)
                             }
                         }
-                        else -> null // TODO: разобраться с sealed классами и убрать этот костыль
+                        else -> null
                     }!!
                 )?.addToBackStack(null)?.commit()
             }
         }
     }
 
-    private suspend fun createLibraryLists(accessToken: String?) = withContext(Dispatchers.IO) {
+    private suspend fun createLibraryLists(
+        accessToken: String?
+    ) = withContext(Dispatchers.IO) {
         when (arguments?.getString(LIST_TYPE)) {
             PLAYLISTS -> {
                 val libraryLists = mutableListOf<Playlist>()
@@ -81,16 +98,7 @@ class LibraryListsFragment(
                     "me/playlists",
                     accessToken
                 )["items"].asJsonArray.forEach {
-                    val item = it.asJsonObject
-                    val tracks = item["tracks"].asJsonObject
-                    libraryLists.add(
-                        Playlist(
-                            image = item["images"].asJsonArray.first().asJsonObject["url"].asString,
-                            name = item["name"].asString,
-                            size = tracks["total"].asInt,
-                            url = tracks["href"].asString
-                        )
-                    )
+                    libraryLists.add(createPlaylist(it.asJsonObject))
                 }
                 libraryLists
             }
@@ -100,14 +108,7 @@ class LibraryListsFragment(
                     "me/following?type=artist",
                     accessToken
                 )["artists"].asJsonObject["items"].asJsonArray.forEach {
-                    val item = it.asJsonObject
-                    libraryLists.add(
-                        Artist(
-                            image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
-                            name = item["name"].asString,
-                            url = "artists/${item["id"].asString}"
-                        )
-                    )
+                    libraryLists.add(createArtist(it.asJsonObject))
                 }
                 libraryLists
             }
@@ -122,38 +123,20 @@ class LibraryListsFragment(
                     json["href"]
                         .asString
                         .removePrefix("https://api.spotify.com/v1/")
-                        .take(2)
+                        .take(ARTIST_FROM_ME_DISTINCTION)
                 ) {
                     "ar" -> {
-                        items.forEach { element ->
-                            val item = element.asJsonObject
-                            libraryLists.add(
-                                Album(
-                                    image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
-                                    name = item["name"].asString,
-                                    artists = item["artists"].asJsonArray
-                                        .joinToString { it.asJsonObject["name"].asString },
-                                    url = "${item["href"].asString}/tracks"
-                                )
-                            )
+                        items.forEach {
+                            libraryLists.add(createAlbum(it.asJsonObject, FROM_ARTIST))
                         }
-                        Log.wtf("Album (artist)", libraryLists.joinToString())
                         libraryLists
                     }
                     "me" -> {
-                        items.forEach { element ->
-                            val album = element.asJsonObject["album"].asJsonObject
+                        items.forEach {
                             libraryLists.add(
-                                Album(
-                                    image = album["images"].asJsonArray[1].asJsonObject["url"].asString,
-                                    name = album["name"].asString,
-                                    artists = album["artists"].asJsonArray
-                                        .joinToString { it.asJsonObject["name"].asString },
-                                    url = album["tracks"].asJsonObject["href"].asString
-                                )
+                                createAlbum(it.asJsonObject["album"].asJsonObject, FROM_ME)
                             )
                         }
-                        Log.wtf("Album (me)", libraryLists.joinToString())
                         libraryLists
                     }
                     else -> libraryLists
@@ -162,6 +145,33 @@ class LibraryListsFragment(
             else -> null
         }
     }
+
+    private fun createPlaylist(item: JsonObject): Playlist {
+        val tracks = item["tracks"].asJsonObject
+        return Playlist(
+            image = item["images"].asJsonArray.first().asJsonObject["url"].asString,
+            name = item["name"].asString,
+            size = tracks["total"].asInt,
+            url = tracks["href"].asString
+        )
+    }
+
+    private fun createArtist(item: JsonObject) = Artist(
+        image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
+        name = item["name"].asString,
+        url = "artists/${item["id"].asString}"
+    )
+
+    private fun createAlbum(item: JsonObject, type: String) = Album(
+        image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
+        name = item["name"].asString,
+        artists = item["artists"].asJsonArray
+            .joinToString { it.asJsonObject["name"].asString },
+        url = if (type == FROM_ARTIST)
+            "${item["href"].asString}/tracks"
+        else
+            item["tracks"].asJsonObject["href"].asString
+    )
 
     private fun getJsonFromApi(requestPostfix: String, accessToken: String?) = JsonParser().parse(
         try {

@@ -38,16 +38,20 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             val response: AuthorizationResponse? =
                 AuthorizationClient.getResponse(resultCode, intent)
-            val accessToken = response?.accessToken
-            Log.i("Access token", accessToken.toString())
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     Log.i("Token", "OK")
                     startActivity(
                         Intent(this, LibraryActivity::class.java).apply {
-                            putExtra(ACCESS_TOKEN, accessToken)
+                            putExtra(
+                                ACCESS_TOKEN,
+                                response.accessToken.also {
+                                    Log.i("Access token", it)
+                                }
+                            )
                         }
                     )
+                    finish()
                 }
                 AuthorizationResponse.Type.ERROR -> Log.wtf("Token", response.error)
                 else -> Log.wtf("Token", "bullshit")

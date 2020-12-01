@@ -3,8 +3,14 @@ package com.archrahkshi.spotifine.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.*
-import kotlinx.android.synthetic.main.activity_library.*
+import com.archrahkshi.spotifine.data.ACCESS_TOKEN
+import com.archrahkshi.spotifine.data.ALBUMS
+import com.archrahkshi.spotifine.data.ARTISTS
+import com.archrahkshi.spotifine.data.LIST_TYPE
+import com.archrahkshi.spotifine.data.PLAYLISTS
+import kotlinx.android.synthetic.main.activity_library.buttonAlbums
+import kotlinx.android.synthetic.main.activity_library.buttonArtists
+import kotlinx.android.synthetic.main.activity_library.buttonPlaylists
 
 class LibraryActivity : AppCompatActivity() {
 

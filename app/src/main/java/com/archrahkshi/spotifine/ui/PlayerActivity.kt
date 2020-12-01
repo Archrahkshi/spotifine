@@ -29,7 +29,7 @@ class PlayerActivity : AppCompatActivity() {
         ).commit()
     }
 
-    override fun onStart() { // TODO: Когда-нибудь реализовать активный ползунок
+    override fun onStart() {
         super.onStart()
         val id = intent.getStringExtra(ID)
         val duration = intent.getLongExtra(DURATION, 0)
@@ -56,7 +56,7 @@ class PlayerActivity : AppCompatActivity() {
                     seekBar.setOnSeekBarChangeListener(
                         object : OnSeekBarChangeListener {
                             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                                if (flag == 0) { // TODO: Убрать этот кривой костыль
+                                if (flag == 0) {
                                     seekBar.progress = 0
                                 } else {
                                     appRemote.playerApi.seekTo(seekBar.progress.toLong())
