@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">Spotifine</string>
-    <string name="playlists">ПЛЕЙЛИСТЫ</string>
-    <string name="Artists">ИСПОЛНИТЕЛИ</string>
-    <string name="albums">АЛЬБОМЫ</string>
-    <string name="translate">ПЕРЕВЕСТИ</string>
     <string name="album_сover">Обложка альбома</string>
+    <string name="albums">АЛЬБОМЫ</string>
+    <string name="app_name">Spotifine</string>
+    <string name="artists">ИСПОЛНИТЕЛИ</string>
+    <string name="playlists">ПЛЕЙЛИСТЫ</string>
+    <string name="russian">РУССКИЙ</string>
+    <string name="spotifine_logo">Логотип Spotifine</string>
+    <string name="translate">ПЕРЕВЕСТИ</string>
+    <string name="tracks_singular">трек</string>
+    <string name="tracks_paucal">трека</string>
+    <string name="tracks_plural">треков</string>
 </resources>
