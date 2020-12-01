@@ -8,4 +8,5 @@
 /captures
 .externalNativeBuild
 .cxx
-
+/spotify-app-remote/build/
+/spotify-auth/build/

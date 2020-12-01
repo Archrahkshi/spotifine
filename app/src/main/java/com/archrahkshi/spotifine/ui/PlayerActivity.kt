@@ -7,10 +7,10 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.CLIENT_ID
 import com.archrahkshi.spotifine.data.DURATION
 import com.archrahkshi.spotifine.data.ID
-import com.archrahkshi.spotifine.data.REDIRECT_URI
+import com.archrahkshi.spotifine.data.SPOTIFY_CLIENT_ID
+import com.archrahkshi.spotifine.data.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -35,8 +35,8 @@ class PlayerActivity : AppCompatActivity() {
         val duration = intent.getLongExtra(DURATION, 0)
         Log.wtf("id", id?.toString())
         Log.wtf("duration", duration.toString())
-        val connectionParams = ConnectionParams.Builder(CLIENT_ID)
-            .setRedirectUri(REDIRECT_URI)
+        val connectionParams = ConnectionParams.Builder(SPOTIFY_CLIENT_ID)
+            .setRedirectUri(SPOTIFY_REDIRECT_URI)
             .showAuthView(true)
             .build()
         SpotifyAppRemote.connect(
