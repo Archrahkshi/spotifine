@@ -26,7 +26,9 @@ class TracksFragment(
     override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_tracks, container, false)
 
     @ExperimentalTime
@@ -46,10 +48,12 @@ class TracksFragment(
                 createTrackLists(args?.getString(URL), args?.getString(ACCESS_TOKEN))
             ) {
                 Log.i("Track", it.toString())
-                startActivity(Intent(activity, PlayerActivity::class.java).apply {
-                    putExtra(ID, it.id)
-                    putExtra(DURATION, it.duration)
-                })
+                startActivity(
+                    Intent(activity, PlayerActivity::class.java).apply {
+                        putExtra(ID, it.id)
+                        putExtra(DURATION, it.duration)
+                    }
+                )
             }
         }
     }

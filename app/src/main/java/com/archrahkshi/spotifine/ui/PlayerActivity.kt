@@ -39,7 +39,9 @@ class PlayerActivity : AppCompatActivity() {
             .setRedirectUri(REDIRECT_URI)
             .showAuthView(true)
             .build()
-        SpotifyAppRemote.connect(this, connectionParams,
+        SpotifyAppRemote.connect(
+            this,
+            connectionParams,
             object : Connector.ConnectionListener {
                 @SuppressLint("SetTextI18n")
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
@@ -51,28 +53,29 @@ class PlayerActivity : AppCompatActivity() {
                     seekBar.max = duration.toInt()
                     var flag = 0
                     buttonPlay.text = "PLAY"
-                    seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-                        override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                            if (flag == 0) {      // TODO: Убрать этот кривой костыль
-                                seekBar.progress = 0
-                            } else {
-                                appRemote.playerApi.seekTo(seekBar.progress.toLong())
+                    seekBar.setOnSeekBarChangeListener(
+                        object : OnSeekBarChangeListener {
+                            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                                if (flag == 0) { // TODO: Убрать этот кривой костыль
+                                    seekBar.progress = 0
+                                } else {
+                                    appRemote.playerApi.seekTo(seekBar.progress.toLong())
+                                }
                             }
 
-                        }
+                            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                                if (flag == 1) {
+                                    appRemote.playerApi.pause()
+                                }
+                            }
 
-                        override fun onStartTrackingTouch(seekBar: SeekBar) {
-                            if (flag == 1) {
-                                appRemote.playerApi.pause()
+                            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                                if (flag == 1) {
+                                    appRemote.playerApi.resume()
+                                }
                             }
                         }
-
-                        override fun onStopTrackingTouch(seekBar: SeekBar) {
-                            if (flag == 1) {
-                                appRemote.playerApi.resume()
-                            }
-                        }
-                    })
+                    )
                     buttonPlay.setOnClickListener {
                         when (flag) {
                             0 -> {
@@ -99,7 +102,8 @@ class PlayerActivity : AppCompatActivity() {
 
                     // Something went wrong when attempting to connect! Handle errors here
                 }
-            })
+            }
+        )
     }
 
     override fun onStop() {

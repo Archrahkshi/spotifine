@@ -24,7 +24,9 @@ class LibraryListsFragment(
 ) : Fragment(), CoroutineScope {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_library_lists, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

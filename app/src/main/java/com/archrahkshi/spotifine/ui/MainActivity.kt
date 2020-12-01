@@ -43,9 +43,11 @@ class MainActivity : AppCompatActivity() {
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     Log.i("Token", "OK")
-                    startActivity(Intent(this, LibraryActivity::class.java).apply {
-                        putExtra(ACCESS_TOKEN, accessToken)
-                    })
+                    startActivity(
+                        Intent(this, LibraryActivity::class.java).apply {
+                            putExtra(ACCESS_TOKEN, accessToken)
+                        }
+                    )
                 }
                 AuthorizationResponse.Type.ERROR -> Log.wtf("Token", response.error)
                 else -> Log.wtf("Token", "bullshit")

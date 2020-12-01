@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.fragment_lyrics.*
 class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_lyrics, container, false)
 
