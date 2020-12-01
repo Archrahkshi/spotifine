@@ -7,55 +7,35 @@ import com.archrahkshi.spotifine.data.*
 import kotlinx.android.synthetic.main.activity_library.*
 
 class LibraryActivity : AppCompatActivity() {
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
-        
+
+        replaceFragmentWith(PLAYLISTS)
+
+        buttonPlaylists.setOnClickListener {
+            replaceFragmentWith(PLAYLISTS)
+        }
+
+        buttonArtists.setOnClickListener {
+            replaceFragmentWith(ARTISTS)
+        }
+
+        buttonAlbums.setOnClickListener {
+            replaceFragmentWith(ALBUMS)
+        }
+    }
+
+    private fun replaceFragmentWith(listType: String) {
         supportFragmentManager.beginTransaction().replace(
             R.id.frameLayoutLibrary,
             LibraryListsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(LIST_TYPE, PLAYLISTS)
+                    putString(LIST_TYPE, listType)
                     putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
                 }
             }
         ).commit()
-        
-        buttonPlaylists.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutLibrary,
-                LibraryListsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(LIST_TYPE, PLAYLISTS)
-                        putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
-                    }
-                }
-            ).commit()
-        }
-        
-        buttonArtists.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutLibrary,
-                LibraryListsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(LIST_TYPE, ARTISTS)
-                        putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
-                    }
-                }
-            ).commit()
-        }
-        
-        buttonAlbums.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutLibrary,
-                LibraryListsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(LIST_TYPE, ALBUMS)
-                        putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
-                    }
-                }
-            ).commit()
-        }
     }
 }

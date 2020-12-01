@@ -17,19 +17,19 @@ class TracksAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
     )
-    
+
     override fun getItemCount() = tracks.size
-    
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(tracks[position], clickListener)
     }
-    
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val textViewTrackName = view.textViewTrackName
         private val textViewTrackArtist = view.textViewTrackArtist
         private val textViewTrackDuration = view.textViewTrackDuration
         private val layoutItemList = view.layoutItemList
-        
+
         fun bind(track: Track, clickListener: (Track) -> Unit) {
             textViewTrackName.text = track.name
             textViewTrackArtist.text = track.artist
@@ -37,10 +37,9 @@ class TracksAdapter(
             textViewTrackDuration.text = track.duration.milliseconds.toComponents { HH, mm, ss, _ ->
                 var duration = ""
                 if (HH > 0) duration += "$HH:"
-                if (mm > 0) {
-                    if (duration.isNotEmpty()) duration += '0'
-                    duration += "$mm:"
-                }
+                if (duration.isNotEmpty() && mm < 9) duration += '0'
+                duration += "$mm:"
+                if (duration.isNotEmpty() && ss < 9) duration += '0'
                 "$duration$ss"
             }
             layoutItemList.setOnClickListener { clickListener(track) }

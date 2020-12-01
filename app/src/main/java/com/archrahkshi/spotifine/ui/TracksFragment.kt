@@ -22,41 +22,43 @@ import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.ExperimentalTime
 
-class TracksFragment(override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate) : Fragment(), CoroutineScope {
+class TracksFragment(
+    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
+) : Fragment(), CoroutineScope {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_tracks, container, false)
-    
+
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val token = this.arguments?.getString(ACCESS_TOKEN)
-        val url = this.arguments?.getString(URL).toString()
-        val image = this.arguments?.getString(IMAGE).toString()
-        textViewHeaderLine1.text = this.arguments?.getString(NAME).toString()
-        
+
+        val args = this.arguments
+        textViewHeaderLine1.text = args?.getString(NAME)
+
         Glide
             .with(this)
-            .load(image)
-            .into(imageView2)
-        
+            .load(args?.getString(IMAGE))
+            .into(imageViewHeader)
+
         launch {
             recyclerViewTracks.adapter = TracksAdapter(
-                createTrackLists(url, token)
+                createTrackLists(args?.getString(URL), args?.getString(ACCESS_TOKEN))
             ) {
                 Log.i("Track", it.toString())
                 startActivity(Intent(activity, PlayerActivity::class.java).apply {
-                   putExtra(ID, it.id)
+                    putExtra(ID, it.id)
                     putExtra(DURATION, it.duration)
                 })
             }
         }
     }
-    private fun getJsonFromApi(url: String, accessToken: String?) = JsonParser().parse(
+
+    private fun getJsonFromApi(url: String?, accessToken: String?) = JsonParser().parse(
         try {
             OkHttpClient().newCall(
                 Request.Builder()
-                    .url(url)
+                    .url(url!!)
                     .header("Authorization", "Bearer $accessToken")
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
@@ -69,13 +71,13 @@ class TracksFragment(override val coroutineContext: CoroutineContext = Dispatche
             null
         }
     ).asJsonObject
-    
+
     private suspend fun createTrackLists(
-        url: String,
+        url: String?,
         accessToken: String?
     ) = withContext(Dispatchers.IO) {
         val tracks = mutableListOf<Track>()
-        val json = getJsonFromApi(url, token)
+        val json = getJsonFromApi(url, accessToken)
         when (json["href"].asString.removePrefix("https://api.spotify.com/v1/").take(5)) {
             "album" -> {
                 json["items"].asJsonArray.forEach { element ->

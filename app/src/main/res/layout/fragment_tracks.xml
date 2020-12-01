@@ -20,7 +20,7 @@
                 android:orientation="horizontal">
 
             <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageViewHeader"
                     android:layout_width="128dp"
                     android:layout_height="128dp"
                     android:contentDescription="@string/album_сover"

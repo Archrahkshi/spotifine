@@ -7,31 +7,28 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.data.CLIENT_ID
 import com.archrahkshi.spotifine.data.DURATION
 import com.archrahkshi.spotifine.data.ID
+import com.archrahkshi.spotifine.data.REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import kotlinx.android.synthetic.main.activity_player.*
 
-
 class PlayerActivity : AppCompatActivity() {
-
-    private val CLIENT_ID = "fbe0ec189f0247f99909e75530bac38e"
-    private val REDIRECT_URI = "http://localhost:8888/callback/"
     private var pSpotifyAppRemote: SpotifyAppRemote? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-    
+
         supportFragmentManager.beginTransaction().replace(
             R.id.frameLayoutPlayer,
             LyricsFragment(false)
         ).commit()
-
     }
+
     override fun onStart() { // TODO: Когда-нибудь реализовать активный ползунок
         super.onStart()
         val id = intent.getStringExtra(ID)
@@ -68,15 +65,12 @@ class PlayerActivity : AppCompatActivity() {
                             if (flag == 1) {
                                 appRemote.playerApi.pause()
                             }
-
                         }
 
                         override fun onStopTrackingTouch(seekBar: SeekBar) {
                             if (flag == 1) {
                                 appRemote.playerApi.resume()
                             }
-
-
                         }
                     })
                     buttonPlay.setOnClickListener {
@@ -98,7 +92,6 @@ class PlayerActivity : AppCompatActivity() {
                             }
                         }
                     }
-
                 }
 
                 override fun onFailure(throwable: Throwable) {
@@ -108,9 +101,9 @@ class PlayerActivity : AppCompatActivity() {
                 }
             })
     }
+
     override fun onStop() {
         super.onStop()
         SpotifyAppRemote.disconnect(pSpotifyAppRemote)
     }
-
 }

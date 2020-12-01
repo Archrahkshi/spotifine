@@ -12,26 +12,26 @@ class LibraryListsAdapter<ListType>(
     private val libraryLists: List<ListType>,
     private val clickListener: (ListType) -> Unit
 ) : RecyclerView.Adapter<LibraryListsAdapter.ViewHolder<ListType>>() {
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder<ListType>(
         LayoutInflater
             .from(parent.context)
             .inflate(R.layout.item_library_list, parent, false)
     )
-    
+
     override fun getItemCount() = libraryLists.size
-    
+
     override fun onBindViewHolder(holder: ViewHolder<ListType>, position: Int) {
         holder.bind(libraryLists[position], clickListener)
     }
-    
+
     class ViewHolder<ListType>(view: View) : RecyclerView.ViewHolder(view) {
         private val textViewListName = view.textViewListName
         private val textViewListInfo = view.textViewListInfo
         private val layoutItemList = view.layoutLibraryList
         private val imageViewListPic = view.imageViewListPic
         private val viewTest = view
-        
+
         fun bind(listType: ListType, clickListener: (ListType) -> Unit) {
             textViewListName.text = when (listType) {
                 is Playlist -> listType.name

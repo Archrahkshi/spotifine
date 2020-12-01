@@ -22,17 +22,19 @@ import kotlin.coroutines.CoroutineContext
 class LibraryListsFragment(
     override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
-    
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_library_lists, container, false)
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
+        val accessToken = arguments?.getString(ACCESS_TOKEN)
+
         launch {
             recyclerViewLists.adapter = LibraryListsAdapter(
-                createLibraryLists(arguments?.getString(ACCESS_TOKEN))!!
+                createLibraryLists(accessToken)!!
             ) {
                 Log.i("Item clicked", it.toString())
                 fragmentManager?.beginTransaction()?.replace(
@@ -43,7 +45,7 @@ class LibraryListsFragment(
                                 putString(URL, it.url)
                                 putString(IMAGE, it.image)
                                 putString(NAME, it.name)
-                                //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
+                                putString(ACCESS_TOKEN, accessToken)
                             }
                         }
                         is Artist -> LibraryListsFragment().apply {
@@ -51,7 +53,7 @@ class LibraryListsFragment(
                                 putString(LIST_TYPE, ALBUMS)
                                 putString(URL, it.url)
                                 putString(IMAGE, it.image)
-                                //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
+                                putString(ACCESS_TOKEN, accessToken)
                             }
                         }
                         is Album -> TracksFragment().apply {
@@ -59,7 +61,7 @@ class LibraryListsFragment(
                                 putString(URL, it.url)
                                 putString(IMAGE, it.image)
                                 putString(NAME, it.name)
-                                //putString(ACCESS_TOKEN, arguments?.getString(ACCESS_TOKEN))
+                                putString(ACCESS_TOKEN, accessToken)
                             }
                         }
                         else -> null // TODO: разобраться с sealed классами и убрать этот костыль
@@ -68,26 +70,27 @@ class LibraryListsFragment(
             }
         }
     }
-    
+
     private suspend fun createLibraryLists(accessToken: String?) = withContext(Dispatchers.IO) {
         when (arguments?.getString(LIST_TYPE)) {
             PLAYLISTS -> {
                 val libraryLists = mutableListOf<Playlist>()
-                getJsonFromApi("me/playlists", accessToken)["items"].asJsonArray
-                    .forEach {
-                        val item = it.asJsonObject
-                        val tracks = item["tracks"].asJsonObject
-                        libraryLists.add(
-                            Playlist(
-                                image = item["images"].asJsonArray.first().asJsonObject["url"].asString,
-                                name = item["name"].asString,
-                                size = tracks["total"].asInt,
-                                url = tracks["href"].asString
-                            )
+                getJsonFromApi(
+                    "me/playlists",
+                    accessToken
+                )["items"].asJsonArray.forEach {
+                    val item = it.asJsonObject
+                    val tracks = item["tracks"].asJsonObject
+                    libraryLists.add(
+                        Playlist(
+                            image = item["images"].asJsonArray.first().asJsonObject["url"].asString,
+                            name = item["name"].asString,
+                            size = tracks["total"].asInt,
+                            url = tracks["href"].asString
                         )
-                    }
-//                val favorites = Playlist()
-                /*favorites + */libraryLists
+                    )
+                }
+                libraryLists
             }
             ARTISTS -> {
                 val libraryLists = mutableListOf<Artist>()
@@ -110,7 +113,7 @@ class LibraryListsFragment(
                 val libraryLists = mutableListOf<Album>()
                 val json = getJsonFromApi(
                     "${arguments?.getString(URL) ?: "me"}/albums",
-                    token
+                    accessToken
                 )
                 val items = json["items"].asJsonArray
                 when (
@@ -157,7 +160,7 @@ class LibraryListsFragment(
             else -> null
         }
     }
-    
+
     private fun getJsonFromApi(requestPostfix: String, accessToken: String?) = JsonParser().parse(
         try {
             OkHttpClient().newCall(

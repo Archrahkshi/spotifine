@@ -10,15 +10,15 @@ import com.archrahkshi.spotifine.data.LyricsAdapter
 import kotlinx.android.synthetic.main.fragment_lyrics.*
 
 class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
-    
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_lyrics, container, false)
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    
+
         val lyricsOriginal = listOf(
             "Hoort u mij toe",
             "Als ik u verhaal",
@@ -42,7 +42,7 @@ class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
             "Что еще ты знаешь?",
         )
         val lyrics = if (isLyricsTranslated) lyricsTranslated else lyricsOriginal
-    
+
         val detectedLanguage = "..." // TODO
         val toRussian = "$detectedLanguage > ${resources.getString(R.string.russian)}"
         buttonTranslate.text =
@@ -50,7 +50,7 @@ class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
                 toRussian
             else
                 resources.getString(R.string.translate)
-    
+
         buttonTranslate.setOnClickListener {
             isLyricsTranslated = !isLyricsTranslated
             fragmentManager?.beginTransaction()?.replace(
@@ -58,7 +58,7 @@ class LyricsFragment(private var isLyricsTranslated: Boolean) : Fragment() {
                 LyricsFragment(isLyricsTranslated)
             )?.commit()
         }
-    
+
         recyclerViewLyrics.adapter = LyricsAdapter(lyrics)
     }
 }
