@@ -101,9 +101,9 @@ class LyricsFragment(
             it.asJsonObject["type"].asString == "song"
         }
         if (songInfo != null) (
-                getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)
-                    ?: "Something went wrong, sorry<not sorry> :("
-                ).deleteTrash()
+            getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)
+                ?: "Something went wrong, sorry<not sorry> :("
+            ).deleteTrash()
         else {
             Log.wtf("Genius", "no song info")
             null
