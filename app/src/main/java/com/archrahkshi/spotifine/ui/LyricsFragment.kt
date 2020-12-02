@@ -99,8 +99,11 @@ class LyricsFragment(
         ).asJsonObject["response"].asJsonObject["hits"].asJsonArray.find {
             it.asJsonObject["type"].asString == "song"
         }
-        if (songInfo != null)
-            getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)?.deleteTrash()
+        var lyricsFromPath = ""
+        if (songInfo != null){
+            lyricsFromPath = getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString) ?: "Something went wrong, sorry<not sorry> :("
+            lyricsFromPath.deleteTrash()
+        }
         else {
             Log.wtf("Genius", "no song info")
             null
@@ -122,16 +125,18 @@ class LyricsFragment(
     }
 
     private fun String.deleteTrash(): String {
-        while (this.indexOf("<") != -1){
-            this.replace(this.substring(this.indexOf("<") - 1 , this.indexOf(">") + 1), "\n")
+        var str = this
+        while (str.indexOf("<") != -1){
+            str = str.replace(str.substring(str.indexOf("<"), str.indexOf(">") + 1), "")
         }
-        return this
+        return str
     }
 
     private fun buildGeniusRequest(url: String) = OkHttpClient().newCall(
         Request.Builder()
             .url(url)
             .header("Authorization", "Bearer $GENIUS_ACCESS_TOKEN")
+            //.header("User-Agent", "Chrome/51.0.2704.103 Mobile")
             .build()
     ).execute().body?.string()
 
