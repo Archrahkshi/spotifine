@@ -1,16 +1,15 @@
 package com.archrahkshi.spotifine.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.CLIENT_ID
 import com.archrahkshi.spotifine.data.DURATION
 import com.archrahkshi.spotifine.data.ID
-import com.archrahkshi.spotifine.data.REDIRECT_URI
+import com.archrahkshi.spotifine.data.SPOTIFY_CLIENT_ID
+import com.archrahkshi.spotifine.data.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -35,15 +34,14 @@ class PlayerActivity : AppCompatActivity() {
         val duration = intent.getLongExtra(DURATION, 0)
         Log.wtf("id", id?.toString())
         Log.wtf("duration", duration.toString())
-        val connectionParams = ConnectionParams.Builder(CLIENT_ID)
-            .setRedirectUri(REDIRECT_URI)
+        val connectionParams = ConnectionParams.Builder(SPOTIFY_CLIENT_ID)
+            .setRedirectUri(SPOTIFY_REDIRECT_URI)
             .showAuthView(true)
             .build()
         SpotifyAppRemote.connect(
             this,
             connectionParams,
             object : Connector.ConnectionListener {
-                @SuppressLint("SetTextI18n")
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                     this@PlayerActivity.pSpotifyAppRemote = spotifyAppRemote
                     val appRemote = this@PlayerActivity.pSpotifyAppRemote!!
@@ -52,7 +50,7 @@ class PlayerActivity : AppCompatActivity() {
                     val seekBar = findViewById<SeekBar>(R.id.seekBar)
                     seekBar.max = duration.toInt()
                     var flag = 0
-                    buttonPlay.text = "PLAY"
+                    buttonPlay.text = getString(R.string.play)
                     seekBar.setOnSeekBarChangeListener(
                         object : OnSeekBarChangeListener {
                             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
@@ -81,17 +79,17 @@ class PlayerActivity : AppCompatActivity() {
                             0 -> {
                                 appRemote.playerApi.play("spotify:track:$id")
                                 flag = 1
-                                buttonPlay.text = "PAUSE"
+                                buttonPlay.text = getString(R.string.pause)
                             }
                             1 -> {
                                 appRemote.playerApi.pause()
                                 flag = 2
-                                buttonPlay.text = "PLAY"
+                                buttonPlay.text = getString(R.string.play)
                             }
                             2 -> {
                                 appRemote.playerApi.resume()
                                 flag = 1
-                                buttonPlay.text = "PAUSE"
+                                buttonPlay.text = getString(R.string.pause)
                             }
                         }
                     }

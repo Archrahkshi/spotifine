@@ -12,9 +12,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="4dp"
+            android:scrollbarThumbVertical="@android:color/white"
+            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:itemCount="50"
             tools:listitem="@layout/item_lyrics_line" />
 
     <Button
@@ -22,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
+            android:text="@string/loading"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -68,7 +68,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.4.1'
 
-    implementation('com.ibm.watson:ibm-watson:8.6.3')
+    implementation 'com.ibm.watson:ibm-watson:8.6.3'
 }

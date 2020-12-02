@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.ACCESS_TOKEN
-import com.archrahkshi.spotifine.data.CLIENT_ID
-import com.archrahkshi.spotifine.data.REDIRECT_URI
-import com.archrahkshi.spotifine.data.REQUEST_CODE
+import com.archrahkshi.spotifine.data.SPOTIFY_CLIENT_ID
+import com.archrahkshi.spotifine.data.SPOTIFY_REDIRECT_URI
+import com.archrahkshi.spotifine.data.SPOTIFY_REQUEST_CODE
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -21,11 +21,11 @@ class MainActivity : AppCompatActivity() {
 
         AuthorizationClient.openLoginActivity(
             this,
-            REQUEST_CODE,
+            SPOTIFY_REQUEST_CODE,
             AuthorizationRequest.Builder(
-                CLIENT_ID,
+                SPOTIFY_CLIENT_ID,
                 AuthorizationResponse.Type.TOKEN,
-                REDIRECT_URI
+                SPOTIFY_REDIRECT_URI
             ).apply {
                 setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
             }.build()
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == SPOTIFY_REQUEST_CODE) {
             val response: AuthorizationResponse? =
                 AuthorizationClient.getResponse(resultCode, intent)
             when (response?.type) {

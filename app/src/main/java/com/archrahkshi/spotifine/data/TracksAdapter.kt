@@ -40,9 +40,9 @@ class TracksAdapter(
             textViewTrackDuration.text = track.duration.milliseconds.toComponents { HH, mm, ss, _ ->
                 var duration = ""
                 if (HH > 0) duration += "$HH:"
-                if (duration.isNotEmpty() && mm < ONE_DIGIT) duration += '0'
+                if (duration.isNotEmpty() && mm <= ONE_DIGIT) duration += '0'
                 duration += "$mm:"
-                if (duration.isNotEmpty() && ss < ONE_DIGIT) duration += '0'
+                if (duration.isNotEmpty() && ss <= ONE_DIGIT) duration += '0'
                 "$duration$ss"
             }
             layoutItemList.setOnClickListener { clickListener(track) }
