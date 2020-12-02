@@ -1,6 +1,5 @@
 package com.archrahkshi.spotifine.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
@@ -43,7 +42,6 @@ class PlayerActivity : AppCompatActivity() {
             this,
             connectionParams,
             object : Connector.ConnectionListener {
-                @SuppressLint("SetTextI18n")
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                     this@PlayerActivity.pSpotifyAppRemote = spotifyAppRemote
                     val appRemote = this@PlayerActivity.pSpotifyAppRemote!!
@@ -52,7 +50,7 @@ class PlayerActivity : AppCompatActivity() {
                     val seekBar = findViewById<SeekBar>(R.id.seekBar)
                     seekBar.max = duration.toInt()
                     var flag = 0
-                    buttonPlay.text = "PLAY"
+                    buttonPlay.text = getString(R.string.play)
                     seekBar.setOnSeekBarChangeListener(
                         object : OnSeekBarChangeListener {
                             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
@@ -81,17 +79,17 @@ class PlayerActivity : AppCompatActivity() {
                             0 -> {
                                 appRemote.playerApi.play("spotify:track:$id")
                                 flag = 1
-                                buttonPlay.text = "PAUSE"
+                                buttonPlay.text = getString(R.string.pause)
                             }
                             1 -> {
                                 appRemote.playerApi.pause()
                                 flag = 2
-                                buttonPlay.text = "PLAY"
+                                buttonPlay.text = getString(R.string.play)
                             }
                             2 -> {
                                 appRemote.playerApi.resume()
                                 flag = 1
-                                buttonPlay.text = "PAUSE"
+                                buttonPlay.text = getString(R.string.pause)
                             }
                         }
                     }

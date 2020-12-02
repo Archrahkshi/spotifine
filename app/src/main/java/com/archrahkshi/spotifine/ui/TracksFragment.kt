@@ -57,7 +57,7 @@ class TracksFragment(
             recyclerViewTracks.adapter = TracksAdapter(
                 createTrackLists(args?.getString(URL), args?.getString(ACCESS_TOKEN))
             ) {
-                Log.i("Track", it.toString())
+                Log.i("Track clicked", it.toString())
                 startActivity(
                     Intent(activity, PlayerActivity::class.java).apply {
                         putExtra(ID, it.id)

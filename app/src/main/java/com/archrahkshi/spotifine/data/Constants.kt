@@ -18,4 +18,6 @@ const val SPOTIFY_CLIENT_ID = "fbe0ec189f0247f99909e75530bac38e"
 const val SPOTIFY_REDIRECT_URI = "http://localhost:8888/callback/"
 const val SPOTIFY_REQUEST_CODE = 1337
 const val URL = "url"
-const val WATSON_API_KEY = "WYGfv9X8GlDHJ1fnVNFU95gY1ntpgL4evnLq3sg1EWFl"
+const val TRANSLATOR_API_KEY = "Nbo7_ne4t1F0JTjcmCS_06yGOuJNdEc7efawvtOHS9i_"
+const val TRANSLATOR_URL = "https://api.eu-gb.language-translator.watson.cloud.ibm.com"
+const val TRANSLATOR_VERSION = "2018-05-01"

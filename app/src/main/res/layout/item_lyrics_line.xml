@@ -5,6 +5,9 @@
         android:id="@+id/textViewLyricsLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textSize="16sp"
         tools:text="Lyrics line">
 
 </TextView>
