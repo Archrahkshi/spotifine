@@ -15,4 +15,5 @@
     <string name="tracks_plural">треков</string>
     <string name="detected_language">%s > %s</string>
     <string name="loading">ЗАГРУЗКА…</string>
+    <string name="header_line3">%d %s</string>
 </resources>

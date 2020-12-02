@@ -8,20 +8,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.ACCESS_TOKEN
-import com.archrahkshi.spotifine.data.ALBUM_FROM_PLAYLIST_DISTINCTION
-import com.archrahkshi.spotifine.data.DURATION
-import com.archrahkshi.spotifine.data.ID
-import com.archrahkshi.spotifine.data.IMAGE
-import com.archrahkshi.spotifine.data.NAME
 import com.archrahkshi.spotifine.data.Track
 import com.archrahkshi.spotifine.data.TracksAdapter
-import com.archrahkshi.spotifine.data.URL
+import com.archrahkshi.spotifine.util.ACCESS_TOKEN
+import com.archrahkshi.spotifine.util.ALBUM_FROM_PLAYLIST_DISTINCTION
+import com.archrahkshi.spotifine.util.ARTISTS
+import com.archrahkshi.spotifine.util.DURATION
+import com.archrahkshi.spotifine.util.ID
+import com.archrahkshi.spotifine.util.IMAGE
+import com.archrahkshi.spotifine.util.NAME
+import com.archrahkshi.spotifine.util.SIZE
+import com.archrahkshi.spotifine.util.URL
+import com.archrahkshi.spotifine.util.setWordTracks
 import com.bumptech.glide.Glide
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_tracks.imageViewHeader
 import kotlinx.android.synthetic.main.fragment_tracks.recyclerViewTracks
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
+import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine2
+import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,12 +52,23 @@ class TracksFragment(
         super.onViewCreated(view, savedInstanceState)
 
         val args = this.arguments
+
         textViewHeaderLine1.text = args?.getString(NAME)
 
-        Glide
-            .with(this)
-            .load(args?.getString(IMAGE))
-            .into(imageViewHeader)
+        val artists = args?.getString(ARTISTS)
+        if (artists != null)
+            textViewHeaderLine2.text = artists
+        else
+            textViewHeaderLine2.visibility = View.GONE
+
+        val size = args?.getInt(SIZE)
+        textViewHeaderLine3.text = getString(
+            R.string.header_line3,
+            size,
+            setWordTracks(context, size)
+        )
+
+        Glide.with(this).load(args?.getString(IMAGE)).into(imageViewHeader)
 
         launch {
             recyclerViewTracks.adapter = TracksAdapter(
@@ -90,45 +107,27 @@ class TracksFragment(
         url: String?,
         accessToken: String?
     ) = withContext(Dispatchers.IO) {
-        val tracks = mutableListOf<Track>()
         val json = getJsonFromApi(url, accessToken)
+        val items = json["items"].asJsonArray
         when (
             json["href"]
                 .asString
                 .removePrefix("https://api.spotify.com/v1/")
                 .take(ALBUM_FROM_PLAYLIST_DISTINCTION)
         ) {
-            "album" -> {
-                json["items"].asJsonArray.forEach { element ->
-                    val item = element.asJsonObject
-                    tracks.add(
-                        Track(
-                            name = item["name"].asString,
-                            artist = item["artists"].asJsonArray
-                                .joinToString { it.asJsonObject["name"].asString },
-                            duration = item["duration_ms"].asLong,
-                            id = item["id"].asString
-                        )
-                    )
-                }
-                tracks
-            }
-            "playl" -> {
-                json["items"].asJsonArray.forEach { element ->
-                    val item = element.asJsonObject["track"].asJsonObject
-                    tracks.add(
-                        Track(
-                            name = item["name"].asString,
-                            artist = item["artists"].asJsonArray
-                                .joinToString { it.asJsonObject["name"].asString },
-                            duration = item["duration_ms"].asLong,
-                            id = item["id"].asString
-                        )
-                    )
-                }
-                tracks
-            }
-            else -> tracks
+            "album" -> items.map { createTrack(it.asJsonObject) }
+            "playl" -> items.map { createTrack(it.asJsonObject["track"].asJsonObject) }
+            else -> listOf()
         }
+    }
+
+    private suspend fun createTrack(item: JsonObject) = withContext(Dispatchers.IO) {
+        Track(
+            name = item["name"].asString,
+            artist = item["artists"].asJsonArray
+                .joinToString { it.asJsonObject["name"].asString },
+            duration = item["duration_ms"].asLong,
+            id = item["id"].asString
+        )
     }
 }

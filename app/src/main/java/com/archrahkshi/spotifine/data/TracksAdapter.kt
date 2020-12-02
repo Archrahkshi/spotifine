@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.util.formatDuration
 import kotlinx.android.synthetic.main.item_track.view.layoutItemList
 import kotlinx.android.synthetic.main.item_track.view.textViewTrackArtist
 import kotlinx.android.synthetic.main.item_track.view.textViewTrackDuration
 import kotlinx.android.synthetic.main.item_track.view.textViewTrackName
 import kotlin.time.ExperimentalTime
-import kotlin.time.milliseconds
 
 @ExperimentalTime
 class TracksAdapter(
@@ -37,14 +37,7 @@ class TracksAdapter(
             textViewTrackName.text = track.name
             textViewTrackArtist.text = track.artist
 //            textViewTrackDuration.text = SimpleDateFormat("HH:mm:ss").format(track.duration)
-            textViewTrackDuration.text = track.duration.milliseconds.toComponents { HH, mm, ss, _ ->
-                var duration = ""
-                if (HH > 0) duration += "$HH:"
-                if (duration.isNotEmpty() && mm <= ONE_DIGIT) duration += '0'
-                duration += "$mm:"
-                if (duration.isNotEmpty() && ss <= ONE_DIGIT) duration += '0'
-                "$duration$ss"
-            }
+            textViewTrackDuration.text = formatDuration(track.duration)
             layoutItemList.setOnClickListener { clickListener(track) }
         }
     }

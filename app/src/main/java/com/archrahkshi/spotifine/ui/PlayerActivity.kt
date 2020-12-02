@@ -6,10 +6,10 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.DURATION
-import com.archrahkshi.spotifine.data.ID
-import com.archrahkshi.spotifine.data.SPOTIFY_CLIENT_ID
-import com.archrahkshi.spotifine.data.SPOTIFY_REDIRECT_URI
+import com.archrahkshi.spotifine.util.DURATION
+import com.archrahkshi.spotifine.util.ID
+import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
+import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote

@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.LyricsAdapter
-import com.archrahkshi.spotifine.data.TRANSLATOR_API_KEY
-import com.archrahkshi.spotifine.data.TRANSLATOR_URL
-import com.archrahkshi.spotifine.data.TRANSLATOR_VERSION
+import com.archrahkshi.spotifine.util.TRANSLATOR_API_KEY
+import com.archrahkshi.spotifine.util.TRANSLATOR_URL
+import com.archrahkshi.spotifine.util.TRANSLATOR_VERSION
 import com.ibm.cloud.sdk.core.security.IamAuthenticator
 import com.ibm.watson.language_translator.v3.LanguageTranslator
 import com.ibm.watson.language_translator.v3.model.TranslateOptions

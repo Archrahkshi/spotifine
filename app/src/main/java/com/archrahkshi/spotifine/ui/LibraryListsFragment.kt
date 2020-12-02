@@ -7,21 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.ACCESS_TOKEN
-import com.archrahkshi.spotifine.data.ALBUMS
-import com.archrahkshi.spotifine.data.ARTISTS
-import com.archrahkshi.spotifine.data.ARTIST_FROM_ME_DISTINCTION
 import com.archrahkshi.spotifine.data.Album
 import com.archrahkshi.spotifine.data.Artist
-import com.archrahkshi.spotifine.data.FROM_ARTIST
-import com.archrahkshi.spotifine.data.FROM_ME
-import com.archrahkshi.spotifine.data.IMAGE
-import com.archrahkshi.spotifine.data.LIST_TYPE
 import com.archrahkshi.spotifine.data.LibraryListsAdapter
-import com.archrahkshi.spotifine.data.NAME
-import com.archrahkshi.spotifine.data.PLAYLISTS
 import com.archrahkshi.spotifine.data.Playlist
-import com.archrahkshi.spotifine.data.URL
+import com.archrahkshi.spotifine.util.ACCESS_TOKEN
+import com.archrahkshi.spotifine.util.ALBUMS
+import com.archrahkshi.spotifine.util.ARTISTS
+import com.archrahkshi.spotifine.util.ARTIST_FROM_USER_DISTINCTION
+import com.archrahkshi.spotifine.util.FROM_ARTIST
+import com.archrahkshi.spotifine.util.FROM_USER
+import com.archrahkshi.spotifine.util.IMAGE
+import com.archrahkshi.spotifine.util.LIST_TYPE
+import com.archrahkshi.spotifine.util.NAME
+import com.archrahkshi.spotifine.util.PLAYLISTS
+import com.archrahkshi.spotifine.util.SIZE
+import com.archrahkshi.spotifine.util.SPOTIFY_PREFIX
+import com.archrahkshi.spotifine.util.URL
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_library_lists.recyclerViewLists
@@ -50,10 +52,8 @@ class LibraryListsFragment(
         val accessToken = arguments?.getString(ACCESS_TOKEN)
 
         launch {
-            recyclerViewLists.adapter = LibraryListsAdapter(
-                createLibraryLists(accessToken)!!
-            ) {
-                Log.i("Item clicked", it.toString())
+            val libraryLists = createLibraryLists(accessToken)!!
+            recyclerViewLists.adapter = LibraryListsAdapter(libraryLists) {
                 fragmentManager?.beginTransaction()?.replace(
                     R.id.frameLayoutLibrary,
                     when (it) {
@@ -62,6 +62,7 @@ class LibraryListsFragment(
                                 putString(URL, it.url)
                                 putString(IMAGE, it.image)
                                 putString(NAME, it.name)
+                                putInt(SIZE, it.size)
                                 putString(ACCESS_TOKEN, accessToken)
                             }
                         }
@@ -78,6 +79,8 @@ class LibraryListsFragment(
                                 putString(URL, it.url)
                                 putString(IMAGE, it.image)
                                 putString(NAME, it.name)
+                                putString(ARTISTS, it.artists)
+                                putInt(SIZE, it.size)
                                 putString(ACCESS_TOKEN, accessToken)
                             }
                         }
@@ -92,28 +95,15 @@ class LibraryListsFragment(
         accessToken: String?
     ) = withContext(Dispatchers.IO) {
         when (arguments?.getString(LIST_TYPE)) {
-            PLAYLISTS -> {
-                val libraryLists = mutableListOf<Playlist>()
-                getJsonFromApi(
-                    "me/playlists",
-                    accessToken
-                )["items"].asJsonArray.forEach {
-                    libraryLists.add(createPlaylist(it.asJsonObject))
-                }
-                libraryLists
-            }
-            ARTISTS -> {
-                val libraryLists = mutableListOf<Artist>()
-                getJsonFromApi(
-                    "me/following?type=artist",
-                    accessToken
-                )["artists"].asJsonObject["items"].asJsonArray.forEach {
-                    libraryLists.add(createArtist(it.asJsonObject))
-                }
-                libraryLists
-            }
+            PLAYLISTS -> getJsonFromApi(
+                "me/playlists",
+                accessToken
+            )["items"].asJsonArray.map { createPlaylist(it.asJsonObject) }
+            ARTISTS -> getJsonFromApi(
+                "me/following?type=artist",
+                accessToken
+            )["artists"].asJsonObject["items"].asJsonArray.map { createArtist(it.asJsonObject) }
             ALBUMS -> {
-                val libraryLists = mutableListOf<Album>()
                 val json = getJsonFromApi(
                     "${arguments?.getString(URL) ?: "me"}/albums",
                     accessToken
@@ -122,24 +112,14 @@ class LibraryListsFragment(
                 when (
                     json["href"]
                         .asString
-                        .removePrefix("https://api.spotify.com/v1/")
-                        .take(ARTIST_FROM_ME_DISTINCTION)
+                        .removePrefix(SPOTIFY_PREFIX)
+                        .take(ARTIST_FROM_USER_DISTINCTION)
                 ) {
-                    "ar" -> {
-                        items.forEach {
-                            libraryLists.add(createAlbum(it.asJsonObject, FROM_ARTIST))
-                        }
-                        libraryLists
+                    "ar" -> items.map { createAlbum(it.asJsonObject, FROM_ARTIST) }
+                    "me" -> items.map {
+                        createAlbum(it.asJsonObject["album"].asJsonObject, FROM_USER)
                     }
-                    "me" -> {
-                        items.forEach {
-                            libraryLists.add(
-                                createAlbum(it.asJsonObject["album"].asJsonObject, FROM_ME)
-                            )
-                        }
-                        libraryLists
-                    }
-                    else -> libraryLists
+                    else -> listOf()
                 }
             }
             else -> null
@@ -163,10 +143,11 @@ class LibraryListsFragment(
     )
 
     private fun createAlbum(item: JsonObject, type: String) = Album(
-        image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
-        name = item["name"].asString,
         artists = item["artists"].asJsonArray
             .joinToString { it.asJsonObject["name"].asString },
+        image = item["images"].asJsonArray[1].asJsonObject["url"].asString,
+        name = item["name"].asString,
+        size = item["total_tracks"].asInt,
         url = if (type == FROM_ARTIST)
             "${item["href"].asString}/tracks"
         else
@@ -177,7 +158,7 @@ class LibraryListsFragment(
         try {
             OkHttpClient().newCall(
                 Request.Builder()
-                    .url("https://api.spotify.com/v1/$requestPostfix")
+                    .url("$SPOTIFY_PREFIX$requestPostfix")
                     .header("Authorization", "Bearer $accessToken")
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
