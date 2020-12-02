@@ -18,7 +18,8 @@ class LibraryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
 
-        replaceFragmentWith(PLAYLISTS)
+        if (savedInstanceState == null)
+            replaceFragmentWith(PLAYLISTS)
 
         buttonPlaylists.setOnClickListener {
             replaceFragmentWith(PLAYLISTS)

@@ -18,13 +18,9 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
                 android:name=".ui.PlayerActivity"
-                android:screenOrientation="portrait"/>
-        <activity
-                android:name=".ui.LibraryActivity"
-                android:screenOrientation="portrait"/>
-        <activity
-                android:name=".ui.MainActivity"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait" />
+        <activity android:name=".ui.LibraryActivity" />
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

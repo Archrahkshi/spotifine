@@ -18,21 +18,22 @@ import com.spotify.android.appremote.api.SpotifyAppRemote
 import kotlinx.android.synthetic.main.activity_player.*
 
 class PlayerActivity : AppCompatActivity() {
-    private var pSpotifyAppRemote: SpotifyAppRemote? = null
+    private var spotifyAppRemote: SpotifyAppRemote? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        supportFragmentManager.beginTransaction().replace(
-            R.id.frameLayoutPlayer,
-            LyricsFragment(false).apply {
-                arguments = Bundle().apply {
-                    putString(NAME, intent.getStringExtra(NAME))
-                    putString(ARTISTS, intent.getStringExtra(ARTISTS))
+        if (savedInstanceState == null)
+            supportFragmentManager.beginTransaction().replace(
+                R.id.frameLayoutPlayer,
+                LyricsFragment(false).apply {
+                    arguments = Bundle().apply {
+                        putString(NAME, intent.getStringExtra(NAME))
+                        putString(ARTISTS, intent.getStringExtra(ARTISTS))
+                    }
                 }
-            }
-        ).commit()
+            ).commit()
     }
 
     override fun onStart() {
@@ -50,8 +51,8 @@ class PlayerActivity : AppCompatActivity() {
             connectionParams,
             object : Connector.ConnectionListener {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
-                    this@PlayerActivity.pSpotifyAppRemote = spotifyAppRemote
-                    val appRemote = this@PlayerActivity.pSpotifyAppRemote!!
+                    this@PlayerActivity.spotifyAppRemote = spotifyAppRemote
+                    val appRemote = this@PlayerActivity.spotifyAppRemote!!
                     Log.d("PlayerActivity", "Connected! Yay!")
 
                     val seekBar = findViewById<SeekBar>(R.id.seekBar)
@@ -113,6 +114,6 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        SpotifyAppRemote.disconnect(pSpotifyAppRemote)
+        SpotifyAppRemote.disconnect(spotifyAppRemote)
     }
 }

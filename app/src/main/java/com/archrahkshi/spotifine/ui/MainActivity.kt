@@ -19,17 +19,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        AuthorizationClient.openLoginActivity(
-            this,
-            SPOTIFY_REQUEST_CODE,
-            AuthorizationRequest.Builder(
-                SPOTIFY_CLIENT_ID,
-                AuthorizationResponse.Type.TOKEN,
-                SPOTIFY_REDIRECT_URI
-            ).apply {
-                setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
-            }.build()
-        )
+        if (savedInstanceState == null)
+            AuthorizationClient.openLoginActivity(
+                this,
+                SPOTIFY_REQUEST_CODE,
+                AuthorizationRequest.Builder(
+                    SPOTIFY_CLIENT_ID,
+                    AuthorizationResponse.Type.TOKEN,
+                    SPOTIFY_REDIRECT_URI
+                ).apply {
+                    setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
+                }.build()
+            )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {

@@ -65,7 +65,9 @@ class LyricsFragment(
                         Locale(detectedLanguage).getDisplayLanguage(appLocale),
                         appLocale.getDisplayLanguage(appLocale)
                     )
-                    recyclerViewLyrics.adapter = LyricsAdapter(translatedLyrics.split('\n'))
+                    recyclerViewLyrics.adapter = LyricsAdapter(
+                        translatedLyrics.split('\n')
+                    )
                 } else {
                     buttonTranslate.text = getString(R.string.translate)
                     recyclerViewLyrics.adapter = LyricsAdapter(originalLyrics.split('\n'))
@@ -90,8 +92,6 @@ class LyricsFragment(
         title: String,
         artists: String
     ) = withContext(Dispatchers.IO) {
-        /*val title = "Rise"
-        val artists = "Disturbed"*/
         val songInfo = JsonParser().parse(
             buildGeniusRequest(
                 "$GENIUS_API_BASE_URL/search?q=$artists $title".replace(" ", "%20")
@@ -99,9 +99,10 @@ class LyricsFragment(
         ).asJsonObject["response"].asJsonObject["hits"].asJsonArray.find {
             it.asJsonObject["type"].asString == "song"
         }
-        if (songInfo != null){
-            (getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString) ?: "Something went wrong, sorry<not sorry> :(").deleteTrash()
-        }
+        if (songInfo != null) (
+                getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)
+                    ?: "Something went wrong, sorry<not sorry> :("
+                ).deleteTrash()
         else {
             Log.wtf("Genius", "no song info")
             null
@@ -124,8 +125,13 @@ class LyricsFragment(
 
     private fun String.deleteTrash(): String {
         var str = this
-        while (str.indexOf("<") != -1){
-            str = str.replace(str.substring(str.indexOf("<"), str.indexOf(">") + 1), "")
+        while (str.indexOf("<") != -1) {
+            str = str.replace(
+                str.substring(
+                    str.indexOf("<"),
+                    str.indexOf(">") + 1
+                ), ""
+            )
         }
         return str
     }
@@ -134,7 +140,6 @@ class LyricsFragment(
         Request.Builder()
             .url(url)
             .header("Authorization", "Bearer $GENIUS_ACCESS_TOKEN")
-            //.header("User-Agent", "Chrome/51.0.2704.103 Mobile")
             .build()
     ).execute().body?.string()
 
