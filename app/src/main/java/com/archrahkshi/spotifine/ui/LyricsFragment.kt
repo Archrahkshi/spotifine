@@ -90,8 +90,8 @@ class LyricsFragment(
         title: String,
         artists: String
     ) = withContext(Dispatchers.IO) {
-        val title = "Rise"
-        val artists = "Disturbed"
+        /*val title = "Rise"
+        val artists = "Disturbed"*/
         val songInfo = JsonParser().parse(
             buildGeniusRequest(
                 "$GENIUS_API_BASE_URL/search?q=$artists $title".replace(" ", "%20")
@@ -100,7 +100,7 @@ class LyricsFragment(
             it.asJsonObject["type"].asString == "song"
         }
         if (songInfo != null)
-            getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)
+            getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)?.deleteTrash()
         else {
             Log.wtf("Genius", "no song info")
             null
@@ -119,6 +119,13 @@ class LyricsFragment(
     } catch (e: Exception) {
         Log.wtf("Jsoup", e)
         null
+    }
+
+    private fun String.deleteTrash(): String {
+        while (this.indexOf("<") != -1){
+            this.replace(this.substring(this.indexOf("<") - 1 , this.indexOf(">") + 1), "\n")
+        }
+        return this
     }
 
     private fun buildGeniusRequest(url: String) = OkHttpClient().newCall(
