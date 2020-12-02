@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import java.io.IOException
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
@@ -118,7 +119,7 @@ class LyricsFragment(
                 ?.html()
                 ?.replace("<br> ", "\n")
         }
-    } catch (e: Exception) {
+    } catch (e: IOException) {
         Log.wtf("Jsoup", e)
         null
     }
@@ -127,10 +128,8 @@ class LyricsFragment(
         var str = this
         while (str.indexOf("<") != -1) {
             str = str.replace(
-                str.substring(
-                    str.indexOf("<"),
-                    str.indexOf(">") + 1
-                ), ""
+                str.substring(str.indexOf("<"), str.indexOf(">") + 1),
+                ""
             )
         }
         return str
