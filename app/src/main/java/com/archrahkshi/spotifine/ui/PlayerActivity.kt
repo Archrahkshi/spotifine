@@ -6,8 +6,10 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.util.ARTISTS
 import com.archrahkshi.spotifine.util.DURATION
 import com.archrahkshi.spotifine.util.ID
+import com.archrahkshi.spotifine.util.NAME
 import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
 import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
@@ -24,7 +26,12 @@ class PlayerActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(
             R.id.frameLayoutPlayer,
-            LyricsFragment(false)
+            LyricsFragment(false).apply {
+                arguments = Bundle().apply {
+                    putString(NAME, intent.getStringExtra(NAME))
+                    putString(ARTISTS, intent.getStringExtra(ARTISTS))
+                }
+            }
         ).commit()
     }
 
@@ -45,7 +52,7 @@ class PlayerActivity : AppCompatActivity() {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                     this@PlayerActivity.pSpotifyAppRemote = spotifyAppRemote
                     val appRemote = this@PlayerActivity.pSpotifyAppRemote!!
-                    Log.d("MainActivity", "Connected! Yay!")
+                    Log.d("PlayerActivity", "Connected! Yay!")
 
                     val seekBar = findViewById<SeekBar>(R.id.seekBar)
                     seekBar.max = duration.toInt()

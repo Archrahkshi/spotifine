@@ -79,6 +79,8 @@ class TracksFragment(
                     Intent(activity, PlayerActivity::class.java).apply {
                         putExtra(ID, it.id)
                         putExtra(DURATION, it.duration)
+                        putExtra(NAME, it.name)
+                        putExtra(ARTISTS, it.artists)
                     }
                 )
             }
@@ -94,9 +96,7 @@ class TracksFragment(
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
                     .build()
-            ).execute().body?.string().also {
-                Log.i("JSON string", it ?: "no JSON string")
-            }
+            ).execute().body?.string()
         } catch (e: IOException) {
             Log.wtf("getJsonFromApi", e)
             null
@@ -124,7 +124,7 @@ class TracksFragment(
     private suspend fun createTrack(item: JsonObject) = withContext(Dispatchers.IO) {
         Track(
             name = item["name"].asString,
-            artist = item["artists"].asJsonArray
+            artists = item["artists"].asJsonArray
                 .joinToString { it.asJsonObject["name"].asString },
             duration = item["duration_ms"].asLong,
             id = item["id"].asString

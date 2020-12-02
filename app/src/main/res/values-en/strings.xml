@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Spotifine</string>
     <string name="album_сover">Album cover</string>
     <string name="albums">ALBUMS</string>
     <string name="artists">ARTISTS</string>
@@ -13,7 +12,5 @@
     <string name="tracks_singular">track</string>
     <string name="tracks_paucal">tracks</string>
     <string name="tracks_plural">tracks</string>
-    <string name="detected_language" translatable="false">%s > %s</string>
     <string name="loading">LOADING…</string>
-    <string name="header_line3" translatable="false">%d %s</string>
 </resources>

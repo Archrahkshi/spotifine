@@ -35,7 +35,7 @@ class TracksAdapter(
 
         fun bind(track: Track, clickListener: (Track) -> Unit) {
             textViewTrackName.text = track.name
-            textViewTrackArtist.text = track.artist
+            textViewTrackArtist.text = track.artists
 //            textViewTrackDuration.text = SimpleDateFormat("HH:mm:ss").format(track.duration)
             textViewTrackDuration.text = formatDuration(track.duration)
             layoutItemList.setOnClickListener { clickListener(track) }

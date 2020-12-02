@@ -163,9 +163,7 @@ class LibraryListsFragment(
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
                     .build()
-            ).execute().body?.string().also {
-                Log.i("JSON string", it ?: "no JSON string")
-            }
+            ).execute().body?.string()
         } catch (e: IOException) {
             Log.wtf("getJsonFromApi", e)
             null

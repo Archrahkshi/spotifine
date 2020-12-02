@@ -2,7 +2,6 @@
 <resources>
     <string name="album_сover">Обложка альбома</string>
     <string name="albums">АЛЬБОМЫ</string>
-    <string name="app_name">Spotifine</string>
     <string name="artists">ИСПОЛНИТЕЛИ</string>
     <string name="pause">ПАУЗА</string>
     <string name="play">ВОСПРОИЗВЕСТИ</string>
@@ -13,7 +12,5 @@
     <string name="tracks_singular">трек</string>
     <string name="tracks_paucal">трека</string>
     <string name="tracks_plural">треков</string>
-    <string name="detected_language">%s > %s</string>
     <string name="loading">ЗАГРУЗКА…</string>
-    <string name="header_line3">%d %s</string>
 </resources>
