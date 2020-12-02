@@ -6,26 +6,34 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.DURATION
-import com.archrahkshi.spotifine.data.ID
-import com.archrahkshi.spotifine.data.SPOTIFY_CLIENT_ID
-import com.archrahkshi.spotifine.data.SPOTIFY_REDIRECT_URI
+import com.archrahkshi.spotifine.util.ARTISTS
+import com.archrahkshi.spotifine.util.DURATION
+import com.archrahkshi.spotifine.util.ID
+import com.archrahkshi.spotifine.util.NAME
+import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
+import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import kotlinx.android.synthetic.main.activity_player.*
 
 class PlayerActivity : AppCompatActivity() {
-    private var pSpotifyAppRemote: SpotifyAppRemote? = null
+    private var spotifyAppRemote: SpotifyAppRemote? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        supportFragmentManager.beginTransaction().replace(
-            R.id.frameLayoutPlayer,
-            LyricsFragment(false)
-        ).commit()
+        if (savedInstanceState == null)
+            supportFragmentManager.beginTransaction().replace(
+                R.id.frameLayoutPlayer,
+                LyricsFragment(false).apply {
+                    arguments = Bundle().apply {
+                        putString(NAME, intent.getStringExtra(NAME))
+                        putString(ARTISTS, intent.getStringExtra(ARTISTS))
+                    }
+                }
+            ).commit()
     }
 
     override fun onStart() {
@@ -43,9 +51,9 @@ class PlayerActivity : AppCompatActivity() {
             connectionParams,
             object : Connector.ConnectionListener {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
-                    this@PlayerActivity.pSpotifyAppRemote = spotifyAppRemote
-                    val appRemote = this@PlayerActivity.pSpotifyAppRemote!!
-                    Log.d("MainActivity", "Connected! Yay!")
+                    this@PlayerActivity.spotifyAppRemote = spotifyAppRemote
+                    val appRemote = this@PlayerActivity.spotifyAppRemote!!
+                    Log.d("PlayerActivity", "Connected! Yay!")
 
                     val seekBar = findViewById<SeekBar>(R.id.seekBar)
                     seekBar.max = duration.toInt()
@@ -106,6 +114,6 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        SpotifyAppRemote.disconnect(pSpotifyAppRemote)
+        SpotifyAppRemote.disconnect(spotifyAppRemote)
     }
 }

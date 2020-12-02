@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.ACCESS_TOKEN
-import com.archrahkshi.spotifine.data.SPOTIFY_CLIENT_ID
-import com.archrahkshi.spotifine.data.SPOTIFY_REDIRECT_URI
-import com.archrahkshi.spotifine.data.SPOTIFY_REQUEST_CODE
+import com.archrahkshi.spotifine.util.ACCESS_TOKEN
+import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
+import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
+import com.archrahkshi.spotifine.util.SPOTIFY_REQUEST_CODE
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -19,17 +19,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        AuthorizationClient.openLoginActivity(
-            this,
-            SPOTIFY_REQUEST_CODE,
-            AuthorizationRequest.Builder(
-                SPOTIFY_CLIENT_ID,
-                AuthorizationResponse.Type.TOKEN,
-                SPOTIFY_REDIRECT_URI
-            ).apply {
-                setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
-            }.build()
-        )
+        if (savedInstanceState == null)
+            AuthorizationClient.openLoginActivity(
+                this,
+                SPOTIFY_REQUEST_CODE,
+                AuthorizationRequest.Builder(
+                    SPOTIFY_CLIENT_ID,
+                    AuthorizationResponse.Type.TOKEN,
+                    SPOTIFY_REDIRECT_URI
+                ).apply {
+                    setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
+                }.build()
+            )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {

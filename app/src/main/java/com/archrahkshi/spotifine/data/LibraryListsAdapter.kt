@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.util.setWordTracks
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_library_list.view.imageViewListPic
 import kotlinx.android.synthetic.main.item_library_list.view.layoutLibraryList
@@ -33,7 +34,7 @@ class LibraryListsAdapter<ListType>(
         private val layoutItemList = view.layoutLibraryList
         private val textViewListInfo = view.textViewListInfo
         private val textViewListName = view.textViewListName
-        private val resources = view.context.resources
+        private val context = view.context
         private val viewTest = view
 
         fun bind(listType: ListType, clickListener: (ListType) -> Unit) {
@@ -46,7 +47,7 @@ class LibraryListsAdapter<ListType>(
             textViewListInfo.text = when (listType) {
                 is Playlist -> {
                     val size = listType.size
-                    "$size ${setWordTracks(size)}"
+                    "$size ${setWordTracks(context, size)}"
                 }
                 is Artist -> ""
                 is Album -> listType.artists
@@ -62,16 +63,5 @@ class LibraryListsAdapter<ListType>(
             ).into(imageViewListPic)
             layoutItemList.setOnClickListener { clickListener(listType) }
         }
-
-        private fun setWordTracks(size: Int) = resources.getString(
-            with(size.toString()) {
-                when {
-                    endsWith('1') -> R.string.tracks_singular
-                    endsWith('2') || endsWith('3') || endsWith('4') ->
-                        R.string.tracks_paucal
-                    else -> R.string.tracks_plural
-                }
-            }
-        )
     }
 }

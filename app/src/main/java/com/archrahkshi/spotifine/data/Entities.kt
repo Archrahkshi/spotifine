@@ -26,9 +26,10 @@ data class Artist(
 data class Album(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+    val artists: String,
     val image: String,
     val name: String,
-    val artists: String,
+    val size: Int,
     val url: String,
 )
 
@@ -36,7 +37,7 @@ data class Album(
 data class Track(
     @PrimaryKey(autoGenerate = true)
     var id: String,
-    val name: String,
-    val artist: String,
+    val artists: String,
     val duration: Long,
+    val name: String,
 )

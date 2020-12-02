@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.archrahkshi.spotifine"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -35,8 +35,10 @@ android {
 }
 
 repositories {
+    mavenCentral()
     google()
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -70,6 +72,8 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.4.1'
+
+    implementation 'org.jsoup:jsoup:1.10.3'
 
     implementation 'com.ibm.watson:ibm-watson:8.6.3'
 }
