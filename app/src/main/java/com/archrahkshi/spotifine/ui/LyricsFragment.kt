@@ -99,10 +99,8 @@ class LyricsFragment(
         ).asJsonObject["response"].asJsonObject["hits"].asJsonArray.find {
             it.asJsonObject["type"].asString == "song"
         }
-        var lyricsFromPath = ""
         if (songInfo != null){
-            lyricsFromPath = getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString) ?: "Something went wrong, sorry<not sorry> :("
-            lyricsFromPath.deleteTrash()
+            (getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString) ?: "Something went wrong, sorry<not sorry> :(").deleteTrash()
         }
         else {
             Log.wtf("Genius", "no song info")
