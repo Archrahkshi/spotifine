@@ -3,6 +3,8 @@ package com.archrahkshi.spotifine.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+sealed class ListType
+
 @Entity
 data class Playlist(
     @PrimaryKey(autoGenerate = true)
@@ -11,7 +13,7 @@ data class Playlist(
     val name: String,
     val size: Int,
     val url: String,
-)
+) : ListType()
 
 @Entity
 data class Artist(
@@ -20,7 +22,7 @@ data class Artist(
     val image: String,
     val name: String,
     val url: String,
-)
+) : ListType()
 
 @Entity
 data class Album(
@@ -31,7 +33,7 @@ data class Album(
     val name: String,
     val size: Int,
     val url: String,
-)
+) : ListType()
 
 @Entity
 data class Track(

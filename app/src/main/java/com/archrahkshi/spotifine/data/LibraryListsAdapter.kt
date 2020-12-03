@@ -12,12 +12,12 @@ import kotlinx.android.synthetic.main.item_library_list.view.layoutLibraryList
 import kotlinx.android.synthetic.main.item_library_list.view.textViewListInfo
 import kotlinx.android.synthetic.main.item_library_list.view.textViewListName
 
-class LibraryListsAdapter<ListType>(
+class LibraryListsAdapter(
     private val libraryLists: List<ListType>,
     private val clickListener: (ListType) -> Unit
-) : RecyclerView.Adapter<LibraryListsAdapter.ViewHolder<ListType>>() {
+) : RecyclerView.Adapter<LibraryListsAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder<ListType>(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater
             .from(parent.context)
             .inflate(R.layout.item_library_list, parent, false)
@@ -25,11 +25,11 @@ class LibraryListsAdapter<ListType>(
 
     override fun getItemCount() = libraryLists.size
 
-    override fun onBindViewHolder(holder: ViewHolder<ListType>, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(libraryLists[position], clickListener)
     }
 
-    class ViewHolder<ListType>(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val imageViewListPic = view.imageViewListPic
         private val layoutItemList = view.layoutLibraryList
         private val textViewListInfo = view.textViewListInfo
@@ -42,7 +42,6 @@ class LibraryListsAdapter<ListType>(
                 is Playlist -> listType.name
                 is Artist -> listType.name
                 is Album -> listType.name
-                else -> null
             }
             textViewListInfo.text = when (listType) {
                 is Playlist -> {
@@ -51,14 +50,12 @@ class LibraryListsAdapter<ListType>(
                 }
                 is Artist -> ""
                 is Album -> listType.artists
-                else -> null
             }
             Glide.with(viewTest).load(
                 when (listType) {
                     is Playlist -> listType.image
                     is Artist -> listType.image
                     is Album -> listType.image
-                    else -> null
                 }
             ).into(imageViewListPic)
             layoutItemList.setOnClickListener { clickListener(listType) }

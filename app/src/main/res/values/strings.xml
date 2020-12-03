@@ -4,6 +4,9 @@
     <string name="album_сover">Album cover</string>
     <string name="albums">ALBUMS</string>
     <string name="artists">ARTISTS</string>
+    <string name="detected_language" translatable="false">%s > %s</string>
+    <string name="header_line3" translatable="false">%d %s</string>
+    <string name="loading">LOADING…</string>
     <string name="pause">PAUSE</string>
     <string name="play">PLAY</string>
     <string name="playlists">PLAYLISTS</string>
@@ -13,7 +16,7 @@
     <string name="tracks_singular">track</string>
     <string name="tracks_paucal">tracks</string>
     <string name="tracks_plural">tracks</string>
-    <string name="detected_language" translatable="false">%s > %s</string>
-    <string name="loading">LOADING…</string>
-    <string name="header_line3" translatable="false">%d %s</string>
+    <string name="elvish">ELVISH</string>
+    <string name="no_lyrics">It seems like this song is instrumental… or is it not?</string>
+    <string name="unidentifiable_language">Sorry, I don\'t know this language yet :(</string>
 </resources>
