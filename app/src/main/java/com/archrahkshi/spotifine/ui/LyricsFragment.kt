@@ -1,7 +1,6 @@
 package com.archrahkshi.spotifine.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,33 +8,23 @@ import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.LyricsAdapter
 import com.archrahkshi.spotifine.util.ARTISTS
-import com.archrahkshi.spotifine.util.GENIUS_ACCESS_TOKEN
-import com.archrahkshi.spotifine.util.GENIUS_API_BASE_URL
-import com.archrahkshi.spotifine.util.GENIUS_BASE_URL
+import com.archrahkshi.spotifine.util.IS_LYRICS_TRANSLATED
 import com.archrahkshi.spotifine.util.NAME
-import com.archrahkshi.spotifine.util.TRANSLATOR_API_KEY
-import com.archrahkshi.spotifine.util.TRANSLATOR_URL
-import com.archrahkshi.spotifine.util.TRANSLATOR_VERSION
-import com.google.gson.JsonParser
-import com.ibm.cloud.sdk.core.security.IamAuthenticator
-import com.ibm.watson.language_translator.v3.LanguageTranslator
-import com.ibm.watson.language_translator.v3.model.TranslateOptions
+import com.archrahkshi.spotifine.util.ORIGINAL_LYRICS
+import com.archrahkshi.spotifine.util.getOriginalLyrics
+import com.archrahkshi.spotifine.util.identifyLanguage
+import com.archrahkshi.spotifine.util.translateFromTo
 import com.ibm.watson.language_translator.v3.util.Language.RUSSIAN
 import kotlinx.android.synthetic.main.fragment_lyrics.buttonTranslate
 import kotlinx.android.synthetic.main.fragment_lyrics.recyclerViewLyrics
+import kotlinx.android.synthetic.main.fragment_lyrics.viewLyricsFloor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.jsoup.Jsoup
-import java.io.IOException
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
-    private val isLyricsTranslated: Boolean,
     override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
 
@@ -48,119 +37,74 @@ class LyricsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val appLanguage = RUSSIAN
+        val appLocale = Locale(appLanguage)
+
+        val isLyricsTranslated = arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false
+        val name = arguments?.getString(NAME) ?: ""
+        val artists = arguments?.getString(ARTISTS) ?: ""
+
         launch {
-            val name = arguments?.getString(NAME) ?: ""
-            val artists = arguments?.getString(ARTISTS) ?: ""
-            val originalLyrics = getOriginalLyrics(name, artists)
+            val originalLyrics = arguments?.getString(ORIGINAL_LYRICS)
+                ?: getOriginalLyrics(name, artists)
+
             if (originalLyrics == null) {
-                recyclerViewLyrics.adapter = LyricsAdapter(
-                    listOf("It seems like this song is instrumental... or is it not?")
-                )
+                recyclerViewLyrics.adapter = LyricsAdapter(listOf(getString(R.string.no_lyrics)))
                 buttonTranslate.visibility = View.GONE
+                viewLyricsFloor.visibility = View.GONE
             } else {
-                if (isLyricsTranslated) {
-                    val (detectedLanguage, translatedLyrics) = getTranslatedLyrics(originalLyrics)
-                    val appLocale = Locale(RUSSIAN)
-                    buttonTranslate.text = getString(
-                        R.string.detected_language,
-                        Locale(detectedLanguage).getDisplayLanguage(appLocale),
-                        appLocale.getDisplayLanguage(appLocale)
-                    )
+                val identifiedLanguage = originalLyrics.identifyLanguage()
+
+                if (identifiedLanguage == appLanguage) {
+                    buttonTranslate.visibility = View.GONE
+                    viewLyricsFloor.visibility = View.GONE
                     recyclerViewLyrics.adapter = LyricsAdapter(
-                        translatedLyrics.split('\n')
+                        originalLyrics.split('\n')
                     )
                 } else {
-                    buttonTranslate.text = getString(R.string.translate)
-                    recyclerViewLyrics.adapter = LyricsAdapter(originalLyrics.split('\n'))
-                }
-
-                buttonTranslate.setOnClickListener {
-                    fragmentManager?.beginTransaction()?.replace(
-                        R.id.frameLayoutPlayer,
-                        LyricsFragment(!isLyricsTranslated).apply {
-                            arguments = Bundle().apply {
-                                putString(NAME, name)
-                                putString(ARTISTS, artists)
-                            }
+                    if (!isLyricsTranslated) {
+                        buttonTranslate.text = getString(R.string.translate)
+                        recyclerViewLyrics.adapter = LyricsAdapter(
+                            originalLyrics.split('\n')
+                        )
+                    } else {
+                        val translatedLyrics =
+                            originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
+                                ?: getString(R.string.unidentifiable_language)
+                        try {
+                            buttonTranslate.text = getString(
+                                R.string.detected_language,
+                                Locale(identifiedLanguage).getDisplayLanguage(appLocale),
+                                appLocale.getDisplayLanguage(appLocale)
+                            )
+                        } catch (e: NullPointerException) { // Couldn't identify language
+                            buttonTranslate.text = getString(
+                                R.string.detected_language,
+                                getString(R.string.elvish),
+                                appLocale.getDisplayLanguage(appLocale)
+                            )
                         }
-                    )?.commit()
+                        recyclerViewLyrics.adapter = LyricsAdapter(
+                            translatedLyrics.split('\n')
+                        )
+                    }
+
+                    buttonTranslate.setOnClickListener {
+                        fragmentManager?.beginTransaction()?.replace(
+                            R.id.frameLayoutPlayer,
+                            LyricsFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString(ARTISTS, artists)
+                                    putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
+                                    putString(NAME, name)
+                                    if (isLyricsTranslated)
+                                        putString(ORIGINAL_LYRICS, originalLyrics)
+                                }
+                            }
+                        )?.commit()
+                    }
                 }
             }
         }
     }
-
-    private suspend fun getOriginalLyrics(
-        title: String,
-        artists: String
-    ) = withContext(Dispatchers.IO) {
-        val songInfo = JsonParser().parse(
-            buildGeniusRequest(
-                "$GENIUS_API_BASE_URL/search?q=$artists $title".replace(" ", "%20")
-            )
-        ).asJsonObject["response"].asJsonObject["hits"].asJsonArray.find {
-            it.asJsonObject["type"].asString == "song"
-        }
-        if (songInfo != null) (
-            getLyricsFromPath(songInfo.asJsonObject["result"].asJsonObject["path"].asString)
-                ?: "Something went wrong, sorry<not sorry> :("
-            ).deleteTrash()
-        else {
-            Log.wtf("Genius", "no song info")
-            null
-        }
-    }
-
-    private fun getLyricsFromPath(path: String) = try {
-        Jsoup.parse(buildGeniusRequest("$GENIUS_BASE_URL$path")).run {
-            select("div.lyrics")
-                .first()
-                ?.select("p")
-                ?.first()
-                ?.html()
-                ?.replace("<br> ", "\n")
-        }
-    } catch (e: IOException) {
-        Log.wtf("Jsoup", e)
-        null
-    }
-
-    private fun String.deleteTrash(): String {
-        var str = this
-        while (str.indexOf("<") != -1) {
-            str = str.replace(
-                str.substring(str.indexOf("<"), str.indexOf(">") + 1),
-                ""
-            )
-        }
-        return str
-    }
-
-    private fun buildGeniusRequest(url: String) = OkHttpClient().newCall(
-        Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $GENIUS_ACCESS_TOKEN")
-            .build()
-    ).execute().body?.string()
-
-    private suspend fun getTranslatedLyrics(lyricsOriginal: String): Pair<String, String> =
-        withContext(Dispatchers.IO) {
-            val result = LanguageTranslator(
-                TRANSLATOR_VERSION,
-                IamAuthenticator(TRANSLATOR_API_KEY)
-            ).apply {
-                serviceUrl = TRANSLATOR_URL
-            }.translate(
-                TranslateOptions.Builder()
-                    // Line separators must be doubled for the lyrics to be translated line by line,
-                    // not as a uniform text
-                    .addText(lyricsOriginal.replace("\n", "\n\n"))
-                    .target(RUSSIAN)
-                    .build()
-            ).execute().result
-            Pair(
-                result.detectedLanguage,
-                // Returning to the original line separators
-                result.translations.first().translation.replace("\n\n", "\n")
-            )
-        }
 }

@@ -2,7 +2,6 @@ package com.archrahkshi.spotifine.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
@@ -12,6 +11,7 @@ import com.archrahkshi.spotifine.util.SPOTIFY_REQUEST_CODE
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,21 +41,20 @@ class MainActivity : AppCompatActivity() {
                 AuthorizationClient.getResponse(resultCode, intent)
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
-                    Log.i("Token", "OK")
                     startActivity(
                         Intent(this, LibraryActivity::class.java).apply {
                             putExtra(
                                 ACCESS_TOKEN,
                                 response.accessToken.also {
-                                    Log.i("Access token", it)
+                                    Timber.i(it)
                                 }
                             )
                         }
                     )
                     finish()
                 }
-                AuthorizationResponse.Type.ERROR -> Log.wtf("Token", response.error)
-                else -> Log.wtf("Token", "bullshit")
+                AuthorizationResponse.Type.ERROR -> Timber.wtf(response.error)
+                else -> Timber.wtf("bullshit")
             }
         }
     }

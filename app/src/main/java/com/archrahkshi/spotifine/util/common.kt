@@ -2,6 +2,12 @@ package com.archrahkshi.spotifine.util
 
 import android.content.Context
 import com.archrahkshi.spotifine.R
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import timber.log.Timber
+import java.io.IOException
 import kotlin.time.ExperimentalTime
 import kotlin.time.milliseconds
 
@@ -25,3 +31,21 @@ fun formatDuration(milliseconds: Long) = milliseconds.milliseconds.toComponents 
     if (duration.isNotEmpty() && ss <= ONE_DIGIT) duration += '0'
     "$duration$ss"
 }
+
+fun getJsonFromApi(url: String, accessToken: String?): JsonObject = JsonParser().parse(
+    try {
+        url.buildRequest(accessToken)
+    } catch (e: IOException) {
+        Timber.wtf(e)
+        null
+    }
+).asJsonObject
+
+fun String.buildRequest(accessToken: String?) = OkHttpClient().newCall(
+    Request.Builder()
+        .url(this)
+        .header("Authorization", "Bearer $accessToken")
+        .header("Accept", "application/json")
+        .header("Content-Type", "application/json")
+        .build()
+).execute().body?.string()
