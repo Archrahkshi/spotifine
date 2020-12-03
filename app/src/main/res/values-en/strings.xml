@@ -13,4 +13,7 @@
     <string name="tracks_paucal">tracks</string>
     <string name="tracks_plural">tracks</string>
     <string name="loading">LOADING…</string>
+    <string name="elvish">ELVISH</string>
+    <string name="no_lyrics">It seems like this song is instrumental… or is it not?</string>
+    <string name="unidentifiable_language">Sorry, I don\'t know this language yet :(</string>
 </resources>
