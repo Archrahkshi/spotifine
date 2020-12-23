@@ -1,15 +1,18 @@
-package com.archrahkshi.spotifine.ui
+package com.archrahkshi.spotifine.ui.library.libraryListsFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.Album
 import com.archrahkshi.spotifine.data.Artist
 import com.archrahkshi.spotifine.data.LibraryListsAdapter
 import com.archrahkshi.spotifine.data.Playlist
+import com.archrahkshi.spotifine.ui.library.tracksFragment.TracksFragment
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
 import com.archrahkshi.spotifine.util.ALBUMS
 import com.archrahkshi.spotifine.util.ARTISTS
@@ -38,6 +41,8 @@ class LibraryListsFragment(
     override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
 
+    private val presenter by lazy { LibraryListsPresenter(this) }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +51,8 @@ class LibraryListsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        presenter.applyToolbar()
 
         val accessToken = arguments?.getString(ACCESS_TOKEN)
 
@@ -67,6 +74,7 @@ class LibraryListsFragment(
                             arguments = Bundle().apply {
                                 putString(ACCESS_TOKEN, accessToken)
                                 putString(IMAGE, it.image)
+                                putString(NAME, it.name)
                                 putString(LIST_TYPE, ALBUMS)
                                 putString(URL, it.url)
                             }
@@ -82,7 +90,7 @@ class LibraryListsFragment(
                             }
                         }
                     }
-                )?.addToBackStack(null)?.commit()
+                )?.setTransition(TRANSIT_FRAGMENT_FADE)?.addToBackStack(null)?.commit()
             }
         }
     }

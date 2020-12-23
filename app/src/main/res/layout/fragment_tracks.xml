@@ -44,7 +44,7 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:textColor="@android:color/black"
+                    android:textColor="@color/main_white_color"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         tools:text="Album Name" />
@@ -55,6 +55,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
+                        android:textColor="@color/main_white_color"
                         android:maxLines="1"
                         android:textSize="18sp"
                         tools:text="Artist Name" />
@@ -65,6 +66,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
+                        android:textColor="#B6B6B6"
                         android:maxLines="1"
                         android:textSize="18sp"
                         tools:text="Year · Track Count" />

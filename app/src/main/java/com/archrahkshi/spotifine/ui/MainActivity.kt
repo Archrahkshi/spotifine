@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.ui.library.LibraryActivity
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
 import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
 import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI

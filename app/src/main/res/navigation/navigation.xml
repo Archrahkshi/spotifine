@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/artists"
+    android:id="@+id/navigation">
+
+    <fragment
+        android:id="@+id/albums"
+        tools:layout="@layout/fragment_library_lists"
+        android:name="com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/artists"
+        tools:layout="@layout/fragment_library_lists"
+        android:name="com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlists"
+        tools:layout="@layout/fragment_library_lists"
+        android:name="com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment">
+    </fragment>
+
+</navigation>

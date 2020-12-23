@@ -3,6 +3,8 @@ package com.archrahkshi.spotifine.data
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.util.setWordTracks
@@ -15,7 +17,13 @@ import kotlinx.android.synthetic.main.item_library_list.view.textViewListName
 class LibraryListsAdapter(
     private val libraryLists: List<ListType>,
     private val clickListener: (ListType) -> Unit
-) : RecyclerView.Adapter<LibraryListsAdapter.ViewHolder>() {
+) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(object: DiffUtil.ItemCallback<ListType>() {
+
+    override fun areItemsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
+
+    override fun areContentsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
+
+}) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater

@@ -1,5 +1,6 @@
 package com.archrahkshi.spotifine.util
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -8,6 +9,7 @@ suspend fun createTrackLists(
     accessToken: String?
 ) = withContext(Dispatchers.IO) {
     val json = getJsonFromApi(url, accessToken)
+    println(json.toString())
     val items = json["items"].asJsonArray
     when (
         json["href"]
