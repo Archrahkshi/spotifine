@@ -5,3 +5,4 @@
 ## Команда авторов:
 - [Игорь Семенов](https://github.com/XJIEBYUJEK)
 - [Константин Смирнов](https://github.com/Archrahkshi)
+- [Дмитрий Шкудов](https://github.com/dashkudik)
