@@ -3,13 +3,20 @@ package com.archrahkshi.spotifine.data
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
 import kotlinx.android.synthetic.main.item_lyrics_line.view.textViewLyricsLine
 
 class LyricsAdapter(
     private val lines: List<String>
-) : RecyclerView.Adapter<LyricsAdapter.ViewHolder>() {
+) : ListAdapter<String, LyricsAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+    }
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater
@@ -19,15 +26,11 @@ class LyricsAdapter(
 
     override fun getItemCount() = lines.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(lines[position])
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(lines[position])
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textViewLyricsLine = view.textViewLyricsLine
-
         fun bind(line: String) {
-            textViewLyricsLine.text = line
+            itemView.textViewLyricsLine.text = line
         }
     }
 }

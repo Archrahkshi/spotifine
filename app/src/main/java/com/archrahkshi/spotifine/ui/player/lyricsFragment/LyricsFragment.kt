@@ -1,6 +1,8 @@
-package com.archrahkshi.spotifine.ui
+package com.archrahkshi.spotifine.ui.player.lyricsFragment
 
+import android.app.Instrumentation
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,17 +18,21 @@ import com.archrahkshi.spotifine.util.identifyLanguage
 import com.archrahkshi.spotifine.util.translateFromTo
 import com.ibm.watson.language_translator.v3.util.Language.RUSSIAN
 import kotlinx.android.synthetic.main.fragment_lyrics.buttonTranslate
+import kotlinx.android.synthetic.main.fragment_lyrics.progressBar
 import kotlinx.android.synthetic.main.fragment_lyrics.recyclerViewLyrics
 import kotlinx.android.synthetic.main.fragment_lyrics.viewLyricsFloor
+import kotlinx.android.synthetic.main.toolbar.imgBack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
     override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
+    private val presenter by lazy { LyricsPresenter(this) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +43,15 @@ class LyricsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        presenter.applyToolbar()
+
+        requireActivity().imgBack.setOnClickListener {
+            CoroutineScope(Dispatchers.Default).launch {
+                val inst = Instrumentation()
+                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+            }
+        }
+
         val appLanguage = RUSSIAN
         val appLocale = Locale(appLanguage)
 
@@ -45,11 +60,16 @@ class LyricsFragment(
         val artists = arguments?.getString(ARTISTS) ?: ""
 
         launch {
+            progressBar.visibility = View.VISIBLE
+            buttonTranslate.visibility = View.GONE
+            Timber.i("START")
             val originalLyrics = arguments?.getString(ORIGINAL_LYRICS)
                 ?: getOriginalLyrics(name, artists)
+            Timber.i("FINISH")
 
             if (originalLyrics == null) {
                 recyclerViewLyrics.adapter = LyricsAdapter(listOf(getString(R.string.no_lyrics)))
+                progressBar.visibility = View.INVISIBLE
                 buttonTranslate.visibility = View.GONE
                 viewLyricsFloor.visibility = View.GONE
             } else {
@@ -61,16 +81,24 @@ class LyricsFragment(
                     recyclerViewLyrics.adapter = LyricsAdapter(
                         originalLyrics.split('\n')
                     )
+                    progressBar.visibility = View.INVISIBLE
                 } else {
                     if (!isLyricsTranslated) {
-                        buttonTranslate.text = getString(R.string.translate)
-                        recyclerViewLyrics.adapter = LyricsAdapter(
-                            originalLyrics.split('\n')
-                        )
+                        try {
+                            buttonTranslate.visibility = View.VISIBLE
+                            buttonTranslate.text = getString(R.string.translate)
+                            recyclerViewLyrics.adapter = LyricsAdapter(
+                                originalLyrics.split('\n')
+                            )
+                            progressBar.visibility = View.INVISIBLE
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     } else {
                         val translatedLyrics =
                             originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
                                 ?: getString(R.string.unidentifiable_language)
+                        buttonTranslate.visibility = View.VISIBLE
                         try {
                             buttonTranslate.text = getString(
                                 R.string.detected_language,
@@ -87,21 +115,25 @@ class LyricsFragment(
                         recyclerViewLyrics.adapter = LyricsAdapter(
                             translatedLyrics.split('\n')
                         )
+                        progressBar.visibility = View.INVISIBLE
                     }
 
-                    buttonTranslate.setOnClickListener {
-                        fragmentManager?.beginTransaction()?.replace(
-                            R.id.frameLayoutPlayer,
-                            LyricsFragment().apply {
-                                arguments = Bundle().apply {
-                                    putString(ARTISTS, artists)
-                                    putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
-                                    putString(NAME, name)
-                                    if (isLyricsTranslated)
-                                        putString(ORIGINAL_LYRICS, originalLyrics)
+                    try {
+                        buttonTranslate.setOnClickListener {
+                            fragmentManager?.beginTransaction()?.replace(
+                                R.id.frameLayoutPlayer,
+                                LyricsFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putString(ARTISTS, artists)
+                                        putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
+                                        putString(NAME, name)
+                                        if (isLyricsTranslated)
+                                            putString(ORIGINAL_LYRICS, originalLyrics)
+                                    }
                                 }
-                            }
-                        )?.commit()
+                            )?.commit()
+                        }
+                    } catch (e: Exception) {
                     }
                 }
             }

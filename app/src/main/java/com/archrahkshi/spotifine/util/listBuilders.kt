@@ -8,6 +8,7 @@ suspend fun createTrackLists(
     accessToken: String?
 ) = withContext(Dispatchers.IO) {
     val json = getJsonFromApi(url, accessToken)
+    println(json.toString())
     val items = json["items"].asJsonArray
     when (
         json["href"]

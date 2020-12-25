@@ -17,9 +17,9 @@
                 android:name="com.spotify.sdk.android.auth.LoginActivity"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-                android:name=".ui.PlayerActivity"
+                android:name=".ui.player.PlayerActivity"
                 android:screenOrientation="portrait" />
-        <activity android:name=".ui.LibraryActivity" />
+        <activity android:name=".ui.library.LibraryActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

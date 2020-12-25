@@ -1,6 +1,7 @@
 package com.archrahkshi.spotifine.util
 
 import android.content.Context
+import android.util.Log
 import com.archrahkshi.spotifine.R
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -47,5 +48,5 @@ fun String.buildRequest(accessToken: String?) = OkHttpClient().newCall(
         .header("Authorization", "Bearer $accessToken")
         .header("Accept", "application/json")
         .header("Content-Type", "application/json")
-        .build()
+        .build().also { Log.i("BVB", it.toString()) }
 ).execute().body?.string()

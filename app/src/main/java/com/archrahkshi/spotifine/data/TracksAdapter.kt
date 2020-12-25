@@ -3,6 +3,8 @@ package com.archrahkshi.spotifine.data
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.util.formatDuration
@@ -16,7 +18,12 @@ import kotlin.time.ExperimentalTime
 class TracksAdapter(
     private val tracks: List<Track>,
     private val clickListener: (Track) -> Unit
-) : RecyclerView.Adapter<TracksAdapter.ViewHolder>() {
+) : ListAdapter<Track, TracksAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<Track>() {
+        override fun areItemsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
+    }
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
     )

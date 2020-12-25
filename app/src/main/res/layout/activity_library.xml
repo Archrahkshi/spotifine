@@ -1,56 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ui.LibraryActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".ui.library.LibraryActivity">
+
+    <include layout="@layout/toolbar"/>
 
     <FrameLayout
-            android:id="@+id/frameLayoutLibrary"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
+        android:id="@+id/frameLayoutLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
     </FrameLayout>
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:orientation="horizontal">
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="#00081C"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        android:id="@+id/navigationView"
+        app:menu="@menu/menu"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-        <TextView
-                android:id="@+id/buttonPlaylists"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/black"
-                android:gravity="center"
-                android:text="@string/playlists"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-        <TextView
-                android:id="@+id/buttonArtists"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/black"
-                android:gravity="center"
-                android:text="@string/artists"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-
-        <TextView
-                android:id="@+id/buttonAlbums"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/black"
-                android:gravity="center"
-                android:text="@string/albums"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
-    </LinearLayout>
 </LinearLayout>
