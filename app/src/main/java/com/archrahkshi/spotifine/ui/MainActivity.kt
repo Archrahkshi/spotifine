@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == SPOTIFY_REQUEST_CODE) {
             val response: AuthorizationResponse? =
-                    AuthorizationClient.getResponse(resultCode, intent)
+                AuthorizationClient.getResponse(resultCode, intent)
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     startActivity(

@@ -12,21 +12,21 @@ class App : Application() { // Some weird warning which is certainly false
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
             StrictMode.setThreadPolicy(
-                    StrictMode.ThreadPolicy.Builder()
+                StrictMode.ThreadPolicy.Builder()
 //                    .detectDiskReads() - Not detecting disk reads cuz Xiaomi ¯\_(ツ)_/¯
-                            .detectDiskWrites()
-                            .detectNetwork()
-                            .penaltyLog()
-                            .penaltyDeath()
-                            .build()
+                    .detectDiskWrites()
+                    .detectNetwork()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build()
             )
             StrictMode.setVmPolicy(
-                    StrictMode.VmPolicy.Builder()
-                            .detectLeakedSqlLiteObjects()
-                            .detectLeakedClosableObjects()
-                            .penaltyLog()
-                            .penaltyDeath()
-                            .build()
+                StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build()
             )
         }
     }

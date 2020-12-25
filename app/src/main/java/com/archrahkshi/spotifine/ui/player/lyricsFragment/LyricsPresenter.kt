@@ -2,7 +2,8 @@ package com.archrahkshi.spotifine.ui.player.lyricsFragment
 
 import com.archrahkshi.spotifine.ui.commonViews.ToolBarImpl
 import com.archrahkshi.spotifine.util.NAME
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar.imgBack
+import kotlinx.android.synthetic.main.toolbar.tvTitle
 
 class LyricsPresenter(private val fragment: LyricsFragment) {
     private val activity = fragment.requireActivity()

@@ -9,8 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private val languageTranslator = LanguageTranslator(
-        TRANSLATOR_VERSION,
-        IamAuthenticator(TRANSLATOR_API_KEY)
+    TRANSLATOR_VERSION,
+    IamAuthenticator(TRANSLATOR_API_KEY)
 ).apply { serviceUrl = TRANSLATOR_URL }
 
 suspend fun String.identifyLanguage(): String = withContext(Dispatchers.IO) {
@@ -32,7 +32,7 @@ suspend fun String.translateFromTo(source: String, target: String) = withContext
                 .target(target)
                 .build()
         ).execute().result.translations.first().translation
-             .replace("\n\n", "\n") // Returning to the original line separators
+            .replace("\n\n", "\n") // Returning to the original line separators
     } catch (e: ServiceResponseException) {
         null
     }

@@ -13,11 +13,11 @@ interface ITracksHeader {
 }
 
 class TracksHeaderImpl(
-                       private val textView: TextView,
-                       private val subTextView: TextView,
-                       private val additionalTextView: TextView,
-                       private val imageView: ImageView
-                      ) : ITracksHeader {
+    private val textView: TextView,
+    private val subTextView: TextView,
+    private val additionalTextView: TextView,
+    private val imageView: ImageView
+) : ITracksHeader {
     override fun setText(text: String) {
         textView.text = text
     }
