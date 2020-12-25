@@ -5,7 +5,6 @@ import com.archrahkshi.spotifine.util.NAME
 import kotlinx.android.synthetic.main.toolbar.*
 
 class LyricsPresenter(private val fragment: LyricsFragment) {
-
     private val activity = fragment.requireActivity()
 
     private val toolBarImpl
@@ -16,10 +15,8 @@ class LyricsPresenter(private val fragment: LyricsFragment) {
     private fun setToolbarTitle(title: String) = toolBarImpl.setTitle(title)
 
     fun applyToolbar() {
-
         setToolbarTitle(fragment.requireArguments().getString(NAME)!!)
         showBackButton()
-
     }
 
 }

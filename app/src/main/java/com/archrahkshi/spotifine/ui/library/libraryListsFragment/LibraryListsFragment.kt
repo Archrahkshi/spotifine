@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.Album
@@ -13,24 +12,8 @@ import com.archrahkshi.spotifine.data.Artist
 import com.archrahkshi.spotifine.data.LibraryListsAdapter
 import com.archrahkshi.spotifine.data.Playlist
 import com.archrahkshi.spotifine.ui.library.tracksFragment.TracksFragment
-import com.archrahkshi.spotifine.util.ACCESS_TOKEN
-import com.archrahkshi.spotifine.util.ALBUMS
-import com.archrahkshi.spotifine.util.ARTISTS
-import com.archrahkshi.spotifine.util.ARTIST_FROM_USER_DISTINCTION
-import com.archrahkshi.spotifine.util.FROM_ARTIST
-import com.archrahkshi.spotifine.util.FROM_USER
-import com.archrahkshi.spotifine.util.IMAGE
-import com.archrahkshi.spotifine.util.LIST_TYPE
-import com.archrahkshi.spotifine.util.NAME
-import com.archrahkshi.spotifine.util.PLAYLISTS
-import com.archrahkshi.spotifine.util.SIZE
-import com.archrahkshi.spotifine.util.SPOTIFY_PREFIX
-import com.archrahkshi.spotifine.util.URL
-import com.archrahkshi.spotifine.util.createAlbum
-import com.archrahkshi.spotifine.util.createArtist
-import com.archrahkshi.spotifine.util.createPlaylist
-import com.archrahkshi.spotifine.util.getJsonFromApi
-import kotlinx.android.synthetic.main.fragment_library_lists.recyclerViewLists
+import com.archrahkshi.spotifine.util.*
+import kotlinx.android.synthetic.main.fragment_library_lists.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -113,9 +96,9 @@ class LibraryListsFragment(
                 val items = json["items"].asJsonArray
                 when (
                     json["href"]
-                            .asString
-                            .removePrefix(SPOTIFY_PREFIX)
-                            .take(ARTIST_FROM_USER_DISTINCTION)
+                        .asString
+                        .removePrefix(SPOTIFY_PREFIX)
+                        .take(ARTIST_FROM_USER_DISTINCTION)
                     ) {
                     "ar" -> items.map { createAlbum(it.asJsonObject, FROM_ARTIST) }
                     "me" -> items.map {

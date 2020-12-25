@@ -15,7 +15,6 @@ import kotlin.time.ExperimentalTime
 class TracksFragment(
         override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
-
     private val presenter by lazy { TracksPresenter(this) }
 
     override fun onCreateView(

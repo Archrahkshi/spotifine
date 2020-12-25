@@ -3,18 +3,16 @@ package com.archrahkshi.spotifine.ui.commonViews
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.google.android.material.button.MaterialButton
 
 interface IToolBar {
-
     fun setTitle(title: String)
     fun applyBackButton(isHidden: Boolean)
-
 }
 
-class ToolBarImpl(private val tvTitle: TextView,
-                  private val buttonBack: ImageView) : IToolBar {
-
+class ToolBarImpl(
+                  private val tvTitle: TextView,
+                  private val buttonBack: ImageView
+                  ): IToolBar {
     override fun setTitle(title: String) {
         tvTitle.text = title
     }
@@ -22,5 +20,4 @@ class ToolBarImpl(private val tvTitle: TextView,
     override fun applyBackButton(isHidden: Boolean) {
         buttonBack.visibility = if (isHidden) View.INVISIBLE else View.VISIBLE
     }
-
 }

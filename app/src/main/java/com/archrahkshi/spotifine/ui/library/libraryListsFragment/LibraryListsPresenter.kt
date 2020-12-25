@@ -8,7 +8,6 @@ import com.archrahkshi.spotifine.util.NAME
 import kotlinx.android.synthetic.main.toolbar.*
 
 class LibraryListsPresenter(private val fragment: LibraryListsFragment) {
-
     private val args = fragment.requireArguments()
 
     private val toolBarImpl
@@ -19,17 +18,12 @@ class LibraryListsPresenter(private val fragment: LibraryListsFragment) {
     private fun setToolbarTitle(title: String) = toolBarImpl.setTitle(title)
 
     internal fun applyToolbar() {
-
         if (args.getString(LIST_TYPE) == ALBUMS && args.getString(NAME) != null) {
-
             setToolbarTitle(args.getString(NAME)!!)
             showBackButton()
-
         } else {
-
             setToolbarTitle(fragment.getString(R.string.title_library))
             hideBackButton()
-
         }
     }
 }

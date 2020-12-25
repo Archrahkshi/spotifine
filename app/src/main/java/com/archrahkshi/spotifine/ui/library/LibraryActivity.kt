@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 
 
 class LibraryActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
@@ -27,7 +26,6 @@ class LibraryActivity : AppCompatActivity() {
             replaceFragmentWith(PLAYLISTS)
 
         imgBack.setOnClickListener {
-
             CoroutineScope(Default).launch {
                 val inst = Instrumentation()
                 inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
@@ -35,13 +33,10 @@ class LibraryActivity : AppCompatActivity() {
         }
 
         navigationView.setOnNavigationItemSelectedListener { item ->
-
             when (item.title) {
-
                 getString(R.string.library_artists) -> replaceFragmentWith(ARTISTS)
                 getString(R.string.library_albums) -> replaceFragmentWith(ALBUMS)
                 getString(R.string.library_playlists) -> replaceFragmentWith(PLAYLISTS)
-
             }
             true
         }
@@ -49,13 +44,13 @@ class LibraryActivity : AppCompatActivity() {
 
     private fun replaceFragmentWith(listType: String) {
         supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutLibrary,
-                LibraryListsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(LIST_TYPE, listType)
-                        putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
-                    }
+            R.id.frameLayoutLibrary,
+            LibraryListsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(LIST_TYPE, listType)
+                    putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
                 }
+            }
         ).setTransition(TRANSIT_FRAGMENT_FADE).commit()
     }
 }

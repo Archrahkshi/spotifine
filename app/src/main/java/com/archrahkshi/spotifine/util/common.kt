@@ -13,14 +13,14 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.milliseconds
 
 fun setWordTracks(context: Context?, size: Int?) = context?.resources?.getString(
-        with(size.toString()) {
-            when {
-                endsWith('1') -> R.string.tracks_singular
-                endsWith('2') || endsWith('3') || endsWith('4') ->
-                    R.string.tracks_paucal
-                else -> R.string.tracks_plural
-            }
+    with(size.toString()) {
+        when {
+            endsWith('1') -> R.string.tracks_singular
+            endsWith('2') || endsWith('3') || endsWith('4') ->
+                R.string.tracks_paucal
+            else -> R.string.tracks_plural
         }
+    }
 )
 
 @ExperimentalTime
@@ -34,19 +34,19 @@ fun formatDuration(milliseconds: Long) = milliseconds.milliseconds.toComponents 
 }
 
 fun getJsonFromApi(url: String, accessToken: String?): JsonObject = JsonParser().parse(
-        try {
-            url.buildRequest(accessToken)
-        } catch (e: IOException) {
-            Timber.wtf(e)
-            null
-        }
+    try {
+        url.buildRequest(accessToken)
+    } catch (e: IOException) {
+        Timber.wtf(e)
+        null
+    }
 ).asJsonObject
 
 fun String.buildRequest(accessToken: String?) = OkHttpClient().newCall(
-        Request.Builder()
-                .url(this)
-                .header("Authorization", "Bearer $accessToken")
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/json")
-                .build().also { Log.i("BVB", it.toString()) }
+    Request.Builder()
+        .url(this)
+        .header("Authorization", "Bearer $accessToken")
+        .header("Accept", "application/json")
+        .header("Content-Type", "application/json")
+        .build().also { Log.i("BVB", it.toString()) }
 ).execute().body?.string()

@@ -29,7 +29,6 @@ import kotlin.coroutines.CoroutineContext
 class LyricsFragment(
         override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
-
     private val presenter by lazy { LyricsPresenter(this) }
 
     override fun onCreateView(
@@ -44,7 +43,6 @@ class LyricsFragment(
         presenter.applyToolbar()
 
         requireActivity().imgBack.setOnClickListener {
-
             CoroutineScope(Dispatchers.Default).launch {
                 val inst = Instrumentation()
                 inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
@@ -59,7 +57,6 @@ class LyricsFragment(
         val artists = arguments?.getString(ARTISTS) ?: ""
 
         launch {
-
             progressBar.visibility = View.VISIBLE
             buttonTranslate.visibility = View.GONE
             Log.i("DD", "START")
@@ -83,44 +80,44 @@ class LyricsFragment(
                     )
                     progressBar.visibility = View.INVISIBLE
                 } else {
-                    if (!isLyricsTranslated) {
-                        try {
+                        if (!isLyricsTranslated) {
+                            try {
+                                buttonTranslate.visibility = View.VISIBLE
+                                buttonTranslate.text = getString(R.string.translate)
+                                recyclerViewLyrics.adapter = LyricsAdapter(
+                                        originalLyrics.split('\n')
+                                )
+                                progressBar.visibility = View.INVISIBLE
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        } else {
+                            val translatedLyrics =
+                                    originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
+                                            ?: getString(R.string.unidentifiable_language)
                             buttonTranslate.visibility = View.VISIBLE
-                            buttonTranslate.text = getString(R.string.translate)
+                            try {
+                                buttonTranslate.text = getString(
+                                        R.string.detected_language,
+                                        Locale(identifiedLanguage).getDisplayLanguage(appLocale),
+                                        appLocale.getDisplayLanguage(appLocale)
+                                )
+                            } catch (e: NullPointerException) { // Couldn't identify language
+                                buttonTranslate.text = getString(
+                                        R.string.detected_language,
+                                        getString(R.string.elvish),
+                                        appLocale.getDisplayLanguage(appLocale)
+                                )
+                            }
                             recyclerViewLyrics.adapter = LyricsAdapter(
-                                    originalLyrics.split('\n')
+                                    translatedLyrics.split('\n')
                             )
                             progressBar.visibility = View.INVISIBLE
-                        } catch (e: Exception) {
-                            e.printStackTrace()
                         }
-                    } else {
-                        val translatedLyrics =
-                                originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
-                                        ?: getString(R.string.unidentifiable_language)
-                        buttonTranslate.visibility = View.VISIBLE
-                        try {
-                            buttonTranslate.text = getString(
-                                    R.string.detected_language,
-                                    Locale(identifiedLanguage).getDisplayLanguage(appLocale),
-                                    appLocale.getDisplayLanguage(appLocale)
-                            )
-                        } catch (e: NullPointerException) { // Couldn't identify language
-                            buttonTranslate.text = getString(
-                                    R.string.detected_language,
-                                    getString(R.string.elvish),
-                                    appLocale.getDisplayLanguage(appLocale)
-                            )
-                        }
-                        recyclerViewLyrics.adapter = LyricsAdapter(
-                                translatedLyrics.split('\n')
-                        )
-                        progressBar.visibility = View.INVISIBLE
-                    }
 
-                    try {
-                        buttonTranslate.setOnClickListener {
-                            fragmentManager?.beginTransaction()?.replace(
+                        try {
+                            buttonTranslate.setOnClickListener {
+                                fragmentManager?.beginTransaction()?.replace(
                                     R.id.frameLayoutPlayer,
                                     LyricsFragment().apply {
                                         arguments = Bundle().apply {
@@ -131,9 +128,9 @@ class LyricsFragment(
                                                 putString(ORIGINAL_LYRICS, originalLyrics)
                                         }
                                     }
-                            )?.commit()
-                        }
-                    } catch (e: Exception) {
+                                )?.commit()
+                            }
+                        } catch (e: Exception) {
                     }
                 }
             }
