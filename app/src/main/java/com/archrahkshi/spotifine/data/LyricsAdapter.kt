@@ -17,9 +17,9 @@ class LyricsAdapter(
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_lyrics_line, parent, false)
+            LayoutInflater
+                    .from(parent.context)
+                    .inflate(R.layout.item_lyrics_line, parent, false)
     )
 
     override fun getItemCount() = lines.size

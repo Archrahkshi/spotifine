@@ -20,8 +20,8 @@ class LibraryListsAdapter(
 }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
             LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_library_list, parent, false)
+                    .from(parent.context)
+                    .inflate(R.layout.item_library_list, parent, false)
     )
 
     override fun getItemCount() = libraryLists.size
@@ -53,11 +53,11 @@ class LibraryListsAdapter(
                 is Album -> listType.artists
             }
             Glide.with(viewTest).load(
-                when (listType) {
-                    is Playlist -> listType.image
-                    is Artist -> listType.image
-                    is Album -> listType.image
-                }
+                    when (listType) {
+                        is Playlist -> listType.image
+                        is Artist -> listType.image
+                        is Album -> listType.image
+                    }
             ).into(imageViewListPic)
             layoutItemList.setOnClickListener { clickListener(listType) }
         }

@@ -43,17 +43,17 @@ internal class TracksPresenter(private val fragment: TracksFragment) {
     @ExperimentalTime
     suspend fun applyRecycler() {
         tracksRecyclerImpl.setupRecycler(
-            TracksAdapter(createTrackLists(args.getString(URL)!!, args.getString(ACCESS_TOKEN))) {
-                Timber.tag("Track clicked").i(it.toString())
-                fragment.requireContext().startActivity(
-                    Intent(activity, PlayerActivity::class.java).apply {
-                        putExtra(ID, it.id)
-                        putExtra(DURATION, it.duration)
-                        putExtra(NAME, it.name)
-                        putExtra(ARTISTS, it.artists)
-                    }
-                )
-        })
+                TracksAdapter(createTrackLists(args.getString(URL)!!, args.getString(ACCESS_TOKEN))) {
+                    Timber.tag("Track clicked").i(it.toString())
+                    fragment.requireContext().startActivity(
+                            Intent(activity, PlayerActivity::class.java).apply {
+                                putExtra(ID, it.id)
+                                putExtra(DURATION, it.duration)
+                                putExtra(NAME, it.name)
+                                putExtra(ARTISTS, it.artists)
+                            }
+                    )
+                })
     }
 
     fun applyToolbar() {

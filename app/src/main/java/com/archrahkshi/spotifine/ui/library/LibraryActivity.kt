@@ -4,8 +4,6 @@ import android.app.Instrumentation
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment
@@ -44,13 +42,13 @@ class LibraryActivity : AppCompatActivity() {
 
     private fun replaceFragmentWith(listType: String) {
         supportFragmentManager.beginTransaction().replace(
-            R.id.frameLayoutLibrary,
-            LibraryListsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(LIST_TYPE, listType)
-                    putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
+                R.id.frameLayoutLibrary,
+                LibraryListsFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(LIST_TYPE, listType)
+                        putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
+                    }
                 }
-            }
         ).setTransition(TRANSIT_FRAGMENT_FADE).commit()
     }
 }

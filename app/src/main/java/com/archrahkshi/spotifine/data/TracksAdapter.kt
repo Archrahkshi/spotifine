@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.util.formatDuration
-import kotlinx.android.synthetic.main.item_track.view.layoutItemList
-import kotlinx.android.synthetic.main.item_track.view.textViewTrackArtist
-import kotlinx.android.synthetic.main.item_track.view.textViewTrackDuration
-import kotlinx.android.synthetic.main.item_track.view.textViewTrackName
+import kotlinx.android.synthetic.main.item_track.view.*
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
