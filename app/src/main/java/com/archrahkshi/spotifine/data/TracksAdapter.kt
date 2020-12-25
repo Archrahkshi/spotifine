@@ -13,14 +13,14 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 class TracksAdapter(
-        private val tracks: List<Track>,
-        private val clickListener: (Track) -> Unit
+    private val tracks: List<Track>,
+    private val clickListener: (Track) -> Unit
 ) : ListAdapter<Track, TracksAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Track>() {
     override fun areItemsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
     override fun areContentsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
 }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
     )
 
     override fun getItemCount() = tracks.size

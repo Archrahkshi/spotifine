@@ -8,7 +8,7 @@ class LyricsPresenter(private val fragment: LyricsFragment) {
     private val activity = fragment.requireActivity()
 
     private val toolBarImpl
-            by lazy { ToolBarImpl(activity.tvTitle, activity.imgBack) }
+        by lazy { ToolBarImpl(activity.tvTitle, activity.imgBack) }
 
     private fun showBackButton() = toolBarImpl.applyBackButton(false)
     private fun hideBackButton() = toolBarImpl.applyBackButton(true)

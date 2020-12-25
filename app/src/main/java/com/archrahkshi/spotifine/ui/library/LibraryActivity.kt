@@ -42,13 +42,13 @@ class LibraryActivity : AppCompatActivity() {
 
     private fun replaceFragmentWith(listType: String) {
         supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutLibrary,
-                LibraryListsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(LIST_TYPE, listType)
-                        putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
-                    }
+            R.id.frameLayoutLibrary,
+            LibraryListsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(LIST_TYPE, listType)
+                    putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
                 }
+            }
         ).setTransition(TRANSIT_FRAGMENT_FADE).commit()
     }
 }

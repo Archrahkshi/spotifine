@@ -11,7 +11,7 @@ class LibraryListsPresenter(private val fragment: LibraryListsFragment) {
     private val args = fragment.requireArguments()
 
     private val toolBarImpl
-            by lazy { ToolBarImpl(fragment.requireActivity().tvTitle, fragment.requireActivity().imgBack) }
+        by lazy { ToolBarImpl(fragment.requireActivity().tvTitle, fragment.requireActivity().imgBack) }
 
     private fun showBackButton() = toolBarImpl.applyBackButton(false)
     private fun hideBackButton() = toolBarImpl.applyBackButton(true)

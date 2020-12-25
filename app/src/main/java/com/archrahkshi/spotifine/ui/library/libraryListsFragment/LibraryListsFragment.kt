@@ -96,9 +96,9 @@ class LibraryListsFragment(
                 val items = json["items"].asJsonArray
                 when (
                     json["href"]
-                        .asString
-                        .removePrefix(SPOTIFY_PREFIX)
-                        .take(ARTIST_FROM_USER_DISTINCTION)
+                            .asString
+                            .removePrefix(SPOTIFY_PREFIX)
+                            .take(ARTIST_FROM_USER_DISTINCTION)
                     ) {
                     "ar" -> items.map { createAlbum(it.asJsonObject, FROM_ARTIST) }
                     "me" -> items.map {

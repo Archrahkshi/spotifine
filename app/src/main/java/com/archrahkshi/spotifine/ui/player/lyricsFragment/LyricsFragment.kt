@@ -21,14 +21,14 @@ import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
-        override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
+    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
     private val presenter by lazy { LyricsPresenter(this) }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_lyrics, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,7 +55,7 @@ class LyricsFragment(
             buttonTranslate.visibility = View.GONE
             Log.i("DD", "START")
             val originalLyrics = arguments?.getString(ORIGINAL_LYRICS)
-                    ?: getOriginalLyrics(name, artists)
+                ?: getOriginalLyrics(name, artists)
             Log.i("DD", "FINISH")
 
             if (originalLyrics == null) {
@@ -70,7 +70,7 @@ class LyricsFragment(
                     buttonTranslate.visibility = View.GONE
                     viewLyricsFloor.visibility = View.GONE
                     recyclerViewLyrics.adapter = LyricsAdapter(
-                            originalLyrics.split('\n')
+                        originalLyrics.split('\n')
                     )
                     progressBar.visibility = View.INVISIBLE
                 } else {
@@ -79,7 +79,7 @@ class LyricsFragment(
                             buttonTranslate.visibility = View.VISIBLE
                             buttonTranslate.text = getString(R.string.translate)
                             recyclerViewLyrics.adapter = LyricsAdapter(
-                                    originalLyrics.split('\n')
+                                originalLyrics.split('\n')
                             )
                             progressBar.visibility = View.INVISIBLE
                         } catch (e: Exception) {
@@ -87,24 +87,24 @@ class LyricsFragment(
                         }
                     } else {
                         val translatedLyrics =
-                                originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
-                                        ?: getString(R.string.unidentifiable_language)
+                            originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
+                                ?: getString(R.string.unidentifiable_language)
                         buttonTranslate.visibility = View.VISIBLE
                         try {
                             buttonTranslate.text = getString(
-                                    R.string.detected_language,
-                                    Locale(identifiedLanguage).getDisplayLanguage(appLocale),
-                                    appLocale.getDisplayLanguage(appLocale)
+                                R.string.detected_language,
+                                Locale(identifiedLanguage).getDisplayLanguage(appLocale),
+                                appLocale.getDisplayLanguage(appLocale)
                             )
                         } catch (e: NullPointerException) { // Couldn't identify language
                             buttonTranslate.text = getString(
-                                    R.string.detected_language,
-                                    getString(R.string.elvish),
-                                    appLocale.getDisplayLanguage(appLocale)
+                                R.string.detected_language,
+                                getString(R.string.elvish),
+                                appLocale.getDisplayLanguage(appLocale)
                             )
                         }
                         recyclerViewLyrics.adapter = LyricsAdapter(
-                                translatedLyrics.split('\n')
+                            translatedLyrics.split('\n')
                         )
                         progressBar.visibility = View.INVISIBLE
                     }
@@ -112,16 +112,16 @@ class LyricsFragment(
                     try {
                         buttonTranslate.setOnClickListener {
                             fragmentManager?.beginTransaction()?.replace(
-                                    R.id.frameLayoutPlayer,
-                                    LyricsFragment().apply {
-                                        arguments = Bundle().apply {
-                                            putString(ARTISTS, artists)
-                                            putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
-                                            putString(NAME, name)
-                                            if (isLyricsTranslated)
-                                                putString(ORIGINAL_LYRICS, originalLyrics)
-                                        }
+                                R.id.frameLayoutPlayer,
+                                LyricsFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putString(ARTISTS, artists)
+                                        putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
+                                        putString(NAME, name)
+                                        if (isLyricsTranslated)
+                                            putString(ORIGINAL_LYRICS, originalLyrics)
                                     }
+                                }
                             )?.commit()
                         }
                     } catch (e: Exception) {

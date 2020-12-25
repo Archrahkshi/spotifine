@@ -18,19 +18,19 @@ internal class TracksPresenter(private val fragment: TracksFragment) {
     private val args = fragment.requireArguments()
 
     private val toolBarImpl
-            by lazy { ToolBarImpl(activity.tvTitle, activity.imgBack) }
+        by lazy { ToolBarImpl(activity.tvTitle, activity.imgBack) }
 
     private fun showBackButton() = toolBarImpl.applyBackButton(false)
     private fun hideBackButton() = toolBarImpl.applyBackButton(true)
     private fun setToolbarTitle(title: String) = toolBarImpl.setTitle(title)
 
     private val tracksHeaderImpl
-            by lazy {
-                TracksHeaderImpl(activity.textViewHeaderLine1,
-                        activity.textViewHeaderLine2,
-                        activity.textViewHeaderLine3,
-                        activity.imageViewHeader)
-            }
+        by lazy {
+            TracksHeaderImpl(activity.textViewHeaderLine1,
+                    activity.textViewHeaderLine2,
+                    activity.textViewHeaderLine3,
+                    activity.imageViewHeader)
+        }
 
     private fun setHeaderText(text: String) = tracksHeaderImpl.setText(text)
     private fun setHeaderSubtext(subtext: String?) = tracksHeaderImpl.setSubtext(subtext)
@@ -38,7 +38,7 @@ internal class TracksPresenter(private val fragment: TracksFragment) {
     private fun setHeaderImage(uri: String) = tracksHeaderImpl.setImage(uri)
 
     private val tracksRecyclerImpl
-            by lazy { TracksRecyclerImpl(fragment.recyclerViewTracks) }
+        by lazy { TracksRecyclerImpl(fragment.recyclerViewTracks) }
 
     @ExperimentalTime
     suspend fun applyRecycler() {
