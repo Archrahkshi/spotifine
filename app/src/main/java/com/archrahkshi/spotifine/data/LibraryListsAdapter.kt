@@ -15,9 +15,9 @@ import kotlinx.android.synthetic.main.item_library_list.view.textViewListInfo
 import kotlinx.android.synthetic.main.item_library_list.view.textViewListName
 
 class LibraryListsAdapter(
-    private val libraryLists: List<ListType>,
-    private val clickListener: (ListType) -> Unit
-) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(object: DiffUtil.ItemCallback<ListType>() {
+        private val libraryLists: List<ListType>,
+        private val clickListener: (ListType) -> Unit
+) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(object : DiffUtil.ItemCallback<ListType>() {
 
     override fun areItemsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
 
@@ -26,9 +26,9 @@ class LibraryListsAdapter(
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_library_list, parent, false)
+            LayoutInflater
+                    .from(parent.context)
+                    .inflate(R.layout.item_library_list, parent, false)
     )
 
     override fun getItemCount() = libraryLists.size
@@ -60,11 +60,11 @@ class LibraryListsAdapter(
                 is Album -> listType.artists
             }
             Glide.with(viewTest).load(
-                when (listType) {
-                    is Playlist -> listType.image
-                    is Artist -> listType.image
-                    is Album -> listType.image
-                }
+                    when (listType) {
+                        is Playlist -> listType.image
+                        is Artist -> listType.image
+                        is Album -> listType.image
+                    }
             ).into(imageViewListPic)
             layoutItemList.setOnClickListener { clickListener(listType) }
         }

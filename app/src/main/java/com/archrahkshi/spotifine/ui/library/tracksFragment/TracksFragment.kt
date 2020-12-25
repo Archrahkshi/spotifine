@@ -13,15 +13,15 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.ExperimentalTime
 
 class TracksFragment(
-    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
+        override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
 ) : Fragment(), CoroutineScope {
 
     private val presenter by lazy { TracksPresenter(this) }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_tracks, container, false)
 
     @ExperimentalTime

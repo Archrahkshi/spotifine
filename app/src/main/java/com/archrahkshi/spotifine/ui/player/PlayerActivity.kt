@@ -31,14 +31,14 @@ class PlayerActivity : AppCompatActivity() {
 
         if (savedInstanceState == null)
             supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutPlayer,
-                LyricsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARTISTS, intent.getStringExtra(ARTISTS))
-                        putString(NAME, intent.getStringExtra(NAME))
-                        putBoolean(IS_LYRICS_TRANSLATED, false)
+                    R.id.frameLayoutPlayer,
+                    LyricsFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(ARTISTS, intent.getStringExtra(ARTISTS))
+                            putString(NAME, intent.getStringExtra(NAME))
+                            putBoolean(IS_LYRICS_TRANSLATED, false)
+                        }
                     }
-                }
             ).commit()
     }
 
@@ -118,7 +118,9 @@ class PlayerActivity : AppCompatActivity() {
                         }
                     }
             )
-        } catch(e: Exception) {e.printStackTrace()}
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onStop() {

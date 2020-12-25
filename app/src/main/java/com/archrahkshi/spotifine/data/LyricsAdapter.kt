@@ -10,8 +10,8 @@ import com.archrahkshi.spotifine.R
 import kotlinx.android.synthetic.main.item_lyrics_line.view.textViewLyricsLine
 
 class LyricsAdapter(
-    private val lines: List<String>
-) : ListAdapter<String, LyricsAdapter.ViewHolder>(object: DiffUtil.ItemCallback<String>() {
+        private val lines: List<String>
+) : ListAdapter<String, LyricsAdapter.ViewHolder>(object : DiffUtil.ItemCallback<String>() {
 
     override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
     override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
@@ -19,9 +19,9 @@ class LyricsAdapter(
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_lyrics_line, parent, false)
+            LayoutInflater
+                    .from(parent.context)
+                    .inflate(R.layout.item_lyrics_line, parent, false)
     )
 
     override fun getItemCount() = lines.size

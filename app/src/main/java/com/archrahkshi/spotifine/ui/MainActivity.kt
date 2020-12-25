@@ -22,15 +22,15 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null)
             AuthorizationClient.openLoginActivity(
-                this,
-                SPOTIFY_REQUEST_CODE,
-                AuthorizationRequest.Builder(
-                    SPOTIFY_CLIENT_ID,
-                    AuthorizationResponse.Type.TOKEN,
-                    SPOTIFY_REDIRECT_URI
-                ).apply {
-                    setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
-                }.build()
+                    this,
+                    SPOTIFY_REQUEST_CODE,
+                    AuthorizationRequest.Builder(
+                            SPOTIFY_CLIENT_ID,
+                            AuthorizationResponse.Type.TOKEN,
+                            SPOTIFY_REDIRECT_URI
+                    ).apply {
+                        setScopes(arrayOf("streaming", "user-library-read", "user-follow-read"))
+                    }.build()
             )
     }
 
@@ -39,18 +39,18 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == SPOTIFY_REQUEST_CODE) {
             val response: AuthorizationResponse? =
-                AuthorizationClient.getResponse(resultCode, intent)
+                    AuthorizationClient.getResponse(resultCode, intent)
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     startActivity(
-                        Intent(this, LibraryActivity::class.java).apply {
-                            putExtra(
-                                ACCESS_TOKEN,
-                                response.accessToken.also {
-                                    Timber.i(it)
-                                }
-                            )
-                        }
+                            Intent(this, LibraryActivity::class.java).apply {
+                                putExtra(
+                                        ACCESS_TOKEN,
+                                        response.accessToken.also {
+                                            Timber.i(it)
+                                        }
+                                )
+                            }
                     )
                     finish()
                 }

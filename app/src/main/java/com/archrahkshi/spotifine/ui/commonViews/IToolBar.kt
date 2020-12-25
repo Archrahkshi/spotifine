@@ -13,7 +13,7 @@ interface IToolBar {
 }
 
 class ToolBarImpl(private val tvTitle: TextView,
-                  private val buttonBack: ImageView): IToolBar {
+                  private val buttonBack: ImageView) : IToolBar {
 
     override fun setTitle(title: String) {
         tvTitle.text = title
