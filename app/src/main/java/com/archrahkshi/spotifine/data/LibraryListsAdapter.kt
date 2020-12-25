@@ -17,11 +17,13 @@ import kotlinx.android.synthetic.main.item_library_list.view.textViewListName
 class LibraryListsAdapter(
     private val libraryLists: List<ListType>,
     private val clickListener: (ListType) -> Unit
-) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(object :
-    DiffUtil.ItemCallback<ListType>() {
-    override fun areItemsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
-    override fun areContentsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
-}) {
+) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(
+    object :
+        DiffUtil.ItemCallback<ListType>() {
+        override fun areItemsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
+    }
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater
             .from(parent.context)

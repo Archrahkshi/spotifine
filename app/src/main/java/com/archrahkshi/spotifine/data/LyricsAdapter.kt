@@ -11,10 +11,12 @@ import kotlinx.android.synthetic.main.item_lyrics_line.view.textViewLyricsLine
 
 class LyricsAdapter(
     private val lines: List<String>
-) : ListAdapter<String, LyricsAdapter.ViewHolder>(object : DiffUtil.ItemCallback<String>() {
-    override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
-    override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
-}) {
+) : ListAdapter<String, LyricsAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+    }
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater
@@ -25,7 +27,6 @@ class LyricsAdapter(
     override fun getItemCount() = lines.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(lines[position])
-
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(line: String) {

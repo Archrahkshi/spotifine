@@ -8,17 +8,22 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.util.formatDuration
-import kotlinx.android.synthetic.main.item_track.view.*
+import kotlinx.android.synthetic.main.item_track.view.layoutItemList
+import kotlinx.android.synthetic.main.item_track.view.textViewTrackArtist
+import kotlinx.android.synthetic.main.item_track.view.textViewTrackDuration
+import kotlinx.android.synthetic.main.item_track.view.textViewTrackName
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 class TracksAdapter(
     private val tracks: List<Track>,
     private val clickListener: (Track) -> Unit
-) : ListAdapter<Track, TracksAdapter.ViewHolder>(object : DiffUtil.ItemCallback<Track>() {
-    override fun areItemsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
-    override fun areContentsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
-}) {
+) : ListAdapter<Track, TracksAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<Track>() {
+        override fun areItemsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: Track, newItem: Track) = oldItem == newItem
+    }
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
     )

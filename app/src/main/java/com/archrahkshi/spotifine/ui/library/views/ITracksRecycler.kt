@@ -9,7 +9,6 @@ interface ITracksRecycler {
     fun setupRecycler(adapter: RecyclerView.Adapter<TracksAdapter.ViewHolder>)
 }
 
-
 class TracksRecyclerImpl(private val recycler: RecyclerView) : ITracksRecycler {
     @ExperimentalTime
     override fun setupRecycler(adapter: RecyclerView.Adapter<TracksAdapter.ViewHolder>) {

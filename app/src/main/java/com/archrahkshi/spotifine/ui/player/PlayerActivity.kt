@@ -62,7 +62,7 @@ class PlayerActivity : AppCompatActivity() {
                         val seekBar = findViewById<SeekBar>(R.id.seekBar)
                         seekBar.max = duration.toInt()
                         var flag = 0
-                        //buttonPlay.text = getString(R.string.play)
+                        // buttonPlay.text = getString(R.string.play)
                         seekBar.setOnSeekBarChangeListener(
                             object : OnSeekBarChangeListener {
                                 override fun onProgressChanged(
@@ -95,17 +95,17 @@ class PlayerActivity : AppCompatActivity() {
                                 0 -> {
                                     spotifyAppRemote.playerApi.play("spotify:track:$id")
                                     flag = 1
-                                    //buttonPlay.text = getString(R.string.pause)
+                                    // buttonPlay.text = getString(R.string.pause)
                                 }
                                 1 -> {
                                     spotifyAppRemote.playerApi.pause()
                                     flag = 2
-                                    //buttonPlay.text = getString(R.string.play)
+                                    // buttonPlay.text = getString(R.string.play)
                                 }
                                 2 -> {
                                     spotifyAppRemote.playerApi.resume()
                                     flag = 1
-                                    //buttonPlay.text = getString(R.string.pause)
+                                    // buttonPlay.text = getString(R.string.pause)
                                 }
                             }
                         }
