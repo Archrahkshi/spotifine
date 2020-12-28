@@ -37,18 +37,12 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (requestCode == SPOTIFY_REQUEST_CODE) {
-            val response: AuthorizationResponse? =
-                AuthorizationClient.getResponse(resultCode, intent)
+            val response = AuthorizationClient.getResponse(resultCode, intent)
             when (response?.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     startActivity(
                         Intent(this, LibraryActivity::class.java).apply {
-                            putExtra(
-                                ACCESS_TOKEN,
-                                response.accessToken.also {
-                                    Timber.i(it)
-                                }
-                            )
+                            putExtra(ACCESS_TOKEN, response.accessToken.also { Timber.i(it) })
                         }
                     )
                     finish()

@@ -27,8 +27,10 @@ class TracksFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.applyHeader()
-        presenter.applyToolbar()
-        launch { presenter.applyRecycler() }
+        presenter.apply {
+            applyHeader()
+            applyToolbar()
+            launch { applyRecycler() }
+        }
     }
 }

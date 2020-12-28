@@ -3,17 +3,24 @@
     <string name="album_сover">Album cover</string>
     <string name="albums">ALBUMS</string>
     <string name="artists">ARTISTS</string>
+    <string name="back">Back</string>
+    <string name="elvish">ELVISH</string>
+    <string name="library_albums">Albums</string>
+    <string name="library_artists">Artists</string>
+    <string name="library_playlists">Playlists</string>
+    <string name="loading">LOADING…</string>
+    <string name="menu">Menu</string>
+    <string name="no_lyrics">It seems like this song is instrumental… or is it not?</string>
     <string name="pause">PAUSE</string>
     <string name="play">PLAY</string>
     <string name="playlists">PLAYLISTS</string>
     <string name="russian">RUSSIAN</string>
     <string name="spotifine_logo">Spotifine logo</string>
+    <string name="title_library">Library</string>
+    <string name="title_tracks">Tracks</string>
     <string name="translate">TRANSLATE</string>
     <string name="tracks_singular">track</string>
     <string name="tracks_paucal">tracks</string>
     <string name="tracks_plural">tracks</string>
-    <string name="loading">LOADING…</string>
-    <string name="elvish">ELVISH</string>
-    <string name="no_lyrics">It seems like this song is instrumental… or is it not?</string>
     <string name="unidentifiable_language">Sorry, I don\'t know this language yet :(</string>
 </resources>

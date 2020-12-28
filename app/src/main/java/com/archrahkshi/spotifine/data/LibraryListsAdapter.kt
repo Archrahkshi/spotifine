@@ -18,8 +18,7 @@ class LibraryListsAdapter(
     private val libraryLists: List<ListType>,
     private val clickListener: (ListType) -> Unit
 ) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(
-    object :
-        DiffUtil.ItemCallback<ListType>() {
+    object : DiffUtil.ItemCallback<ListType>() {
         override fun areItemsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
         override fun areContentsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
     }

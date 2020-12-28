@@ -13,7 +13,7 @@ import com.archrahkshi.spotifine.util.ARTISTS
 import com.archrahkshi.spotifine.util.LIST_TYPE
 import com.archrahkshi.spotifine.util.PLAYLISTS
 import kotlinx.android.synthetic.main.activity_library.navigationView
-import kotlinx.android.synthetic.main.toolbar.imgBack
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
@@ -26,15 +26,15 @@ class LibraryActivity : AppCompatActivity() {
         if (savedInstanceState == null)
             replaceFragmentWith(PLAYLISTS)
 
-        imgBack.setOnClickListener {
+        imageViewBack.setOnClickListener {
             CoroutineScope(Default).launch {
                 val inst = Instrumentation()
                 inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
             }
         }
 
-        navigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.title) {
+        navigationView.setOnNavigationItemSelectedListener {
+            when (it.title) {
                 getString(R.string.library_artists) -> replaceFragmentWith(ARTISTS)
                 getString(R.string.library_albums) -> replaceFragmentWith(ALBUMS)
                 getString(R.string.library_playlists) -> replaceFragmentWith(PLAYLISTS)

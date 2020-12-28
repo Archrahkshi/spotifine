@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.util.formatDuration
+import com.archrahkshi.spotifine.util.format
 import kotlinx.android.synthetic.main.item_track.view.layoutItemList
 import kotlinx.android.synthetic.main.item_track.view.textViewTrackArtist
 import kotlinx.android.synthetic.main.item_track.view.textViewTrackDuration
@@ -44,7 +44,7 @@ class TracksAdapter(
             textViewTrackName.text = track.name
             textViewTrackArtist.text = track.artists
 //            textViewTrackDuration.text = SimpleDateFormat("HH:mm:ss").format(track.duration)
-            textViewTrackDuration.text = formatDuration(track.duration)
+            textViewTrackDuration.text = track.duration.format()
             layoutItemList.setOnClickListener { clickListener(track) }
         }
     }

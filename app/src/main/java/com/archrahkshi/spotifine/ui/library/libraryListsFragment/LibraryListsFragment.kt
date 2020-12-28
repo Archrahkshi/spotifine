@@ -25,10 +25,10 @@ import com.archrahkshi.spotifine.util.PLAYLISTS
 import com.archrahkshi.spotifine.util.SIZE
 import com.archrahkshi.spotifine.util.SPOTIFY_PREFIX
 import com.archrahkshi.spotifine.util.URL
-import com.archrahkshi.spotifine.util.createAlbum
-import com.archrahkshi.spotifine.util.createArtist
-import com.archrahkshi.spotifine.util.createPlaylist
-import com.archrahkshi.spotifine.util.getJsonFromApi
+import com.archrahkshi.spotifine.util.asAlbum
+import com.archrahkshi.spotifine.util.asArtist
+import com.archrahkshi.spotifine.util.asPlaylist
+import com.archrahkshi.spotifine.util.getJson
 import kotlinx.android.synthetic.main.fragment_library_lists.recyclerViewLists
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +57,7 @@ class LibraryListsFragment(
 
         launch {
             recyclerViewLists.adapter = LibraryListsAdapter(createLibraryLists(accessToken)) {
-                fragmentManager?.beginTransaction()?.replace(
+                requireActivity().supportFragmentManager.beginTransaction().replace(
                     R.id.frameLayoutLibrary,
                     when (it) {
                         is Playlist -> TracksFragment().apply {
@@ -89,26 +89,27 @@ class LibraryListsFragment(
                             }
                         }
                     }
-                )?.setTransition(TRANSIT_FRAGMENT_FADE)?.addToBackStack(null)?.commit()
+                ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
             }
         }
     }
 
     private suspend fun createLibraryLists(accessToken: String?) = withContext(Dispatchers.IO) {
         when (arguments?.getString(LIST_TYPE)) {
-            PLAYLISTS -> getJsonFromApi(
-                "${SPOTIFY_PREFIX}me/playlists",
-                accessToken
-            )["items"].asJsonArray.map { createPlaylist(it.asJsonObject) }
-            ARTISTS -> getJsonFromApi(
-                "${SPOTIFY_PREFIX}me/following?type=artist",
-                accessToken
-            )["artists"].asJsonObject["items"].asJsonArray.map { createArtist(it.asJsonObject) }
+            PLAYLISTS ->
+                "${SPOTIFY_PREFIX}me/playlists"
+                    .getJson(accessToken)["items"]
+                    .asJsonArray
+                    .map { it.asJsonObject.asPlaylist() }
+            ARTISTS ->
+                "${SPOTIFY_PREFIX}me/following?type=artist"
+                    .getJson(accessToken)["artists"]
+                    .asJsonObject["items"]
+                    .asJsonArray
+                    .map { it.asJsonObject.asArtist() }
             ALBUMS -> {
-                val json = getJsonFromApi(
-                    "$SPOTIFY_PREFIX${arguments?.getString(URL) ?: "me"}/albums",
-                    accessToken
-                )
+                val json = "$SPOTIFY_PREFIX${arguments?.getString(URL) ?: "me"}/albums"
+                    .getJson(accessToken)
                 val items = json["items"].asJsonArray
                 when (
                     json["href"]
@@ -116,9 +117,9 @@ class LibraryListsFragment(
                         .removePrefix(SPOTIFY_PREFIX)
                         .take(ARTIST_FROM_USER_DISTINCTION)
                 ) {
-                    "ar" -> items.map { createAlbum(it.asJsonObject, FROM_ARTIST) }
+                    "ar" -> items.map { it.asJsonObject.asAlbum(FROM_ARTIST) }
                     "me" -> items.map {
-                        createAlbum(it.asJsonObject["album"].asJsonObject, FROM_USER)
+                        it.asJsonObject["album"].asJsonObject.asAlbum(FROM_USER)
                     }
                     else -> listOf()
                 }

@@ -47,80 +47,76 @@ class PlayerActivity : AppCompatActivity() {
         Timber.wtf(id?.toString())
         Timber.wtf(duration.toString())
 
-        try {
-            SpotifyAppRemote.connect(
-                this,
-                ConnectionParams.Builder(SPOTIFY_CLIENT_ID)
-                    .setRedirectUri(SPOTIFY_REDIRECT_URI)
-                    .showAuthView(true)
-                    .build(),
-                object : Connector.ConnectionListener {
-                    override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
-                        this@PlayerActivity.spotifyAppRemote = spotifyAppRemote
-                        Timber.d("Connected! Yay!")
+        SpotifyAppRemote.connect(
+            this,
+            ConnectionParams.Builder(SPOTIFY_CLIENT_ID)
+                .setRedirectUri(SPOTIFY_REDIRECT_URI)
+                .showAuthView(true)
+                .build(),
+            object : Connector.ConnectionListener {
+                override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
+                    this@PlayerActivity.spotifyAppRemote = spotifyAppRemote
+                    Timber.d("Connected! Yay!")
 
-                        val seekBar = findViewById<SeekBar>(R.id.seekBar)
-                        seekBar.max = duration.toInt()
-                        var flag = 0
-                        // buttonPlay.text = getString(R.string.play)
-                        seekBar.setOnSeekBarChangeListener(
-                            object : OnSeekBarChangeListener {
-                                override fun onProgressChanged(
-                                    seekBar: SeekBar,
-                                    i: Int,
-                                    b: Boolean
-                                ) {
-                                    if (flag == 0) {
-                                        seekBar.progress = 0
-                                    } else {
-                                        spotifyAppRemote.playerApi.seekTo(seekBar.progress.toLong())
-                                    }
-                                }
-
-                                override fun onStartTrackingTouch(seekBar: SeekBar) {
-                                    if (flag == 1) {
-                                        spotifyAppRemote.playerApi.pause()
-                                    }
-                                }
-
-                                override fun onStopTrackingTouch(seekBar: SeekBar) {
-                                    if (flag == 1) {
-                                        spotifyAppRemote.playerApi.resume()
-                                    }
+                    val seekBar = findViewById<SeekBar>(R.id.seekBar)
+                    seekBar.max = duration.toInt()
+                    var flag = 0
+                    // buttonPlay.text = getString(R.string.play)
+                    seekBar.setOnSeekBarChangeListener(
+                        object : OnSeekBarChangeListener {
+                            override fun onProgressChanged(
+                                seekBar: SeekBar,
+                                i: Int,
+                                b: Boolean
+                            ) {
+                                if (flag == 0) {
+                                    seekBar.progress = 0
+                                } else {
+                                    spotifyAppRemote.playerApi.seekTo(seekBar.progress.toLong())
                                 }
                             }
-                        )
-                        buttonPlay.setOnClickListener {
-                            when (flag) {
-                                0 -> {
-                                    spotifyAppRemote.playerApi.play("spotify:track:$id")
-                                    flag = 1
-                                    // buttonPlay.text = getString(R.string.pause)
-                                }
-                                1 -> {
+
+                            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                                if (flag == 1) {
                                     spotifyAppRemote.playerApi.pause()
-                                    flag = 2
-                                    // buttonPlay.text = getString(R.string.play)
                                 }
-                                2 -> {
+                            }
+
+                            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                                if (flag == 1) {
                                     spotifyAppRemote.playerApi.resume()
-                                    flag = 1
-                                    // buttonPlay.text = getString(R.string.pause)
                                 }
                             }
                         }
-                    }
-
-                    override fun onFailure(throwable: Throwable) {
-                        Timber.e(throwable)
-
-                        // Something went wrong when attempting to connect! Handle errors here
+                    )
+                    buttonPlay.setOnClickListener {
+                        when (flag) {
+                            0 -> {
+                                spotifyAppRemote.playerApi.play("spotify:track:$id")
+                                flag = 1
+                                // buttonPlay.text = getString(R.string.pause)
+                            }
+                            1 -> {
+                                spotifyAppRemote.playerApi.pause()
+                                flag = 2
+                                // buttonPlay.text = getString(R.string.play)
+                            }
+                            2 -> {
+                                spotifyAppRemote.playerApi.resume()
+                                flag = 1
+                                // buttonPlay.text = getString(R.string.pause)
+                            }
+                        }
                     }
                 }
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+
+                override fun onFailure(throwable: Throwable) {
+                    Timber.e(throwable)
+
+                    // Something went wrong when attempting to connect! Handle errors here
+                }
+            }
+        )
     }
 
     override fun onStop() {

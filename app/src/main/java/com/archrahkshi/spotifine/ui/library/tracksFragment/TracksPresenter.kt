@@ -3,7 +3,7 @@ package com.archrahkshi.spotifine.ui.library.tracksFragment
 import android.content.Intent
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.TracksAdapter
-import com.archrahkshi.spotifine.ui.commonViews.ToolBarImpl
+import com.archrahkshi.spotifine.ui.commonViews.ToolbarImpl
 import com.archrahkshi.spotifine.ui.library.views.TracksHeaderImpl
 import com.archrahkshi.spotifine.ui.library.views.TracksRecyclerImpl
 import com.archrahkshi.spotifine.ui.player.PlayerActivity
@@ -22,19 +22,24 @@ import kotlinx.android.synthetic.main.fragment_tracks.recyclerViewTracks
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine2
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
-import kotlinx.android.synthetic.main.toolbar.imgBack
-import kotlinx.android.synthetic.main.toolbar.tvTitle
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import timber.log.Timber
 import kotlin.time.ExperimentalTime
 
 internal class TracksPresenter(private val fragment: TracksFragment) {
     private val activity = fragment.requireActivity()
     private val args = fragment.requireArguments()
+    private val context = fragment.requireContext()
 
-    private val toolBarImpl by lazy { ToolBarImpl(activity.tvTitle, activity.imgBack) }
+    private val toolBarImpl by lazy {
+        ToolbarImpl(
+            activity.textViewToolbarText,
+            activity.imageViewBack
+        )
+    }
 
     private fun showBackButton() = toolBarImpl.applyBackButton(false)
-    private fun hideBackButton() = toolBarImpl.applyBackButton(true)
     private fun setToolbarTitle(title: String) = toolBarImpl.setTitle(title)
 
     private val tracksHeaderImpl by lazy {
@@ -59,8 +64,8 @@ internal class TracksPresenter(private val fragment: TracksFragment) {
     suspend fun applyRecycler() {
         tracksRecyclerImpl.setupRecycler(
             TracksAdapter(createTrackLists(args.getString(URL)!!, args.getString(ACCESS_TOKEN))) {
-                Timber.tag("Track clicked").i(it.toString())
-                fragment.requireContext().startActivity(
+                Timber.i(it.toString())
+                context.startActivity(
                     Intent(activity, PlayerActivity::class.java).apply {
                         putExtra(ID, it.id)
                         putExtra(DURATION, it.duration)
@@ -85,7 +90,7 @@ internal class TracksPresenter(private val fragment: TracksFragment) {
                 fragment.getString(
                     R.string.header_line3,
                     getInt(SIZE),
-                    setWordTracks(fragment.requireContext(), getInt(SIZE))
+                    setWordTracks(context, getInt(SIZE))
                 )
             )
             setHeaderImage(getString(IMAGE)!!)
