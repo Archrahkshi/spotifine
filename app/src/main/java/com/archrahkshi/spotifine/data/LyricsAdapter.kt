@@ -17,7 +17,6 @@ class LyricsAdapter(
         override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
     }
 ) {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater
             .from(parent.context)

@@ -18,12 +18,11 @@
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:background="#00081C"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
-        android:id="@+id/navigationView"
-        app:menu="@menu/menu"
-        android:layout_width="match_parent"
-        android:layout_height="56dp">
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+            android:background="@color/toolbar_color"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            android:id="@+id/navigationView"
+            app:menu="@menu/menu"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height" />
 
 </LinearLayout>

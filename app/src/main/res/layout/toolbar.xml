@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:background="#00081C"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_height">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@color/toolbar_color"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height">
 
     <ImageButton
-        android:background="?attr/selectableItemBackgroundBorderless"
-            android:id="@+id/imgBack"
-            android:layout_marginStart="@dimen/margin_7"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:id="@+id/imageViewBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/icon_back">
-    </ImageButton>
+            android:src="@drawable/icon_back"
+            android:layout_marginStart="@dimen/margin_16"
+            android:contentDescription="@string/back" />
 
     <TextView
-        android:lines="1"
-        android:maxLines="1"
-        android:textStyle="bold"
-        android:id="@+id/tvTitle"
-        android:textColor="@color/purple_200"
-        android:textSize="@dimen/toolbar_title_text_size"
-        android:gravity="center"
-        android:fontFamily="verdana"
-        android:layout_marginStart="@dimen/margin_7"
-        android:layout_toEndOf="@id/imgBack"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-    </TextView>
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:id="@+id/textViewToolbarText"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/toolbar_title_text_size"
+            android:fontFamily="verdana"
+            android:layout_marginStart="@dimen/margin_16"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:text="Toolbar"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:ellipsize="end" />
 
     <ImageView
-        android:layout_alignParentEnd="true"
-        android:id="@+id/imgSettings"
-        android:layout_marginEnd="@dimen/margin_9"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/icon_settings">
-    </ImageView>
+            android:id="@+id/imageViewMenu"
+            android:layout_marginEnd="@dimen/margin_16"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_menu"
+            android:layout_marginStart="@dimen/margin_16"
+            android:contentDescription="@string/menu" />
 
-</RelativeLayout>
+</LinearLayout>

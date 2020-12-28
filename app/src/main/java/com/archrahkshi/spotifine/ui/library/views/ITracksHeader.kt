@@ -1,8 +1,8 @@
 package com.archrahkshi.spotifine.ui.library.views
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.archrahkshi.spotifine.util.EMPTY_STRING
 import com.bumptech.glide.Glide
 
 interface ITracksHeader {
@@ -23,7 +23,10 @@ class TracksHeaderImpl(
     }
 
     override fun setSubtext(text: String?) {
-        subTextView.text = text ?: EMPTY_STRING
+        if (text != null)
+            subTextView.text = text
+        else
+            subTextView.visibility = View.GONE
     }
 
     override fun setAdditionalText(text: String) {

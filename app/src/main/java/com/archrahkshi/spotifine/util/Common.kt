@@ -1,7 +1,6 @@
 package com.archrahkshi.spotifine.util
 
 import android.content.Context
-import android.util.Log
 import com.archrahkshi.spotifine.R
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -24,7 +23,7 @@ fun setWordTracks(context: Context?, size: Int?) = context?.resources?.getString
 )
 
 @ExperimentalTime
-fun formatDuration(milliseconds: Long) = milliseconds.milliseconds.toComponents { HH, mm, ss, _ ->
+fun Long.format() = this.milliseconds.toComponents { HH, mm, ss, _ ->
     var duration = ""
     if (HH > 0) duration += "$HH:"
     if (duration.isNotEmpty() && mm <= ONE_DIGIT) duration += '0'
@@ -33,9 +32,9 @@ fun formatDuration(milliseconds: Long) = milliseconds.milliseconds.toComponents 
     "$duration$ss"
 }
 
-fun getJsonFromApi(url: String, accessToken: String?): JsonObject = JsonParser().parse(
+fun String.getJson(accessToken: String?): JsonObject = JsonParser().parse(
     try {
-        url.buildRequest(accessToken)
+        this.buildRequest(accessToken)
     } catch (e: IOException) {
         Timber.wtf(e)
         null
@@ -48,5 +47,6 @@ fun String.buildRequest(accessToken: String?) = OkHttpClient().newCall(
         .header("Authorization", "Bearer $accessToken")
         .header("Accept", "application/json")
         .header("Content-Type", "application/json")
-        .build().also { Log.i("BVB", it.toString()) }
+        .build()
+        .also { Timber.i(it.toString()) }
 ).execute().body?.string()

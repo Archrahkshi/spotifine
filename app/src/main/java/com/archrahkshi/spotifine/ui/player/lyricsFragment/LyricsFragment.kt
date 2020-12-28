@@ -16,16 +16,16 @@ import com.archrahkshi.spotifine.util.ORIGINAL_LYRICS
 import com.archrahkshi.spotifine.util.getOriginalLyrics
 import com.archrahkshi.spotifine.util.identifyLanguage
 import com.archrahkshi.spotifine.util.translateFromTo
+import com.ibm.watson.language_translator.v3.util.Language.ENGLISH
 import com.ibm.watson.language_translator.v3.util.Language.RUSSIAN
 import kotlinx.android.synthetic.main.fragment_lyrics.buttonTranslate
 import kotlinx.android.synthetic.main.fragment_lyrics.progressBar
 import kotlinx.android.synthetic.main.fragment_lyrics.recyclerViewLyrics
-import kotlinx.android.synthetic.main.fragment_lyrics.viewLyricsFloor
-import kotlinx.android.synthetic.main.toolbar.imgBack
+import kotlinx.android.synthetic.main.fragment_lyrics.viewLyricsFooter
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.Locale
 import kotlin.coroutines.CoroutineContext
 
@@ -45,98 +45,119 @@ class LyricsFragment(
 
         presenter.applyToolbar()
 
-        requireActivity().imgBack.setOnClickListener {
+        requireActivity().imageViewBack.setOnClickListener {
             CoroutineScope(Dispatchers.Default).launch {
                 val inst = Instrumentation()
                 inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
             }
         }
 
-        val appLanguage = RUSSIAN
-        val appLocale = Locale(appLanguage)
-
-        val isLyricsTranslated = arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false
         val name = arguments?.getString(NAME) ?: ""
         val artists = arguments?.getString(ARTISTS) ?: ""
 
         launch {
-            progressBar.visibility = View.VISIBLE
             buttonTranslate.visibility = View.GONE
-            Timber.i("START")
+            progressBar.visibility = View.VISIBLE
             val originalLyrics = arguments?.getString(ORIGINAL_LYRICS)
                 ?: getOriginalLyrics(name, artists)
-            Timber.i("FINISH")
 
-            if (originalLyrics == null) {
-                recyclerViewLyrics.adapter = LyricsAdapter(listOf(getString(R.string.no_lyrics)))
-                progressBar.visibility = View.INVISIBLE
-                buttonTranslate.visibility = View.GONE
-                viewLyricsFloor.visibility = View.GONE
-            } else {
-                val identifiedLanguage = originalLyrics.identifyLanguage()
+            if (originalLyrics == null)
+                handleNoLyrics()
+            else
+                handleLyrics(originalLyrics, artists, name)
+        }
+    }
 
-                if (identifiedLanguage == appLanguage) {
-                    buttonTranslate.visibility = View.GONE
-                    viewLyricsFloor.visibility = View.GONE
-                    recyclerViewLyrics.adapter = LyricsAdapter(
-                        originalLyrics.split('\n')
-                    )
-                    progressBar.visibility = View.INVISIBLE
-                } else {
-                    if (!isLyricsTranslated) {
-                        try {
-                            buttonTranslate.visibility = View.VISIBLE
-                            buttonTranslate.text = getString(R.string.translate)
-                            recyclerViewLyrics.adapter = LyricsAdapter(
-                                originalLyrics.split('\n')
-                            )
-                            progressBar.visibility = View.INVISIBLE
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    } else {
-                        val translatedLyrics =
-                            originalLyrics.translateFromTo(identifiedLanguage, appLanguage)
-                                ?: getString(R.string.unidentifiable_language)
-                        buttonTranslate.visibility = View.VISIBLE
-                        try {
-                            buttonTranslate.text = getString(
-                                R.string.detected_language,
-                                Locale(identifiedLanguage).getDisplayLanguage(appLocale),
-                                appLocale.getDisplayLanguage(appLocale)
-                            )
-                        } catch (e: NullPointerException) { // Couldn't identify language
-                            buttonTranslate.text = getString(
-                                R.string.detected_language,
-                                getString(R.string.elvish),
-                                appLocale.getDisplayLanguage(appLocale)
-                            )
-                        }
-                        recyclerViewLyrics.adapter = LyricsAdapter(
-                            translatedLyrics.split('\n')
-                        )
-                        progressBar.visibility = View.INVISIBLE
-                    }
+    private fun handleNoLyrics() {
+        recyclerViewLyrics.adapter = LyricsAdapter(listOf(getString(R.string.no_lyrics)))
+        progressBar.visibility = View.GONE
+        viewLyricsFooter.visibility = View.GONE
+    }
 
-                    try {
-                        buttonTranslate.setOnClickListener {
-                            fragmentManager?.beginTransaction()?.replace(
-                                R.id.frameLayoutPlayer,
-                                LyricsFragment().apply {
-                                    arguments = Bundle().apply {
-                                        putString(ARTISTS, artists)
-                                        putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
-                                        putString(NAME, name)
-                                        if (isLyricsTranslated)
-                                            putString(ORIGINAL_LYRICS, originalLyrics)
-                                    }
-                                }
-                            )?.commit()
-                        }
-                    } catch (e: Exception) {
+    private suspend fun handleLyrics(
+        originalLyrics: String,
+        artists: String,
+        name: String
+    ) {
+        val identifiedLanguage = originalLyrics.identifyLanguage()
+        val targetLanguage = RUSSIAN
+
+        if (identifiedLanguage == targetLanguage)
+            handleSameLanguage(originalLyrics)
+        else
+            handleDifferentLanguage(
+                originalLyrics,
+                identifiedLanguage,
+                targetLanguage,
+                artists,
+                name
+            )
+    }
+
+    private fun handleSameLanguage(originalLyrics: String) {
+        progressBar.visibility = View.GONE
+        viewLyricsFooter.visibility = View.GONE
+        recyclerViewLyrics.adapter = LyricsAdapter(originalLyrics.split('\n'))
+    }
+
+    private suspend fun handleDifferentLanguage(
+        originalLyrics: String,
+        identifiedLanguage: String,
+        targetLanguage: String,
+        artists: String,
+        name: String
+    ) {
+        progressBar.visibility = View.GONE
+        buttonTranslate.visibility = View.VISIBLE
+        val isLyricsTranslated = arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false
+        if (!isLyricsTranslated)
+            handleOriginalLyrics(originalLyrics)
+        else
+            handleTranslatedLyrics(originalLyrics, identifiedLanguage, targetLanguage)
+
+        buttonTranslate.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction().replace(
+                R.id.frameLayoutPlayer,
+                LyricsFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(ARTISTS, artists)
+                        putBoolean(IS_LYRICS_TRANSLATED, !isLyricsTranslated)
+                        putString(NAME, name)
+                        if (isLyricsTranslated) putString(ORIGINAL_LYRICS, originalLyrics)
                     }
                 }
-            }
+            ).commit()
         }
+    }
+
+    private fun handleOriginalLyrics(originalLyrics: String) {
+        buttonTranslate.text = getString(R.string.translate)
+        recyclerViewLyrics.adapter = LyricsAdapter(originalLyrics.split('\n'))
+    }
+
+    private suspend fun handleTranslatedLyrics(
+        originalLyrics: String,
+        identifiedLanguage: String,
+        targetLanguage: String
+    ) {
+        val appLocale = Locale(ENGLISH)
+        var languageNotIdentified = false
+        val translatedLyrics: String
+        val translationResult = originalLyrics.translateFromTo(identifiedLanguage, targetLanguage)
+        if (translationResult != null)
+            translatedLyrics = translationResult
+        else {
+            languageNotIdentified = true
+            translatedLyrics = getString(R.string.unidentifiable_language)
+        }
+        buttonTranslate.text = getString(
+            R.string.detected_language,
+            if (languageNotIdentified)
+                getString(R.string.elvish) // Language kinda identified, yet badly
+            else
+                Locale(identifiedLanguage).getDisplayLanguage(appLocale),
+            Locale(targetLanguage).getDisplayLanguage(appLocale)
+        )
+        recyclerViewLyrics.adapter = LyricsAdapter(translatedLyrics.split('\n'))
     }
 }
