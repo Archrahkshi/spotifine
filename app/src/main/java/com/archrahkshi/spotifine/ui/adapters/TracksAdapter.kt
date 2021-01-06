@@ -1,4 +1,4 @@
-package com.archrahkshi.spotifine.data
+package com.archrahkshi.spotifine.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.data.Track
 import com.archrahkshi.spotifine.util.format
 import kotlinx.android.synthetic.main.item_track.view.layoutItemList
 import kotlinx.android.synthetic.main.item_track.view.textViewTrackArtist

@@ -11,6 +11,7 @@ import com.archrahkshi.spotifine.util.DURATION
 import com.archrahkshi.spotifine.util.ID
 import com.archrahkshi.spotifine.util.IS_LYRICS_TRANSLATED
 import com.archrahkshi.spotifine.util.NAME
+import com.archrahkshi.spotifine.util.ORIGINAL_LYRICS
 import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
 import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
@@ -20,6 +21,11 @@ import kotlinx.android.synthetic.main.activity_player.*
 import timber.log.Timber
 
 class PlayerActivity : AppCompatActivity() {
+    companion object {
+        lateinit var artists: String
+        lateinit var name: String
+    }
+
     private var spotifyAppRemote: SpotifyAppRemote? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +37,8 @@ class PlayerActivity : AppCompatActivity() {
                 R.id.frameLayoutPlayer,
                 LyricsFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARTISTS, intent.getStringExtra(ARTISTS))
-                        putString(NAME, intent.getStringExtra(NAME))
+                        putString(ARTISTS, intent.getStringExtra(ARTISTS).also { artists = it })
+                        putString(NAME, intent.getStringExtra(NAME).also { name = it })
                         putBoolean(IS_LYRICS_TRANSLATED, false)
                     }
                 }

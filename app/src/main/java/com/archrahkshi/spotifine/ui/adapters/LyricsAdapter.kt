@@ -1,4 +1,4 @@
-package com.archrahkshi.spotifine.data
+package com.archrahkshi.spotifine.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View

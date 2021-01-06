@@ -13,12 +13,16 @@ import com.archrahkshi.spotifine.util.ARTISTS
 import com.archrahkshi.spotifine.util.LIST_TYPE
 import com.archrahkshi.spotifine.util.PLAYLISTS
 import kotlinx.android.synthetic.main.activity_library.navigationView
-import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.btnBack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
 class LibraryActivity : AppCompatActivity() {
+    companion object {
+        lateinit var accessToken: String
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
@@ -26,7 +30,7 @@ class LibraryActivity : AppCompatActivity() {
         if (savedInstanceState == null)
             replaceFragmentWith(PLAYLISTS)
 
-        imageViewBack.setOnClickListener {
+        btnBack.setOnClickListener {
             CoroutineScope(Default).launch {
                 val inst = Instrumentation()
                 inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
@@ -49,7 +53,7 @@ class LibraryActivity : AppCompatActivity() {
             LibraryListsFragment().apply {
                 arguments = Bundle().apply {
                     putString(LIST_TYPE, listType)
-                    putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN))
+                    putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN).also { accessToken = it })
                 }
             }
         ).setTransition(TRANSIT_FRAGMENT_FADE).commit()
