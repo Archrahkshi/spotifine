@@ -20,6 +20,11 @@ import kotlinx.android.synthetic.main.activity_player.*
 import timber.log.Timber
 
 class PlayerActivity : AppCompatActivity() {
+    companion object {
+        lateinit var artists: String
+        lateinit var name: String
+    }
+
     private var spotifyAppRemote: SpotifyAppRemote? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +36,8 @@ class PlayerActivity : AppCompatActivity() {
                 R.id.frameLayoutPlayer,
                 LyricsFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARTISTS, intent.getStringExtra(ARTISTS))
-                        putString(NAME, intent.getStringExtra(NAME))
+                        putString(ARTISTS, intent.getStringExtra(ARTISTS).also { artists = it!! })
+                        putString(NAME, intent.getStringExtra(NAME).also { name = it!! })
                         putBoolean(IS_LYRICS_TRANSLATED, false)
                     }
                 }

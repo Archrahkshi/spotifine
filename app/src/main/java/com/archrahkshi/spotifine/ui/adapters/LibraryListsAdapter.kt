@@ -1,4 +1,4 @@
-package com.archrahkshi.spotifine.data
+package com.archrahkshi.spotifine.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.data.Album
+import com.archrahkshi.spotifine.data.Artist
+import com.archrahkshi.spotifine.data.ListType
+import com.archrahkshi.spotifine.data.Playlist
 import com.archrahkshi.spotifine.util.setWordTracks
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_library_list.view.imageViewListPic
