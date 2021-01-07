@@ -32,13 +32,12 @@ import kotlinx.android.synthetic.main.fragment_tracks.recyclerViewTracks
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine2
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
-import kotlinx.android.synthetic.main.toolbar.btnBack
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.lang.NullPointerException
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.ExperimentalTime
 
@@ -59,16 +58,16 @@ class TracksFragment(
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         TracksListProviderFactory.provide()
 
-        //
         tracksListPresenter.setupList(
             requireArguments().getString(URL)!!,
             requireArguments().getString(ACCESS_TOKEN)
         )
-        //
+
         toolbarPresenter.setupToolbar()
-        //
+
         tracksHeaderPresenter.setText(requireArguments().getString(NAME)!!)
         tracksHeaderPresenter.setSubtext(requireArguments().getString(ARTISTS))
         tracksHeaderPresenter.setAdditionalText(
@@ -84,6 +83,7 @@ class TracksFragment(
     /**
      * TracksHeader implementation
      */
+
     override fun setText(text: String) {
         textViewHeaderLine1.text = text
     }
@@ -122,7 +122,8 @@ class TracksFragment(
                         }
                     )
                 }
-            } catch(e: NullPointerException) {}
+            } catch (e: NullPointerException) {
+            }
         }
     }
 
@@ -135,6 +136,6 @@ class TracksFragment(
     }
 
     override fun showBackButton(isShown: Boolean) {
-        requireActivity().btnBack.visibility = if (isShown) View.VISIBLE else View.INVISIBLE
+        requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 }

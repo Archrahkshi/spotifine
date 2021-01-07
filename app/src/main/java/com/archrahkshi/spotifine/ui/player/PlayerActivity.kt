@@ -33,12 +33,18 @@ class PlayerActivity : AppCompatActivity() {
                 R.id.frameLayoutPlayer,
                 LyricsFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARTISTS, intent.getStringExtra(ARTISTS).also {
-                            TrackDataProviderFactory.instance!!.setArtists(it)
-                        })
-                        putString(NAME, intent.getStringExtra(NAME).also {
-                            TrackDataProviderFactory.instance!!.setName(it)
-                        })
+                        putString(
+                            ARTISTS,
+                            intent.getStringExtra(ARTISTS).also {
+                                TrackDataProviderFactory.instance!!.setArtists(it!!)
+                            }
+                        )
+                        putString(
+                            NAME,
+                            intent.getStringExtra(NAME).also {
+                                TrackDataProviderFactory.instance!!.setName(it!!)
+                            }
+                        )
                         putBoolean(IS_LYRICS_TRANSLATED, false)
                     }
                 }

@@ -3,7 +3,7 @@ package com.archrahkshi.spotifine.data.providerImpls
 import com.archrahkshi.spotifine.data.providers.ITrackDataAccessor
 import com.archrahkshi.spotifine.data.providers.ITrackDataProvider
 
-class TrackDataProviderImpl: ITrackDataProvider, ITrackDataAccessor {
+class TrackDataProviderImpl : ITrackDataProvider, ITrackDataAccessor {
     private object TrackDataRepository {
         var accessToken: String? = null
         var artists: String? = null

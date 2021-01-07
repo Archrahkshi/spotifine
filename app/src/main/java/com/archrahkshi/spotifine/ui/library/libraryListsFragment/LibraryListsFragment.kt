@@ -1,8 +1,6 @@
 package com.archrahkshi.spotifine.ui.library.libraryListsFragment
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +15,6 @@ import com.archrahkshi.spotifine.data.factories.LibraryListProviderFactory
 import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
 import com.archrahkshi.spotifine.ui.adapters.LibraryListsAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
-import com.archrahkshi.spotifine.ui.library.LibraryActivity
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.views.ITracksList
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.views.presenters.LibraryListPresenter
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.views.presenters.ToolbarPresenter
@@ -31,7 +28,7 @@ import com.archrahkshi.spotifine.util.NAME
 import com.archrahkshi.spotifine.util.SIZE
 import com.archrahkshi.spotifine.util.URL
 import kotlinx.android.synthetic.main.fragment_library_lists.recyclerViewLists
-import kotlinx.android.synthetic.main.toolbar.btnBack
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -52,14 +49,14 @@ class LibraryListsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         LibraryListProviderFactory.provide()
 
-        //
         toolbarPresenter.setupToolbar(
             requireArguments().getString(NAME),
             requireArguments().getString(LIST_TYPE) == ALBUMS
         )
-        //
+
         libraryListPresenter.setupList(
             arguments?.getString(URL) ?: "me",
             requireArguments().getString(LIST_TYPE)!!,
@@ -76,7 +73,7 @@ class LibraryListsFragment(
     }
 
     override fun showBackButton(isShown: Boolean) {
-        requireActivity().btnBack.visibility = if (isShown) View.VISIBLE else View.INVISIBLE
+        requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
     /**
@@ -92,7 +89,10 @@ class LibraryListsFragment(
                         when (listType) {
                             is Playlist -> TracksFragment().apply {
                                 arguments = Bundle().apply {
-                                    putString(ACCESS_TOKEN, TrackDataProviderFactory.instance!!.getAccessToken())
+                                    putString(
+                                        ACCESS_TOKEN,
+                                        TrackDataProviderFactory.instance!!.getAccessToken()
+                                    )
                                     putString(IMAGE, listType.image)
                                     putString(NAME, listType.name)
                                     putInt(SIZE, listType.size)
@@ -101,7 +101,10 @@ class LibraryListsFragment(
                             }
                             is Artist -> LibraryListsFragment().apply {
                                 arguments = Bundle().apply {
-                                    putString(ACCESS_TOKEN, TrackDataProviderFactory.instance!!.getAccessToken())
+                                    putString(
+                                        ACCESS_TOKEN,
+                                        TrackDataProviderFactory.instance!!.getAccessToken()
+                                    )
                                     putString(IMAGE, listType.image)
                                     putString(NAME, listType.name)
                                     putString(LIST_TYPE, ALBUMS)
@@ -110,7 +113,10 @@ class LibraryListsFragment(
                             }
                             is Album -> TracksFragment().apply {
                                 arguments = Bundle().apply {
-                                    putString(ACCESS_TOKEN, TrackDataProviderFactory.instance!!.getAccessToken())
+                                    putString(
+                                        ACCESS_TOKEN,
+                                        TrackDataProviderFactory.instance!!.getAccessToken()
+                                    )
                                     putString(ARTISTS, listType.artists)
                                     putString(IMAGE, listType.image)
                                     putString(NAME, listType.name)
@@ -121,7 +127,8 @@ class LibraryListsFragment(
                         }
                     ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
                 }
-            } catch (e: NullPointerException) {}
+            } catch (e: NullPointerException) {
+            }
         }
     }
 }
