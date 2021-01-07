@@ -9,16 +9,16 @@ import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.Album
 import com.archrahkshi.spotifine.data.Artist
-import com.archrahkshi.spotifine.ui.adapters.LibraryListsAdapter
 import com.archrahkshi.spotifine.data.ListType
 import com.archrahkshi.spotifine.data.Playlist
 import com.archrahkshi.spotifine.data.factories.LibraryListProviderFactory
+import com.archrahkshi.spotifine.ui.adapters.LibraryListsAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 import com.archrahkshi.spotifine.ui.library.LibraryActivity
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.views.ITracksList
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.views.presenters.LibraryListPresenter
-import com.archrahkshi.spotifine.ui.library.tracksFragment.TracksFragment
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.views.presenters.ToolbarPresenter
+import com.archrahkshi.spotifine.ui.library.tracksFragment.TracksFragment
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
 import com.archrahkshi.spotifine.util.ALBUMS
 import com.archrahkshi.spotifine.util.ARTISTS
@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
-import java.lang.NullPointerException
 import kotlin.coroutines.CoroutineContext
 
 class LibraryListsFragment(
@@ -46,7 +45,7 @@ class LibraryListsFragment(
     private val accessToken by lazy {
         try {
             requireArguments().getString(ACCESS_TOKEN)!!
-        } catch(e: IllegalStateException) {
+        } catch (e: IllegalStateException) {
             LibraryActivity.accessToken
         }
     }

@@ -1,7 +1,6 @@
 package com.archrahkshi.spotifine.data.factories
 
-import com.archrahkshi.spotifine.data.providersImpls.LibraryListProviderImpl
-import com.archrahkshi.spotifine.data.providersImpls.TracksListProviderImpl
+import com.archrahkshi.spotifine.data.providerImpls.LibraryListProviderImpl
 
 class LibraryListProviderFactory {
     companion object {

@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.ui.adapters.LyricsAdapter
 import com.archrahkshi.spotifine.data.factories.LyricsProviderFactory
+import com.archrahkshi.spotifine.ui.adapters.LyricsAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 import com.archrahkshi.spotifine.ui.player.PlayerActivity
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.views.presenters.ILyrics
@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
@@ -75,7 +74,7 @@ class LyricsFragment(
     }
 
     override fun showBackButton(isShown: Boolean) {
-        requireActivity().btnBack.visibility = if (isShown) View.VISIBLE else View.INVISIBLE
+        requireActivity().btnBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
     /**
@@ -89,15 +88,17 @@ class LyricsFragment(
                     R.id.frameLayoutPlayer,
                     LyricsFragment().apply {
                         arguments = Bundle().apply {
-                            putString(ARTISTS, arguments?.getString(ARTISTS) ?: PlayerActivity.artists)
+                            putString(
+                                ARTISTS,
+                                arguments?.getString(ARTISTS) ?: PlayerActivity.artists
+                            )
                             putBoolean(
                                 IS_LYRICS_TRANSLATED,
                                 !(arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
                             )
                             putString(NAME, arguments?.getString(NAME) ?: PlayerActivity.name)
-                            if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true) {
+                            if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true)
                                 putString(ORIGINAL_LYRICS, originalLyrics)
-                            }
                         }
                     }
                 ).commit()
@@ -111,20 +112,23 @@ class LyricsFragment(
             buttonText?.let {
                 buttonTranslate.text = it
             }
-        } catch(e: NullPointerException) {}
+        } catch (e: NullPointerException) {
+        }
     }
 
     override fun loading() {
         try {
             buttonTranslate.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
-        } catch(e: NullPointerException) {}
+        } catch (e: NullPointerException) {
+        }
     }
 
     override fun loaded() {
         try {
             buttonTranslate.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
-        } catch(e: NullPointerException) {}
+        } catch (e: NullPointerException) {
+        }
     }
 }

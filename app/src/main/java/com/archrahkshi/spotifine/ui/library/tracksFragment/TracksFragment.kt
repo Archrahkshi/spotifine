@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.Track
-import com.archrahkshi.spotifine.ui.adapters.TracksAdapter
 import com.archrahkshi.spotifine.data.factories.TracksListProviderFactory
+import com.archrahkshi.spotifine.ui.adapters.TracksAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 import com.archrahkshi.spotifine.ui.library.tracksFragment.views.ITracksHeader
 import com.archrahkshi.spotifine.ui.library.tracksFragment.views.ITracksList
@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.toolbar.btnBack
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
@@ -109,7 +108,7 @@ class TracksFragment(
 
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
-        withContext(Main) {
+        withContext(Dispatchers.Main) {
             recyclerViewTracks.adapter = TracksAdapter(list) {
                 Timber.i(it.toString())
                 requireContext().startActivity(

@@ -53,7 +53,10 @@ class LibraryActivity : AppCompatActivity() {
             LibraryListsFragment().apply {
                 arguments = Bundle().apply {
                     putString(LIST_TYPE, listType)
-                    putString(ACCESS_TOKEN, intent.getStringExtra(ACCESS_TOKEN).also { accessToken = it })
+                    putString(
+                        ACCESS_TOKEN,
+                        intent.getStringExtra(ACCESS_TOKEN).also { accessToken = it!! }
+                    )
                 }
             }
         ).setTransition(TRANSIT_FRAGMENT_FADE).commit()

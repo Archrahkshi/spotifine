@@ -11,7 +11,6 @@ import com.archrahkshi.spotifine.util.DURATION
 import com.archrahkshi.spotifine.util.ID
 import com.archrahkshi.spotifine.util.IS_LYRICS_TRANSLATED
 import com.archrahkshi.spotifine.util.NAME
-import com.archrahkshi.spotifine.util.ORIGINAL_LYRICS
 import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
 import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
@@ -37,8 +36,8 @@ class PlayerActivity : AppCompatActivity() {
                 R.id.frameLayoutPlayer,
                 LyricsFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARTISTS, intent.getStringExtra(ARTISTS).also { artists = it })
-                        putString(NAME, intent.getStringExtra(NAME).also { name = it })
+                        putString(ARTISTS, intent.getStringExtra(ARTISTS).also { artists = it!! })
+                        putString(NAME, intent.getStringExtra(NAME).also { name = it!! })
                         putBoolean(IS_LYRICS_TRANSLATED, false)
                     }
                 }
