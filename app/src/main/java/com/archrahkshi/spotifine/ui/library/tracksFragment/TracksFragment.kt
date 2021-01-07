@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.fragment_tracks.recyclerViewTracks
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine2
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
-import kotlinx.android.synthetic.main.toolbar.btnBack
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,16 +58,16 @@ class TracksFragment(
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         TracksListProviderFactory.provide()
 
-        //
         tracksListPresenter.setupList(
             requireArguments().getString(URL)!!,
             requireArguments().getString(ACCESS_TOKEN)
         )
-        //
+
         toolbarPresenter.setupToolbar()
-        //
+
         tracksHeaderPresenter.setText(requireArguments().getString(NAME)!!)
         tracksHeaderPresenter.setSubtext(requireArguments().getString(ARTISTS))
         tracksHeaderPresenter.setAdditionalText(
@@ -83,6 +83,7 @@ class TracksFragment(
     /**
      * TracksHeader implementation
      */
+
     override fun setText(text: String) {
         textViewHeaderLine1.text = text
     }
@@ -109,16 +110,19 @@ class TracksFragment(
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
         withContext(Dispatchers.Main) {
-            recyclerViewTracks.adapter = TracksAdapter(list) {
-                Timber.i(it.toString())
-                requireContext().startActivity(
-                    Intent(activity, PlayerActivity::class.java).apply {
-                        putExtra(ID, it.id)
-                        putExtra(DURATION, it.duration)
-                        putExtra(NAME, it.name)
-                        putExtra(ARTISTS, it.artists)
-                    }
-                )
+            try {
+                recyclerViewTracks.adapter = TracksAdapter(list) {
+                    Timber.i(it.toString())
+                    requireContext().startActivity(
+                        Intent(activity, PlayerActivity::class.java).apply {
+                            putExtra(ID, it.id)
+                            putExtra(DURATION, it.duration)
+                            putExtra(NAME, it.name)
+                            putExtra(ARTISTS, it.artists)
+                        }
+                    )
+                }
+            } catch (e: NullPointerException) {
             }
         }
     }
@@ -132,6 +136,6 @@ class TracksFragment(
     }
 
     override fun showBackButton(isShown: Boolean) {
-        requireActivity().btnBack.visibility = if (isShown) View.VISIBLE else View.INVISIBLE
+        requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 }

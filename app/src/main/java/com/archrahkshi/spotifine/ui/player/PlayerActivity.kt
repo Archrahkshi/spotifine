@@ -5,6 +5,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.LyricsFragment
 import com.archrahkshi.spotifine.util.ARTISTS
 import com.archrahkshi.spotifine.util.DURATION
@@ -20,24 +21,30 @@ import kotlinx.android.synthetic.main.activity_player.*
 import timber.log.Timber
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        lateinit var artists: String
-        lateinit var name: String
-    }
-
     private var spotifyAppRemote: SpotifyAppRemote? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+        TrackDataProviderFactory.provide()
 
         if (savedInstanceState == null)
             supportFragmentManager.beginTransaction().replace(
                 R.id.frameLayoutPlayer,
                 LyricsFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARTISTS, intent.getStringExtra(ARTISTS).also { artists = it!! })
-                        putString(NAME, intent.getStringExtra(NAME).also { name = it!! })
+                        putString(
+                            ARTISTS,
+                            intent.getStringExtra(ARTISTS).also {
+                                TrackDataProviderFactory.instance!!.setArtists(it!!)
+                            }
+                        )
+                        putString(
+                            NAME,
+                            intent.getStringExtra(NAME).also {
+                                TrackDataProviderFactory.instance!!.setName(it!!)
+                            }
+                        )
                         putBoolean(IS_LYRICS_TRANSLATED, false)
                     }
                 }

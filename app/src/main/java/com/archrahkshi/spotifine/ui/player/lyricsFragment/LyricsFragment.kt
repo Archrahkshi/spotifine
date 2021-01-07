@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.LyricsProviderFactory
+import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
 import com.archrahkshi.spotifine.ui.adapters.LyricsAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
-import com.archrahkshi.spotifine.ui.player.PlayerActivity
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.views.presenters.ILyrics
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.views.presenters.LyricsPresenter
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.views.presenters.ToolbarPresenter
@@ -23,11 +23,12 @@ import com.archrahkshi.spotifine.util.getOriginalLyrics
 import kotlinx.android.synthetic.main.fragment_lyrics.buttonTranslate
 import kotlinx.android.synthetic.main.fragment_lyrics.progressBar
 import kotlinx.android.synthetic.main.fragment_lyrics.recyclerViewLyrics
-import kotlinx.android.synthetic.main.toolbar.btnBack
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
@@ -36,6 +37,12 @@ class LyricsFragment(
 
     private val toolbarPresenter by lazy { ToolbarPresenter(this) }
     private val lyricsPresenter by lazy { LyricsPresenter(this) }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        Timber.i("ON SAVE INSTANCE STATE")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +64,7 @@ class LyricsFragment(
             )
         }
 
-        requireActivity().btnBack.setOnClickListener {
+        requireActivity().imageViewBack.setOnClickListener {
             CoroutineScope(Dispatchers.Default).launch {
                 val inst = Instrumentation()
                 inst.sendKeyDownUpSync(KEYCODE_BACK)
@@ -74,7 +81,7 @@ class LyricsFragment(
     }
 
     override fun showBackButton(isShown: Boolean) {
-        requireActivity().btnBack.visibility = if (isShown) View.VISIBLE else View.GONE
+        requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
     /**
@@ -90,13 +97,16 @@ class LyricsFragment(
                         arguments = Bundle().apply {
                             putString(
                                 ARTISTS,
-                                arguments?.getString(ARTISTS) ?: PlayerActivity.artists
+                                TrackDataProviderFactory.instance!!.getArtists()
                             )
                             putBoolean(
                                 IS_LYRICS_TRANSLATED,
                                 !(arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
                             )
-                            putString(NAME, arguments?.getString(NAME) ?: PlayerActivity.name)
+                            putString(
+                                NAME,
+                                TrackDataProviderFactory.instance!!.getName()
+                            )
                             if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true)
                                 putString(ORIGINAL_LYRICS, originalLyrics)
                         }

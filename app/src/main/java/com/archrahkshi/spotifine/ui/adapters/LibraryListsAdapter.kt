@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.item_library_list.view.textViewListName
 
 class LibraryListsAdapter(
     private val libraryLists: List<ListType>,
-    private val clickListener: (ListType) -> Unit
+    private val clickListener: (ListType, Int) -> Unit
 ) : ListAdapter<ListType, LibraryListsAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<ListType>() {
         override fun areItemsTheSame(oldItem: ListType, newItem: ListType) = oldItem == newItem
@@ -36,7 +36,7 @@ class LibraryListsAdapter(
     override fun getItemCount() = libraryLists.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(libraryLists[position], clickListener)
+        holder.bind(libraryLists[position], clickListener, position)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -47,7 +47,7 @@ class LibraryListsAdapter(
         private val context = view.context
         private val viewTest = view
 
-        fun bind(listType: ListType, clickListener: (ListType) -> Unit) {
+        fun bind(listType: ListType, clickListener: (ListType, Int) -> Unit, position: Int) {
             textViewListName.text = when (listType) {
                 is Playlist -> listType.name
                 is Artist -> listType.name
@@ -68,7 +68,7 @@ class LibraryListsAdapter(
                     is Album -> listType.image
                 }
             ).into(imageViewListPic)
-            layoutItemList.setOnClickListener { clickListener(listType) }
+            layoutItemList.setOnClickListener { clickListener(listType, position) }
         }
     }
 }

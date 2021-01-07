@@ -1,4 +1,4 @@
-# Continius Integration
+# Continuous Integration
 
 Это CI для студентческих проектов Технопарка.
 

@@ -28,3 +28,6 @@ const val TRANSLATOR_API_KEY = "Nbo7_ne4t1F0JTjcmCS_06yGOuJNdEc7efawvtOHS9i_"
 const val TRANSLATOR_URL = "https://api.eu-gb.language-translator.watson.cloud.ibm.com"
 const val TRANSLATOR_VERSION = "2018-05-01"
 const val URL = "url"
+const val INDEX_0 = 0
+const val INDEX_1 = 1
+const val INDEX_2 = 2
