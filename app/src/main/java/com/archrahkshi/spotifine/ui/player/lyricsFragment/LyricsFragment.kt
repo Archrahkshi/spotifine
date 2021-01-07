@@ -2,6 +2,7 @@ package com.archrahkshi.spotifine.ui.player.lyricsFragment
 
 import android.app.Instrumentation
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent.KEYCODE_BACK
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.LyricsProviderFactory
+import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
 import com.archrahkshi.spotifine.ui.adapters.LyricsAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 import com.archrahkshi.spotifine.ui.player.PlayerActivity
@@ -36,6 +38,13 @@ class LyricsFragment(
 
     private val toolbarPresenter by lazy { ToolbarPresenter(this) }
     private val lyricsPresenter by lazy { LyricsPresenter(this) }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        Log.i("TEST", "ON SAVE INSTANCE STATE")
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,13 +99,16 @@ class LyricsFragment(
                         arguments = Bundle().apply {
                             putString(
                                 ARTISTS,
-                                arguments?.getString(ARTISTS) ?: PlayerActivity.artists
+                                TrackDataProviderFactory.instance!!.getArtists()
                             )
                             putBoolean(
                                 IS_LYRICS_TRANSLATED,
                                 !(arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
                             )
-                            putString(NAME, arguments?.getString(NAME) ?: PlayerActivity.name)
+                            putString(
+                                NAME,
+                                TrackDataProviderFactory.instance!!.getName()
+                            )
                             if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true)
                                 putString(ORIGINAL_LYRICS, originalLyrics)
                         }

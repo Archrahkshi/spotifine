@@ -5,16 +5,19 @@
     tools:showIn="navigation">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/item_playlists"
             android:icon="@drawable/icon_playlist"
             android:title="@string/library_playlists">
         </item>
 
         <item
+            android:id="@+id/item_artists"
             android:icon="@drawable/icon_artist"
             android:title="@string/library_artists">
         </item>
 
         <item
+            android:id="@+id/item_albums"
             android:icon="@drawable/icon_album"
             android:title="@string/library_albums">
         </item>

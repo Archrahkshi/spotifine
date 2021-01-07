@@ -1,6 +1,8 @@
 package com.archrahkshi.spotifine.ui.library.libraryListsFragment
 
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import com.archrahkshi.spotifine.data.Artist
 import com.archrahkshi.spotifine.data.ListType
 import com.archrahkshi.spotifine.data.Playlist
 import com.archrahkshi.spotifine.data.factories.LibraryListProviderFactory
+import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
 import com.archrahkshi.spotifine.ui.adapters.LibraryListsAdapter
 import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 import com.archrahkshi.spotifine.ui.library.LibraryActivity
@@ -38,17 +41,8 @@ import kotlin.coroutines.CoroutineContext
 class LibraryListsFragment(
     override val coroutineContext: CoroutineContext = Main.immediate
 ) : Fragment(), CoroutineScope, ITracksList, IToolbar {
-
     private val toolbarPresenter by lazy { ToolbarPresenter(this) }
     private val libraryListPresenter by lazy { LibraryListPresenter(this) }
-
-    private val accessToken by lazy {
-        try {
-            requireArguments().getString(ACCESS_TOKEN)!!
-        } catch (e: IllegalStateException) {
-            LibraryActivity.accessToken
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,7 +63,7 @@ class LibraryListsFragment(
         libraryListPresenter.setupList(
             arguments?.getString(URL) ?: "me",
             requireArguments().getString(LIST_TYPE)!!,
-            accessToken
+            TrackDataProviderFactory.instance!!.getAccessToken()
         )
     }
 
@@ -92,36 +86,36 @@ class LibraryListsFragment(
     override suspend fun setupList(list: List<ListType>) {
         withContext(Main) {
             try {
-                recyclerViewLists.adapter = LibraryListsAdapter(list) {
+                recyclerViewLists.adapter = LibraryListsAdapter(list) { listType, position ->
                     requireActivity().supportFragmentManager.beginTransaction().replace(
                         R.id.frameLayoutLibrary,
-                        when (it) {
+                        when (listType) {
                             is Playlist -> TracksFragment().apply {
                                 arguments = Bundle().apply {
-                                    putString(ACCESS_TOKEN, accessToken)
-                                    putString(IMAGE, it.image)
-                                    putString(NAME, it.name)
-                                    putInt(SIZE, it.size)
-                                    putString(URL, it.url)
+                                    putString(ACCESS_TOKEN, TrackDataProviderFactory.instance!!.getAccessToken())
+                                    putString(IMAGE, listType.image)
+                                    putString(NAME, listType.name)
+                                    putInt(SIZE, listType.size)
+                                    putString(URL, listType.url)
                                 }
                             }
                             is Artist -> LibraryListsFragment().apply {
                                 arguments = Bundle().apply {
-                                    putString(ACCESS_TOKEN, accessToken)
-                                    putString(IMAGE, it.image)
-                                    putString(NAME, it.name)
+                                    putString(ACCESS_TOKEN, TrackDataProviderFactory.instance!!.getAccessToken())
+                                    putString(IMAGE, listType.image)
+                                    putString(NAME, listType.name)
                                     putString(LIST_TYPE, ALBUMS)
-                                    putString(URL, it.url)
+                                    putString(URL, listType.url)
                                 }
                             }
                             is Album -> TracksFragment().apply {
                                 arguments = Bundle().apply {
-                                    putString(ACCESS_TOKEN, accessToken)
-                                    putString(ARTISTS, it.artists)
-                                    putString(IMAGE, it.image)
-                                    putString(NAME, it.name)
-                                    putInt(SIZE, it.size)
-                                    putString(URL, it.url)
+                                    putString(ACCESS_TOKEN, TrackDataProviderFactory.instance!!.getAccessToken())
+                                    putString(ARTISTS, listType.artists)
+                                    putString(IMAGE, listType.image)
+                                    putString(NAME, listType.name)
+                                    putInt(SIZE, listType.size)
+                                    putString(URL, listType.url)
                                 }
                             }
                         }

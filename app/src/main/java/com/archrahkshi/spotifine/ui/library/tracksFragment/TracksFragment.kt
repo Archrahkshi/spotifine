@@ -38,6 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.lang.NullPointerException
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.ExperimentalTime
 
@@ -109,17 +110,19 @@ class TracksFragment(
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
         withContext(Dispatchers.Main) {
-            recyclerViewTracks.adapter = TracksAdapter(list) {
-                Timber.i(it.toString())
-                requireContext().startActivity(
-                    Intent(activity, PlayerActivity::class.java).apply {
-                        putExtra(ID, it.id)
-                        putExtra(DURATION, it.duration)
-                        putExtra(NAME, it.name)
-                        putExtra(ARTISTS, it.artists)
-                    }
-                )
-            }
+            try {
+                recyclerViewTracks.adapter = TracksAdapter(list) {
+                    Timber.i(it.toString())
+                    requireContext().startActivity(
+                        Intent(activity, PlayerActivity::class.java).apply {
+                            putExtra(ID, it.id)
+                            putExtra(DURATION, it.duration)
+                            putExtra(NAME, it.name)
+                            putExtra(ARTISTS, it.artists)
+                        }
+                    )
+                }
+            } catch(e: NullPointerException) {}
         }
     }
 
