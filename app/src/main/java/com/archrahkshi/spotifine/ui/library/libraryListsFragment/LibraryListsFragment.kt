@@ -83,7 +83,7 @@ class LibraryListsFragment(
     override suspend fun setupList(list: List<ListType>) {
         withContext(Main) {
             try {
-                recyclerViewLists.adapter = LibraryListsAdapter(list) { listType, position ->
+                recyclerViewLists.adapter = LibraryListsAdapter(list) { listType ->
                     requireActivity().supportFragmentManager.beginTransaction().replace(
                         R.id.frameLayoutLibrary,
                         when (listType) {
