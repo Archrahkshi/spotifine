@@ -26,4 +26,11 @@
     <string name="tracks_paucal">tracks</string>
     <string name="tracks_plural">tracks</string>
     <string name="unidentifiable_language">Sorry, I don\'t know this language yet :(</string>
+    <string name="message_restart">To apply changes, you need to restart the application</string>
+    <string name="label_restart">Restart</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_exit">Exit</string>
+    <string name="label_language">Language</string>
+    <string name="label_fullscreen_mode">Fullscreen</string>
+    <string name="label_settings">Settings</string>
 </resources>

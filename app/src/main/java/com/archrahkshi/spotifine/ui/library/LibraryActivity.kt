@@ -1,13 +1,18 @@
 package com.archrahkshi.spotifine.ui.library
 
 import android.app.Instrumentation
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
+import com.archrahkshi.spotifine.data.factories.UserPreferencesFactory
+import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
+import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment
+import com.archrahkshi.spotifine.ui.settings.SettingsActivity
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
 import com.archrahkshi.spotifine.util.ALBUMS
 import com.archrahkshi.spotifine.util.ARTISTS
@@ -18,43 +23,29 @@ import com.archrahkshi.spotifine.util.LIST_TYPE
 import com.archrahkshi.spotifine.util.PLAYLISTS
 import kotlinx.android.synthetic.main.activity_library.navigationView
 import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.imageViewSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
-class LibraryActivity : AppCompatActivity() {
-    companion object {
-        const val KEY_CURRENT_FRAGMENT = "Current fragment"
-    }
+class LibraryActivity : AppCompatActivity(), IFullscreenMode {
 
-    override fun onSaveInstanceState(outState: Bundle) {
-
-        outState.putInt(
-            KEY_CURRENT_FRAGMENT,
-            when (navigationView.selectedItemId) {
-                R.id.item_playlists -> INDEX_0
-                R.id.item_artists -> INDEX_1
-                else -> INDEX_2
-            }
-        )
-        super.onSaveInstanceState(outState)
-    }
+    private val fullscreenModePresenter
+            by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fullscreenModePresenter.setSelectionFullscreenMode()
         setContentView(R.layout.activity_library)
         TrackDataProviderFactory.provide()
 
-        if (savedInstanceState == null) {
+        fullscreenModePresenter.setSelectionFullscreenMode()
+
+        if (savedInstanceState == null)
             replaceFragmentWith(PLAYLISTS)
-        } else {
-            replaceFragmentWith(
-                when (savedInstanceState.getInt(KEY_CURRENT_FRAGMENT)) {
-                    INDEX_0 -> PLAYLISTS
-                    INDEX_1 -> ARTISTS
-                    else -> ALBUMS
-                }
-            )
+
+        imageViewSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity:: class.java))
         }
 
         imageViewBack.setOnClickListener {
@@ -90,4 +81,17 @@ class LibraryActivity : AppCompatActivity() {
             }
         ).setTransition(TRANSIT_FRAGMENT_FADE).commit()
     }
+
+    /**
+     * Fullscreen mode implementation
+     */
+
+    override fun setFullscreenMode(isFullscreenModeSelected: Boolean) {
+        if (isFullscreenModeSelected) {
+            setTheme(R.style.fullscreen)
+        } else {
+            setTheme(R.style.spotifine)
+        }
+    }
+
 }

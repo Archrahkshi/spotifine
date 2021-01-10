@@ -38,12 +38,6 @@ class LyricsFragment(
     private val toolbarPresenter by lazy { ToolbarPresenter(this) }
     private val lyricsPresenter by lazy { LyricsPresenter(this) }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        Timber.i("ON SAVE INSTANCE STATE")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

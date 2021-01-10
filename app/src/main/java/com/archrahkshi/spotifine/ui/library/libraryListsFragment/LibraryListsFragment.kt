@@ -73,7 +73,7 @@ class LibraryListsFragment(
     }
 
     override fun showBackButton(isShown: Boolean) {
-        requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
+        requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.INVISIBLE
     }
 
     /**
