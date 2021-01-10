@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
@@ -107,7 +106,8 @@ class LyricsFragment(
                     }
                 ).commit()
             }
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     override fun setupLyrics(lyrics: List<String>, buttonText: String?) {

@@ -6,7 +6,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
-import com.archrahkshi.spotifine.data.factories.UserPreferencesFactory
 import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
 import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.LyricsFragment
@@ -26,9 +25,7 @@ import timber.log.Timber
 class PlayerActivity : AppCompatActivity(), IFullscreenMode {
     private var spotifyAppRemote: SpotifyAppRemote? = null
 
-    private val fullscreenModePresenter
-            by lazy { FullscreenModePresenter(this) }
-
+    private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,10 +146,6 @@ class PlayerActivity : AppCompatActivity(), IFullscreenMode {
      */
 
     override fun setFullscreenMode(isFullscreenModeSelected: Boolean) {
-        if (isFullscreenModeSelected) {
-            setTheme(R.style.fullscreen)
-        } else {
-            setTheme(R.style.spotifine)
-        }
+        setTheme(if (isFullscreenModeSelected) R.style.fullscreen else R.style.spotifine)
     }
 }

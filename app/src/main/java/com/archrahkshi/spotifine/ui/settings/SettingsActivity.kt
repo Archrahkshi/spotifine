@@ -5,15 +5,14 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.archrahkshi.spotifine.R
-import com.archrahkshi.spotifine.data.factories.UserPreferencesFactory
 import com.archrahkshi.spotifine.ui.MainActivity
 import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
 import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
@@ -33,14 +32,14 @@ import kotlinx.android.synthetic.main.activity_settings.cbFullscreen
 import kotlinx.android.synthetic.main.activity_settings.imgLang
 import kotlinx.android.synthetic.main.activity_settings.spinnerLang
 
-class SettingsActivity : AppCompatActivity(), ILanguageSpinner, IFullscreenModeCheckbox, IFullscreenMode {
-    private val languageSpinnerPresenter
-            by lazy { LanguageSpinnerPresenter(this) }
-    private val fullscreenModeCheckboxPresenter
-            by lazy { FullscreenModeCheckboxPresenter(this) }
-    private val fullscreenModePresenter
-            by lazy { FullscreenModePresenter(this) }
-
+class SettingsActivity :
+    AppCompatActivity(),
+    ILanguageSpinner,
+    IFullscreenModeCheckbox,
+    IFullscreenMode {
+    private val languageSpinnerPresenter by lazy { LanguageSpinnerPresenter(this) }
+    private val fullscreenModeCheckboxPresenter by lazy { FullscreenModeCheckboxPresenter(this) }
+    private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +56,8 @@ class SettingsActivity : AppCompatActivity(), ILanguageSpinner, IFullscreenModeC
         fullscreenModeCheckboxPresenter.setSelectedFullscreenMode()
 
         /**
-         * Spinner bug: the list during initialization selects the zero position,
-         * to avoid this, we've to ignore this
+         * Spinner bug: the list selects the zero position during initialization.
+         * To avoid this, we have to ignore this
          */
         var i = 0
         spinnerLang.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -71,6 +70,7 @@ class SettingsActivity : AppCompatActivity(), ILanguageSpinner, IFullscreenModeC
                     }
                 }
             }
+
             override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
 
@@ -79,26 +79,24 @@ class SettingsActivity : AppCompatActivity(), ILanguageSpinner, IFullscreenModeC
             val alertDialog: AlertDialog
 
             val dialogOnPositiveClickListener: DialogInterface.OnClickListener =
-                DialogInterface.OnClickListener { dialog, which ->
+                DialogInterface.OnClickListener { _, _ ->
                     fullscreenModeCheckboxPresenter.setFullscreenMode(cbFullscreen.isChecked)
                     val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                        addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).
-                        addFlags(FLAG_ACTIVITY_CLEAR_TASK).
-                        addFlags(FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).addFlags(
+                            FLAG_ACTIVITY_CLEAR_TASK
+                        ).addFlags(FLAG_ACTIVITY_NEW_TASK)
                     }
                     startActivity(intent)
                 }
 
             val dialogOnNegativeClickListener =
-                DialogInterface.OnClickListener { dialog, which ->
+                DialogInterface.OnClickListener { _, _ ->
                     fullscreenModeCheckboxPresenter.setSelectedFullscreenMode()
                 }
 
-            builder.
-            setMessage(R.string.message_restart).
-            setCancelable(CANCELLATION_PROHIBITED).
-            setPositiveButton(R.string.label_restart, dialogOnPositiveClickListener).
-            setNegativeButton(R.string.label_cancel, dialogOnNegativeClickListener)
+            builder.setMessage(R.string.message_restart).setCancelable(CANCELLATION_PROHIBITED)
+                .setPositiveButton(R.string.label_restart, dialogOnPositiveClickListener)
+                .setNegativeButton(R.string.label_cancel, dialogOnNegativeClickListener)
 
             alertDialog = builder.create()
             alertDialog.show()
@@ -106,9 +104,8 @@ class SettingsActivity : AppCompatActivity(), ILanguageSpinner, IFullscreenModeC
 
         btnExit.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).
-                addFlags(FLAG_ACTIVITY_CLEAR_TASK).
-                addFlags(FLAG_ACTIVITY_NEW_TASK)
+                addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                    .addFlags(FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
         }
@@ -141,10 +138,6 @@ class SettingsActivity : AppCompatActivity(), ILanguageSpinner, IFullscreenModeC
      */
 
     override fun setFullscreenMode(isFullscreenModeSelected: Boolean) {
-        if (isFullscreenModeSelected) {
-            setTheme(R.style.fullscreen)
-        } else {
-            setTheme(R.style.spotifine)
-        }
+        setTheme(if (isFullscreenModeSelected) R.style.fullscreen else R.style.spotifine)
     }
 }

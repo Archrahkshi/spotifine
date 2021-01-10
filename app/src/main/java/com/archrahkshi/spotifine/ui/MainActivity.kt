@@ -2,14 +2,12 @@ package com.archrahkshi.spotifine.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.UserPreferencesFactory
 import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
 import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
 import com.archrahkshi.spotifine.ui.library.LibraryActivity
-import com.archrahkshi.spotifine.ui.settings.views.IFullscreenModeCheckbox
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
 import com.archrahkshi.spotifine.util.SPOTIFY_CLIENT_ID
 import com.archrahkshi.spotifine.util.SPOTIFY_REDIRECT_URI
@@ -71,11 +69,6 @@ class MainActivity : AppCompatActivity(), IFullscreenMode {
      */
 
     override fun setFullscreenMode(isFullscreenModeSelected: Boolean) {
-        if (isFullscreenModeSelected) {
-            Log.i("setiing", "!")
-            setTheme(R.style.fullscreen)
-        } else {
-            setTheme(R.style.spotifine)
-        }
+        setTheme(if (isFullscreenModeSelected) R.style.fullscreen else R.style.spotifine)
     }
 }

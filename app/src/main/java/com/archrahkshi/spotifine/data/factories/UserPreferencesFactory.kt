@@ -1,7 +1,6 @@
 package com.archrahkshi.spotifine.data.factories
 
 import android.content.Context
-import com.archrahkshi.spotifine.data.providerImpls.TracksListProviderImpl
 import com.archrahkshi.spotifine.data.providerImpls.UserPreferencesImpl
 
 class UserPreferencesFactory {

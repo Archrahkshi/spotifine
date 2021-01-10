@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
-import com.archrahkshi.spotifine.data.factories.UserPreferencesFactory
 import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
 import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
 import com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment
@@ -16,9 +15,6 @@ import com.archrahkshi.spotifine.ui.settings.SettingsActivity
 import com.archrahkshi.spotifine.util.ACCESS_TOKEN
 import com.archrahkshi.spotifine.util.ALBUMS
 import com.archrahkshi.spotifine.util.ARTISTS
-import com.archrahkshi.spotifine.util.INDEX_0
-import com.archrahkshi.spotifine.util.INDEX_1
-import com.archrahkshi.spotifine.util.INDEX_2
 import com.archrahkshi.spotifine.util.LIST_TYPE
 import com.archrahkshi.spotifine.util.PLAYLISTS
 import kotlinx.android.synthetic.main.activity_library.navigationView
@@ -30,8 +26,7 @@ import kotlinx.coroutines.launch
 
 class LibraryActivity : AppCompatActivity(), IFullscreenMode {
 
-    private val fullscreenModePresenter
-            by lazy { FullscreenModePresenter(this) }
+    private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +40,7 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
             replaceFragmentWith(PLAYLISTS)
 
         imageViewSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity:: class.java))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         imageViewBack.setOnClickListener {
@@ -87,11 +82,6 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
      */
 
     override fun setFullscreenMode(isFullscreenModeSelected: Boolean) {
-        if (isFullscreenModeSelected) {
-            setTheme(R.style.fullscreen)
-        } else {
-            setTheme(R.style.spotifine)
-        }
+        setTheme(if (isFullscreenModeSelected) R.style.fullscreen else R.style.spotifine)
     }
-
 }
