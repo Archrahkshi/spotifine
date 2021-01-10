@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Text sizes -->
+    <dimen name="small_text_size">5sp</dimen>
+    <dimen name="up_small_text_size">8sp</dimen>
+    <dimen name="standard_text_size_12">12sp</dimen>
+    <dimen name="standard_text_size_13">13sp</dimen>
+    <dimen name="standard_text_size_14">14sp</dimen>
+    <dimen name="standard_text_size_15">15sp</dimen>
+    <dimen name="standard_text_size_16">16sp</dimen>
+    <dimen name="standard_text_size_17">17sp</dimen>
+    <dimen name="header_text_size">20sp</dimen>
+    <dimen name="big_standard_text_size_21">21sp</dimen>
+    <dimen name="big_standard_text_size_23">23sp</dimen>
+    <dimen name="large_text_size">43sp</dimen>
     <dimen name="toolbar_title_text_size">22sp</dimen>
+
+    <!-- Margins & padding -->
+    <dimen name="smallest_offset">1dp</dimen>
+    <dimen name="very_small_offset">2dp</dimen>
+    <dimen name="little_offset">3dp</dimen>
+    <dimen name="small_offset">4dp</dimen>
+    <dimen name="up_small_offset">5dp</dimen>
+    <dimen name="compact_offset">5dp</dimen>
+    <dimen name="standard_offset">9dp</dimen>
+    <dimen name="big_offset">11dp</dimen>
+    <dimen name="start_offset">-3dp</dimen>
     <dimen name="margin_7">7dp</dimen>
     <dimen name="margin_6">6dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="margin_9">9dp</dimen>
     <dimen name="margin_16">16dp</dimen>
+
 </resources>

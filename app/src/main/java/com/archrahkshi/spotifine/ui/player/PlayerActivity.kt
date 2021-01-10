@@ -6,6 +6,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.data.factories.TrackDataProviderFactory
+import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
+import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.LyricsFragment
 import com.archrahkshi.spotifine.util.ARTISTS
 import com.archrahkshi.spotifine.util.DURATION
@@ -20,11 +22,14 @@ import com.spotify.android.appremote.api.SpotifyAppRemote
 import kotlinx.android.synthetic.main.activity_player.*
 import timber.log.Timber
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity(), IFullscreenMode {
     private var spotifyAppRemote: SpotifyAppRemote? = null
+
+    private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fullscreenModePresenter.setSelectionFullscreenMode()
         setContentView(R.layout.activity_player)
         TrackDataProviderFactory.provide()
 
@@ -134,5 +139,13 @@ class PlayerActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         SpotifyAppRemote.disconnect(spotifyAppRemote)
+    }
+
+    /**
+     * Fullscreen mode implementation
+     */
+
+    override fun setFullscreenMode(isFullscreenModeSelected: Boolean) {
+        setTheme(if (isFullscreenModeSelected) R.style.fullscreen else R.style.spotifine)
     }
 }

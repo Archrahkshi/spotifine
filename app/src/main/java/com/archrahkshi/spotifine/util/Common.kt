@@ -23,7 +23,7 @@ fun setWordTracks(context: Context?, size: Int?) = context?.resources?.getString
 )
 
 @ExperimentalTime
-fun Long.format() = this.milliseconds.toComponents { HH, mm, ss, _ ->
+fun Long.format() = milliseconds.toComponents { HH, mm, ss, _ ->
     var duration = ""
     if (HH > 0) duration += "$HH:"
     if (duration.isNotEmpty() && mm <= ONE_DIGIT) duration += '0'
@@ -34,7 +34,7 @@ fun Long.format() = this.milliseconds.toComponents { HH, mm, ss, _ ->
 
 fun String.getJson(accessToken: String?): JsonObject = JsonParser().parse(
     try {
-        this.buildRequest(accessToken)
+        buildRequest(accessToken)
     } catch (e: IOException) {
         Timber.wtf(e)
         null

@@ -23,4 +23,11 @@
     <string name="tracks_paucal">трека</string>
     <string name="tracks_plural">треков</string>
     <string name="unidentifiable_language">Простите, я пока не знаю этого языка :(</string>
+    <string name="message_restart">Чтобы применить изменения, необходимо перезагрузить приложение</string>
+    <string name="label_restart">Перезагрузить</string>
+    <string name="label_cancel">Отмена</string>
+    <string name="label_exit">Выход</string>
+    <string name="label_language">Язык</string>
+    <string name="label_fullscreen_mode">Полноэкранный режим</string>
+    <string name="label_settings">Настройки</string>
 </resources>

@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 class LyricsFragment(
@@ -37,12 +36,6 @@ class LyricsFragment(
 
     private val toolbarPresenter by lazy { ToolbarPresenter(this) }
     private val lyricsPresenter by lazy { LyricsPresenter(this) }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        Timber.i("ON SAVE INSTANCE STATE")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -113,7 +106,8 @@ class LyricsFragment(
                     }
                 ).commit()
             }
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     override fun setupLyrics(lyrics: List<String>, buttonText: String?) {

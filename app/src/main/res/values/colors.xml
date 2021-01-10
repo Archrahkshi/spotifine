@@ -7,4 +7,6 @@
     <color name="main_white_color">#CCCCCC</color>
     <color name="secondary_white_color">#A3A3A3</color>
     <color name="toolbar_color">#00081C</color>
+    <color name="white">#EDEDED</color>
+    <color name="transparent">#00000000</color>
 </resources>
