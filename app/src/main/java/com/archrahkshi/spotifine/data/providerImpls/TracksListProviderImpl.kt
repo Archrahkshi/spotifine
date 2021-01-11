@@ -22,7 +22,7 @@ class TracksListProviderImpl : ITracksListProvider {
                 .take(ALBUM_FROM_PLAYLIST_DISTINCTION)
         ) {
             "album" -> items.map { it.asJsonObject.asTrack() }
-            "playl" -> items.map { it.asJsonObject["track"].asJsonObject.asTrack() }
+            "playl", "me/tr" -> items.map { it.asJsonObject["track"].asJsonObject.asTrack() }
             else -> listOf()
         }
     }
