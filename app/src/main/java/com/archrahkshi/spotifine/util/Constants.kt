@@ -40,3 +40,16 @@ const val LABEL_ENGLISH = "English"
 const val LABEL_RUSSIAN = "Russian"
 
 const val CANCELLATION_PROHIBITED = false
+const val JSON_STRING_FAVORITES =
+    """{
+        "images":[
+            {
+                "url":"https://ps.w.org/hivepress-favorites/assets/icon-256x256.png?rev=2131086"
+            }
+        ],
+        "name":"Favorites",
+        "tracks":{
+            "href":"https://api.spotify.com/v1/playlists/7H5woHPpnMKIKxpDSANU5y/tracks",
+            "total":5
+        }
+    }"""

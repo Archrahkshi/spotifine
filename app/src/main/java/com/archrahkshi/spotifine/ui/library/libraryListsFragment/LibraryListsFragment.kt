@@ -50,7 +50,7 @@ class LibraryListsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        LibraryListProviderFactory.provide()
+        LibraryListProviderFactory.provide(this)
 
         toolbarPresenter.setupToolbar(
             requireArguments().getString(NAME),

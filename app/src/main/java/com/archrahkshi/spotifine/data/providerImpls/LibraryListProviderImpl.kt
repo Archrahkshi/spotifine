@@ -1,6 +1,10 @@
 package com.archrahkshi.spotifine.data.providerImpls
 
+import android.net.Uri
+import com.archrahkshi.spotifine.R
+import com.archrahkshi.spotifine.data.Playlist
 import com.archrahkshi.spotifine.data.providers.ILibraryListProvider
+import com.archrahkshi.spotifine.ui.library.libraryListsFragment.LibraryListsFragment
 import com.archrahkshi.spotifine.util.ALBUMS
 import com.archrahkshi.spotifine.util.ARTISTS
 import com.archrahkshi.spotifine.util.ARTIST_FROM_USER_DISTINCTION
@@ -15,16 +19,33 @@ import com.archrahkshi.spotifine.util.getJson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class LibraryListProviderImpl : ILibraryListProvider {
+class LibraryListProviderImpl(private val fragment: LibraryListsFragment) : ILibraryListProvider {
     // TODO: исправить на GSON
     override suspend fun getList(url: String?, listType: String, accessToken: String?) =
         withContext(Dispatchers.IO) {
             when (listType) {
-                PLAYLISTS ->
-                    "${SPOTIFY_PREFIX}me/playlists"
+                PLAYLISTS -> {
+                    val favorites = "${SPOTIFY_PREFIX}me/tracks"
+                        .getJson(accessToken)
+
+                    val playlists = "${SPOTIFY_PREFIX}me/playlists"
                         .getJson(accessToken)["items"]
                         .asJsonArray
-                        .map { it.asJsonObject.asPlaylist() }
+                        .map { it.asJsonObject.asPlaylist() }.toMutableList()
+                    playlists.add(
+                        0,
+                        Playlist(
+                            image = Uri.parse(
+                                "android.resource://com.archrahkshi.spotifine/" +
+                                        R.drawable.favorites
+                            ).toString(),
+                            name = fragment.getString(R.string.favorites),
+                            size = favorites["total"].asInt,
+                            url = favorites["href"].asString
+                        )
+                    )
+                    playlists
+                }
                 ARTISTS ->
                     "${SPOTIFY_PREFIX}me/following?type=artist"
                         .getJson(accessToken)["artists"]
