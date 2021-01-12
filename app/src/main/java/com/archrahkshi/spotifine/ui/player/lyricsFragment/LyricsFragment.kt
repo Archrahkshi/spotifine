@@ -77,6 +77,8 @@ class LyricsFragment(
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
+    override fun hideSettingsButton() {}
+
     /**
      * Lyrics implementation
      */

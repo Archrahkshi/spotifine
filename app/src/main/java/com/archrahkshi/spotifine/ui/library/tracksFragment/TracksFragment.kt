@@ -52,17 +52,19 @@ class TracksFragment(
 
     private val tracksListPresenter by lazy { TracksListPresenter(this) }
     private val tracksHeaderPresenter by lazy { TracksHeaderPresenter(this) }
-    private val toolbarPresenter by lazy { ToolbarPresenter(this) }
+    private val toolbarPresenter by lazy { ToolbarPresenter(this, this) }
 
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         TracksListProviderFactory.provide()
 
-        tracksListPresenter.setupList(
-            requireArguments().getString(URL)!!,
-            requireArguments().getString(ACCESS_TOKEN)
-        )
+        with(requireArguments()) {
+            tracksListPresenter.setupList(
+                getString(URL)!!,
+                getString(ACCESS_TOKEN)
+            )
+        }
 
         toolbarPresenter.setupToolbar()
 
@@ -137,4 +139,6 @@ class TracksFragment(
     override fun showBackButton(isShown: Boolean) {
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
+
+    override fun hideSettingsButton() {}
 }
