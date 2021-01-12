@@ -33,23 +33,22 @@ suspend fun getOriginalLyrics(title: String, artists: String) = withContext(Disp
 
 fun String.getLyrics() = try { // Forbidden dark magic
     Jsoup.parse("$GENIUS_BASE_URL$this".buildRequest(GENIUS_ACCESS_TOKEN))?.run {
-        with(selectFirst("div.lyrics")?.selectFirst("p")) {
-            if (this == null) {
-                Timber.wtf("ROOT")
-                selectFirst("div[class*=Lyrics__Root]")
-                    ?.html()
-                    ?.replace("<br>", "\n")
-                    ?.split('\n')
-                    ?.joinToString("\n") { it.trim() }
-                    ?.cleanTags()
-                    ?.replace(Regex("\n{2,}"), "\n\n")
-                    ?.trimStart('\n')
-            } else
-                html()
-                    .split("<br>")
-                    .joinToString("\n") { it.trim() }
-                    .cleanTags()
-        }
+        val lyricsClass = selectFirst("div.lyrics")?.selectFirst("p")
+        if (lyricsClass == null) {
+            Timber.wtf("ROOT")
+            selectFirst("div[class*=Lyrics__Root]")
+                ?.html()
+                ?.replace("<br>", "\n")
+                ?.split('\n')
+                ?.joinToString("\n") { it.trim() }
+                ?.cleanTags()
+                ?.replace(Regex("\n{2,}"), "\n\n")
+                ?.trimStart('\n')
+        } else
+            lyricsClass.html()
+                .split("<br>")
+                .joinToString("\n") { it.trim() }
+                .cleanTags()
     }
 } catch (e: IOException) {
     e.printStackTrace()

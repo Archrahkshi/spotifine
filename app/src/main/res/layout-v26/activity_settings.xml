@@ -75,7 +75,7 @@
                 android:contentDescription="@string/label_language" />
 
         <Spinner
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@android:color/white"
                 android:id="@+id/spinnerLang"
                 android:layout_height="match_parent"
                 android:layout_width="48dp" />

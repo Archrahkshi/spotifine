@@ -36,7 +36,8 @@
                     android:scrollbars="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="50"
-                    tools:listitem="@layout/item_lyrics_line" />
+                    tools:listitem="@layout/item_lyrics_line"
+                    android:overScrollMode="never" />
 
             <View
                     android:layout_width="match_parent"

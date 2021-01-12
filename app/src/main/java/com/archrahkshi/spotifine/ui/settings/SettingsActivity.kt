@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SettingsActivity :
     AppCompatActivity(),
@@ -92,7 +93,9 @@ class SettingsActivity :
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Timber.i("Our Detekt, who art in heaven, hallowed be thy name!")
+            }
         }
 
         checkBoxFullscreen.setOnClickListener {
@@ -135,7 +138,9 @@ class SettingsActivity :
         textViewToolbarText.text = title
     }
 
-    override fun showBackButton(isShown: Boolean) {}
+    override fun showBackButton(isShown: Boolean) {
+        imageViewBack.visibility = View.VISIBLE
+    }
 
     override fun hideSettingsButton() {
         imageViewSettings.visibility = View.GONE

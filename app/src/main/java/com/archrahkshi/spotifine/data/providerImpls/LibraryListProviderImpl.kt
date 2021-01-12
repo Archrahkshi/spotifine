@@ -20,31 +20,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class LibraryListProviderImpl(private val fragment: LibraryListsFragment) : ILibraryListProvider {
-    // TODO: исправить на GSON
     override suspend fun getList(url: String?, listType: String, accessToken: String?) =
         withContext(Dispatchers.IO) {
             when (listType) {
-                PLAYLISTS -> {
-                    val favorites = "${SPOTIFY_PREFIX}me/tracks"
-                        .getJson(accessToken)
-
-                    val playlists = "${SPOTIFY_PREFIX}me/playlists"
+                PLAYLISTS -> with("${SPOTIFY_PREFIX}me/tracks".getJson(accessToken)) {
+                    "${SPOTIFY_PREFIX}me/playlists"
                         .getJson(accessToken)["items"]
                         .asJsonArray
-                        .map { it.asJsonObject.asPlaylist() }.toMutableList()
-                    playlists.add(
-                        0,
-                        Playlist(
-                            image = Uri.parse(
-                                "android.resource://com.archrahkshi.spotifine/" +
-                                    R.drawable.favorites
-                            ).toString(),
-                            name = fragment.getString(R.string.favorites),
-                            size = favorites["total"].asInt,
-                            url = favorites["href"].asString
-                        )
-                    )
-                    playlists
+                        .map { it.asJsonObject.asPlaylist() }
+                        .toMutableList()
+                        .apply {
+                            add(
+                                0,
+                                Playlist(
+                                    image = Uri.parse(
+                                        "android.resource://com.archrahkshi.spotifine/" +
+                                            R.drawable.favorites
+                                    ).toString(),
+                                    name = fragment.getString(R.string.favorites),
+                                    size = this@with["total"].asInt,
+                                    url = this@with["href"].asString
+                                )
+                            )
+                        }
                 }
                 ARTISTS ->
                     "${SPOTIFY_PREFIX}me/following?type=artist"
@@ -52,12 +50,10 @@ class LibraryListProviderImpl(private val fragment: LibraryListsFragment) : ILib
                         .asJsonObject["items"]
                         .asJsonArray
                         .map { it.asJsonObject.asArtist() }
-                ALBUMS -> {
-                    val json = "$SPOTIFY_PREFIX${url ?: "me"}/albums"
-                        .getJson(accessToken)
-                    val items = json["items"].asJsonArray
+                ALBUMS -> with("$SPOTIFY_PREFIX${url ?: "me"}/albums".getJson(accessToken)) {
+                    val items = this["items"].asJsonArray
                     when (
-                        json["href"]
+                        this["href"]
                             .asString
                             .removePrefix(SPOTIFY_PREFIX)
                             .take(ARTIST_FROM_USER_DISTINCTION)
