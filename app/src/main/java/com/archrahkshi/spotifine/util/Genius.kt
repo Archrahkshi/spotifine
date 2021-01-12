@@ -8,44 +8,51 @@ import timber.log.Timber
 import java.io.IOException
 
 suspend fun getOriginalLyrics(title: String, artists: String) = withContext(Dispatchers.IO) {
-    val songInfo = JsonParser().parse(
-        "$GENIUS_API_BASE_URL/search?q=$artists $title"
-            .replace(" ", "%20")
-            .buildRequest(GENIUS_ACCESS_TOKEN)
-    ).asJsonObject["response"].asJsonObject["hits"].asJsonArray.find {
-        it.asJsonObject["type"].asString == "song"
-    }
-    if (songInfo != null) {
-        val lyrics = songInfo.asJsonObject["result"].asJsonObject["path"].asString.getLyrics()
-        if (lyrics == "[Instrumental]")
+    with(
+        JsonParser().parse(
+            "$GENIUS_API_BASE_URL/search?q=$artists $title"
+                .replace(" ", "%20")
+                .buildRequest(GENIUS_ACCESS_TOKEN)
+        ).asJsonObject["response"].asJsonObject["hits"].asJsonArray.find {
+            it.asJsonObject["type"].asString == "song"
+        }
+    ) {
+        if (this != null)
+            with(asJsonObject["result"].asJsonObject["path"].asString.getLyrics()) {
+                if (this == "[Instrumental]")
+                    null
+                else
+                    this
+            }
+        else {
+            Timber.wtf("no song info")
             null
-        else
-            lyrics
-    } else {
-        Timber.wtf("no song info")
-        null
+        }
     }
 }
 
 fun String.getLyrics() = try { // Forbidden dark magic
-    val parsed = Jsoup.parse("$GENIUS_BASE_URL$this".buildRequest(GENIUS_ACCESS_TOKEN))
-    parsed?.run {
-        val lyricsClass = selectFirst("div.lyrics")?.selectFirst("p")
-        if (lyricsClass == null) {
-            Timber.wtf("ROOT")
-            selectFirst("div[class*=Lyrics__Root]")
-                ?.html()
-                ?.replace("<br>", "")
-                ?.split('\n')
-                ?.joinToString("\n") { it.trim() }
-                ?.cleanTags()
-        } else lyricsClass.html()
-            .split("<br>")
-            .joinToString("\n") { it.trim() }
-            .cleanTags()
+    Jsoup.parse("$GENIUS_BASE_URL$this".buildRequest(GENIUS_ACCESS_TOKEN))?.run {
+        with(selectFirst("div.lyrics")?.selectFirst("p")) {
+            if (this == null) {
+                Timber.wtf("ROOT")
+                selectFirst("div[class*=Lyrics__Root]")
+                    ?.html()
+                    ?.replace("<br>", "\n")
+                    ?.split('\n')
+                    ?.joinToString("\n") { it.trim() }
+                    ?.cleanTags()
+                    ?.replace(Regex("\n{2,}"), "\n\n")
+                    ?.trimStart('\n')
+            } else
+                html()
+                    .split("<br>")
+                    .joinToString("\n") { it.trim() }
+                    .cleanTags()
+        }
     }
 } catch (e: IOException) {
-    Timber.wtf(e)
+    e.printStackTrace()
     null
 }
 
