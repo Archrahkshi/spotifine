@@ -16,8 +16,10 @@ class LyricsPresenter(private val viewState: ILyrics) : Provider {
         CoroutineScope(Main).launch {
             viewState.apply {
                 loading()
-                if (originalLyrics == null)
+                if (originalLyrics == null) {
                     setupLyrics(provider.getNoLyricsMessage(), null)
+                    loaded(successfully = false)
+                }
                 else {
                     val targetLanguage = RUSSIAN
                     val identifiedLanguage = originalLyrics.identifyLanguage()
@@ -50,8 +52,8 @@ class LyricsPresenter(private val viewState: ILyrics) : Provider {
                             }
                         applyButtonTranslate(originalLyrics)
                     }
+                    loaded(successfully = true)
                 }
-                loaded()
             }
         }
     }

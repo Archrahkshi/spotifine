@@ -106,8 +106,7 @@ class LyricsFragment(
                     }
                 ).commit()
             }
-        } catch (e: Exception) {
-        }
+        } catch (e: Exception) { }
     }
 
     override fun setupLyrics(lyrics: List<String>, buttonText: String?) {
@@ -116,23 +115,20 @@ class LyricsFragment(
             buttonText?.let {
                 buttonTranslate.text = it
             }
-        } catch (e: NullPointerException) {
-        }
+        } catch (e: NullPointerException) { }
     }
 
     override fun loading() {
         try {
             buttonTranslate.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
-        } catch (e: NullPointerException) {
-        }
+        } catch (e: NullPointerException) { }
     }
 
-    override fun loaded() {
+    override fun loaded(successfully: Boolean) {
         try {
-            buttonTranslate.visibility = View.VISIBLE
+            buttonTranslate.visibility = if (successfully) View.VISIBLE else View.GONE
             progressBar.visibility = View.GONE
-        } catch (e: NullPointerException) {
-        }
+        } catch (e: NullPointerException) { }
     }
 }
