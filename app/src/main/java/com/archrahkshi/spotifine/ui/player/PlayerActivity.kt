@@ -111,17 +111,17 @@ class PlayerActivity : AppCompatActivity(), IFullscreenMode {
                             0 -> {
                                 spotifyAppRemote.playerApi.play("spotify:track:$id")
                                 flag = 1
-                                // buttonPlay.text = getString(R.string.pause)
+                                buttonPlay.setBackgroundResource(R.drawable.back_pause_btn)
                             }
                             1 -> {
                                 spotifyAppRemote.playerApi.pause()
                                 flag = 2
-                                // buttonPlay.text = getString(R.string.play)
+                                buttonPlay.setBackgroundResource(R.drawable.back_play_btn)
                             }
                             2 -> {
                                 spotifyAppRemote.playerApi.resume()
                                 flag = 1
-                                // buttonPlay.text = getString(R.string.pause)
+                                buttonPlay.setBackgroundResource(R.drawable.back_pause_btn)
                             }
                         }
                     }

@@ -21,8 +21,8 @@
             android:layout_weight="1">
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:background="@drawable/back_pause_btn"
-            android:id="@+id/buttonPlay"
+            android:background="@drawable/back_play_btn"
+                android:id="@+id/buttonPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
