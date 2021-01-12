@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SettingsActivity :
     AppCompatActivity(),
@@ -92,14 +93,16 @@ class SettingsActivity :
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Timber.i("Our Detekt, who art in heaven, hallowed be thy name!")
+            }
         }
 
         checkBoxFullscreen.setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage(R.string.message_restart)
                 .setCancelable(CANCELLATION_PROHIBITED)
-                .setPositiveButton(R.string.label_restart) { _, _ ->
+                .setPositiveButton(R.string.restart) { _, _ ->
                     fullscreenModeCheckboxPresenter.setFullscreenMode(checkBoxFullscreen.isChecked)
                     startActivity(
                         Intent(applicationContext, MainActivity::class.java).apply {
@@ -109,7 +112,7 @@ class SettingsActivity :
                         }
                     )
                 }
-                .setNegativeButton(R.string.label_cancel) { _, _ ->
+                .setNegativeButton(R.string.cancel) { _, _ ->
                     fullscreenModeCheckboxPresenter.setSelectedFullscreenMode()
                 }
                 .create()
@@ -135,7 +138,9 @@ class SettingsActivity :
         textViewToolbarText.text = title
     }
 
-    override fun showBackButton(isShown: Boolean) {}
+    override fun showBackButton(isShown: Boolean) {
+        imageViewBack.visibility = View.VISIBLE
+    }
 
     override fun hideSettingsButton() {
         imageViewSettings.visibility = View.GONE

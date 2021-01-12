@@ -11,7 +11,7 @@ class ToolbarPresenter(private val fragment: Fragment, private val viewState: IT
                 setTitle(name)
                 showBackButton(true)
             } else {
-                setTitle(fragment.getString(R.string.title_library))
+                setTitle(fragment.getString(R.string.library))
                 showBackButton(false)
             }
         }

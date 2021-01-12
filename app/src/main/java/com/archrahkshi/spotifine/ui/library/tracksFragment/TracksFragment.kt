@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine2
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
 import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.imageViewSettings
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -112,18 +113,15 @@ class TracksFragment(
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
         withContext(Main) {
-            try {
-                recyclerViewTracks.adapter = TracksAdapter(list) {
-                    requireContext().startActivity(
-                        Intent(activity, PlayerActivity::class.java).apply {
-                            putExtra(ID, it.id)
-                            putExtra(DURATION, it.duration)
-                            putExtra(NAME, it.name)
-                            putExtra(ARTISTS, it.artists)
-                        }
-                    )
-                }
-            } catch (e: NullPointerException) {
+            recyclerViewTracks.adapter = TracksAdapter(list) {
+                requireContext().startActivity(
+                    Intent(activity, PlayerActivity::class.java).apply {
+                        putExtra(ID, it.id)
+                        putExtra(DURATION, it.duration)
+                        putExtra(NAME, it.name)
+                        putExtra(ARTISTS, it.artists)
+                    }
+                )
             }
         }
     }
@@ -140,5 +138,7 @@ class TracksFragment(
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
-    override fun hideSettingsButton() {}
+    override fun hideSettingsButton() {
+        requireActivity().imageViewSettings.visibility = View.VISIBLE
+    }
 }

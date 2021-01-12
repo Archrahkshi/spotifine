@@ -25,7 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp" />
 
         <androidx.appcompat.widget.AppCompatImageButton
                 android:background="@drawable/back_play_btn"

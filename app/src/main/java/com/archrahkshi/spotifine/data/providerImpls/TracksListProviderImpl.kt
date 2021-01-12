@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class TracksListProviderImpl : ITracksListProvider {
-    // TODO: заменить на GSON
     override suspend fun getList(url: String, accessToken: String?) = withContext(Dispatchers.IO) {
         Timber.i(accessToken ?: "null")
         val json = url.getJson(accessToken)

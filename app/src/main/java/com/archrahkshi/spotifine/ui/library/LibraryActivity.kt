@@ -48,9 +48,9 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
 
         navigationView.setOnNavigationItemSelectedListener {
             when (it.title) {
-                getString(R.string.library_artists) -> replaceFragmentWith(ARTISTS)
-                getString(R.string.library_albums) -> replaceFragmentWith(ALBUMS)
-                getString(R.string.library_playlists) -> replaceFragmentWith(PLAYLISTS)
+                getString(R.string.artists) -> replaceFragmentWith(ARTISTS)
+                getString(R.string.albums) -> replaceFragmentWith(ALBUMS)
+                getString(R.string.playlists) -> replaceFragmentWith(PLAYLISTS)
             }
             true
         }

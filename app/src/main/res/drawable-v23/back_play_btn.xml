@@ -4,7 +4,7 @@
         <layer-list>
             <item android:width="72dp" android:height="72dp">
                 <shape android:shape="oval">
-                    <solid android:color="@color/white" />
+                    <solid android:color="@android:color/white" />
                 </shape>
             </item>
             <item android:gravity="center" android:width="48dp" android:height="48dp" android:drawable="@drawable/icon_play" />

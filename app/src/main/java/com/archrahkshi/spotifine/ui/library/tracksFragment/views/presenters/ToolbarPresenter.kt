@@ -7,7 +7,7 @@ import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 class ToolbarPresenter(private val fragment: Fragment, private val viewState: IToolbar) {
     fun setupToolbar() {
         with(viewState) {
-            setTitle(fragment.getString(R.string.title_tracks))
+            setTitle(fragment.getString(R.string.tracks))
             showBackButton(true)
         }
     }

@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="navigation">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/item_playlists"
-            android:icon="@drawable/icon_playlist"
-            android:title="@string/library_playlists">
-        </item>
+                android:id="@+id/item_playlists"
+                android:icon="@drawable/icon_playlist"
+                android:title="@string/playlists" />
 
         <item
-            android:id="@+id/item_artists"
-            android:icon="@drawable/icon_artist"
-            android:title="@string/library_artists">
-        </item>
+                android:id="@+id/item_artists"
+                android:icon="@drawable/icon_artist"
+                android:title="@string/artists" />
 
         <item
-            android:id="@+id/item_albums"
-            android:icon="@drawable/icon_album"
-            android:title="@string/library_albums">
-        </item>
+                android:id="@+id/item_albums"
+                android:icon="@drawable/icon_album"
+                android:title="@string/albums" />
     </group>
 </menu>

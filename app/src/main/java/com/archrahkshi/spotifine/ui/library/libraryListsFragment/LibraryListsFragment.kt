@@ -29,6 +29,7 @@ import com.archrahkshi.spotifine.util.SIZE
 import com.archrahkshi.spotifine.util.URL
 import kotlinx.android.synthetic.main.fragment_library_lists.recyclerViewLists
 import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.imageViewSettings
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -78,7 +79,9 @@ class LibraryListsFragment(
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
-    override fun hideSettingsButton() {}
+    override fun hideSettingsButton() {
+        requireActivity().imageViewSettings.visibility = View.VISIBLE
+    }
 
     /**
      * TracksList implementation
@@ -86,52 +89,49 @@ class LibraryListsFragment(
 
     override suspend fun setupList(list: List<ListType>) {
         withContext(Main) {
-            try {
-                recyclerViewLists.adapter = LibraryListsAdapter(list) { listType ->
-                    requireActivity().supportFragmentManager.beginTransaction().replace(
-                        R.id.frameLayoutLibrary,
-                        when (listType) {
-                            is Playlist -> TracksFragment().apply {
-                                arguments = Bundle().apply {
-                                    putString(
-                                        ACCESS_TOKEN,
-                                        TrackDataProviderFactory.instance!!.getAccessToken()
-                                    )
-                                    putString(IMAGE, listType.image)
-                                    putString(NAME, listType.name)
-                                    putInt(SIZE, listType.size)
-                                    putString(URL, listType.url)
-                                }
-                            }
-                            is Artist -> LibraryListsFragment().apply {
-                                arguments = Bundle().apply {
-                                    putString(
-                                        ACCESS_TOKEN,
-                                        TrackDataProviderFactory.instance!!.getAccessToken()
-                                    )
-                                    putString(IMAGE, listType.image)
-                                    putString(NAME, listType.name)
-                                    putString(LIST_TYPE, ALBUMS)
-                                    putString(URL, listType.url)
-                                }
-                            }
-                            is Album -> TracksFragment().apply {
-                                arguments = Bundle().apply {
-                                    putString(
-                                        ACCESS_TOKEN,
-                                        TrackDataProviderFactory.instance!!.getAccessToken()
-                                    )
-                                    putString(ARTISTS, listType.artists)
-                                    putString(IMAGE, listType.image)
-                                    putString(NAME, listType.name)
-                                    putInt(SIZE, listType.size)
-                                    putString(URL, listType.url)
-                                }
+            recyclerViewLists.adapter = LibraryListsAdapter(list) { listType ->
+                requireActivity().supportFragmentManager.beginTransaction().replace(
+                    R.id.frameLayoutLibrary,
+                    when (listType) {
+                        is Playlist -> TracksFragment().apply {
+                            arguments = Bundle().apply {
+                                putString(
+                                    ACCESS_TOKEN,
+                                    TrackDataProviderFactory.instance!!.getAccessToken()
+                                )
+                                putString(IMAGE, listType.image)
+                                putString(NAME, listType.name)
+                                putInt(SIZE, listType.size)
+                                putString(URL, listType.url)
                             }
                         }
-                    ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
-                }
-            } catch (e: NullPointerException) {
+                        is Artist -> LibraryListsFragment().apply {
+                            arguments = Bundle().apply {
+                                putString(
+                                    ACCESS_TOKEN,
+                                    TrackDataProviderFactory.instance!!.getAccessToken()
+                                )
+                                putString(IMAGE, listType.image)
+                                putString(NAME, listType.name)
+                                putString(LIST_TYPE, ALBUMS)
+                                putString(URL, listType.url)
+                            }
+                        }
+                        is Album -> TracksFragment().apply {
+                            arguments = Bundle().apply {
+                                putString(
+                                    ACCESS_TOKEN,
+                                    TrackDataProviderFactory.instance!!.getAccessToken()
+                                )
+                                putString(ARTISTS, listType.artists)
+                                putString(IMAGE, listType.image)
+                                putString(NAME, listType.name)
+                                putInt(SIZE, listType.size)
+                                putString(URL, listType.url)
+                            }
+                        }
+                    }
+                ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
             }
         }
     }

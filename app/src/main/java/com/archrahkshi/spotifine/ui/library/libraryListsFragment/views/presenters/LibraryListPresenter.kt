@@ -12,8 +12,7 @@ class LibraryListPresenter(private val viewState: ITracksList) : Provider {
 
     fun setupList(url: String, listType: String, token: String) {
         CoroutineScope(IO).launch {
-            val list = provider.getList(url, listType, token)
-            viewState.setupList(list)
+            viewState.setupList(provider.getList(url, listType, token))
         }
     }
 }
