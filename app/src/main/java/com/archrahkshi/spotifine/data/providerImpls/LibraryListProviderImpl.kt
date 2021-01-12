@@ -37,7 +37,7 @@ class LibraryListProviderImpl(private val fragment: LibraryListsFragment) : ILib
                         Playlist(
                             image = Uri.parse(
                                 "android.resource://com.archrahkshi.spotifine/" +
-                                        R.drawable.favorites
+                                    R.drawable.favorites
                             ).toString(),
                             name = fragment.getString(R.string.favorites),
                             size = favorites["total"].asInt,

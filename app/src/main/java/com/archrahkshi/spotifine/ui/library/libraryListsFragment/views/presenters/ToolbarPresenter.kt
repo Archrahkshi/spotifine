@@ -8,12 +8,14 @@ class ToolbarPresenter(private val viewState: IToolbar) {
     }
 
     fun setupToolbar(name: String?, isAlbums: Boolean) {
-        if (isAlbums && name != null) {
-            viewState.setTitle(name)
-            viewState.showBackButton(true)
-        } else {
-            viewState.setTitle(TOOLBAR_TITLE)
-            viewState.showBackButton(false)
+        with(viewState) {
+            if (isAlbums && name != null) {
+                setTitle(name)
+                showBackButton(true)
+            } else {
+                setTitle(TOOLBAR_TITLE)
+                showBackButton(false)
+            }
         }
     }
 }

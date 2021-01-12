@@ -5,7 +5,6 @@ import com.archrahkshi.spotifine.data.providers.ILyricsProvider
 import com.archrahkshi.spotifine.ui.player.lyricsFragment.LyricsFragment
 import com.archrahkshi.spotifine.util.IS_LYRICS_TRANSLATED
 import com.ibm.watson.language_translator.v3.util.Language.ENGLISH
-import com.ibm.watson.language_translator.v3.util.Language.RUSSIAN
 import java.util.Locale
 
 class LyricsProviderImpl(private val fragment: LyricsFragment) : ILyricsProvider {
@@ -17,13 +16,18 @@ class LyricsProviderImpl(private val fragment: LyricsFragment) : ILyricsProvider
     override fun getTranslatingSuccess() =
         fragment.arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false
 
-    override fun getTranslateButtonText(isLangIdentified: Boolean, language: String) =
+    override fun getTranslateButtonText(
+        isLangIdentified: Boolean,
+        identifiedLanguage: String,
+        targetLanguage: String
+    ) = with(Locale(ENGLISH)) {
         fragment.getString(
             R.string.detected_language,
             if (!isLangIdentified)
                 fragment.getString(R.string.elvish) // Language kinda identified, yet badly
             else
-                Locale(language).getDisplayLanguage(Locale(ENGLISH)),
-            Locale(RUSSIAN).getDisplayLanguage(Locale(ENGLISH))
+                Locale(identifiedLanguage).getDisplayLanguage(this),
+            Locale(targetLanguage).getDisplayLanguage(this)
         )
+    }
 }

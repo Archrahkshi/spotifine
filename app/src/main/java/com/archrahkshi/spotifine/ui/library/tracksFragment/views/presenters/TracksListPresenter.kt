@@ -12,8 +12,7 @@ class TracksListPresenter(private val viewState: ITracksList) : Provider {
 
     fun setupList(url: String, token: String?) {
         CoroutineScope(IO).launch {
-            val list = provider.getList(url, token)
-            viewState.setupList(list)
+            viewState.setupList(provider.getList(url, token))
         }
     }
 }

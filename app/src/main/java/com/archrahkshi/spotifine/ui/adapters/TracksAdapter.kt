@@ -42,11 +42,13 @@ class TracksAdapter(
         private val layoutItemList = view.layoutItemList
 
         fun bind(track: Track, clickListener: (Track) -> Unit) {
-            textViewTrackName.text = track.name
-            textViewTrackArtist.text = track.artists
-//            textViewTrackDuration.text = SimpleDateFormat("HH:mm:ss").format(track.duration)
-            textViewTrackDuration.text = track.duration.format()
-            layoutItemList.setOnClickListener { clickListener(track) }
+            with(track) {
+                textViewTrackName.text = name
+                textViewTrackArtist.text = artists
+//                textViewTrackDuration.text = SimpleDateFormat("HH:mm:ss").format(track.duration)
+                textViewTrackDuration.text = duration.format()
+                layoutItemList.setOnClickListener { clickListener(this) }
+            }
         }
     }
 }

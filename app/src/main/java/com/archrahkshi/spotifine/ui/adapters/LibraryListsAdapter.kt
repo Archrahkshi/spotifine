@@ -54,9 +54,8 @@ class LibraryListsAdapter(
                 is Album -> listType.name
             }
             textViewListInfo.text = when (listType) {
-                is Playlist -> {
-                    val size = listType.size
-                    "$size ${setWordTracks(context, size)}"
+                is Playlist -> with(listType.size) {
+                    "$this ${setWordTracks(context, this)}"
                 }
                 is Artist -> ""
                 is Album -> listType.artists
