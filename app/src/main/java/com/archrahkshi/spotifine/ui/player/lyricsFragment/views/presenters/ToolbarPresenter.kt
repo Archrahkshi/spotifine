@@ -8,7 +8,9 @@ class ToolbarPresenter(private val viewState: IToolbar) {
     }
 
     fun setupToolbar(title: String) {
-        viewState.setTitle(title)
-        viewState.showBackButton(BACK_BUTTON_VISIBILITY)
+        viewState.apply {
+            setTitle(title)
+            showBackButton(BACK_BUTTON_VISIBILITY)
+        }
     }
 }

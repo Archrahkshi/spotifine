@@ -9,10 +9,9 @@
         tools:context=".ui.MainActivity">
 
     <ImageView
-            android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/spotifine_logo"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            app:srcCompat="@drawable/app_icon_foreground" />
 </FrameLayout>

@@ -35,14 +35,13 @@ import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
 import kotlinx.android.synthetic.main.toolbar.imageViewBack
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.ExperimentalTime
 
 class TracksFragment(
-    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate
+    override val coroutineContext: CoroutineContext = Main.immediate
 ) : Fragment(), CoroutineScope, ITracksHeader, ITracksList, IToolbar {
 
     override fun onCreateView(
@@ -58,7 +57,6 @@ class TracksFragment(
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         TracksListProviderFactory.provide()
 
         tracksListPresenter.setupList(
@@ -68,16 +66,18 @@ class TracksFragment(
 
         toolbarPresenter.setupToolbar()
 
-        tracksHeaderPresenter.setText(requireArguments().getString(NAME)!!)
-        tracksHeaderPresenter.setSubtext(requireArguments().getString(ARTISTS))
-        tracksHeaderPresenter.setAdditionalText(
-            getString(
-                R.string.header_line3,
-                requireArguments().getInt(SIZE),
-                setWordTracks(context, requireArguments().getInt(SIZE))
+        with(tracksHeaderPresenter) {
+            setText(requireArguments().getString(NAME)!!)
+            setSubtext(requireArguments().getString(ARTISTS))
+            setAdditionalText(
+                getString(
+                    R.string.header_line3,
+                    requireArguments().getInt(SIZE),
+                    setWordTracks(context, requireArguments().getInt(SIZE))
+                )
             )
-        )
-        tracksHeaderPresenter.setImage(requireArguments().getString(IMAGE)!!)
+            setImage(requireArguments().getString(IMAGE)!!)
+        }
     }
 
     /**
@@ -109,10 +109,9 @@ class TracksFragment(
 
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
-        withContext(Dispatchers.Main) {
+        withContext(Main) {
             try {
                 recyclerViewTracks.adapter = TracksAdapter(list) {
-                    Timber.i(it.toString())
                     requireContext().startActivity(
                         Intent(activity, PlayerActivity::class.java).apply {
                             putExtra(ID, it.id)

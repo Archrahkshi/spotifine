@@ -45,8 +45,7 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
 
         imageViewBack.setOnClickListener {
             CoroutineScope(Default).launch {
-                val inst = Instrumentation()
-                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+                Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
             }
         }
 

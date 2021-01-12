@@ -1,6 +1,5 @@
 package com.archrahkshi.spotifine.ui.settings
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
@@ -27,10 +26,10 @@ import com.archrahkshi.spotifine.util.INDEX_0
 import com.archrahkshi.spotifine.util.INDEX_1
 import com.archrahkshi.spotifine.util.LABEL_ENGLISH
 import com.archrahkshi.spotifine.util.LABEL_RUSSIAN
-import kotlinx.android.synthetic.main.activity_settings.btnExit
-import kotlinx.android.synthetic.main.activity_settings.cbFullscreen
-import kotlinx.android.synthetic.main.activity_settings.imgLang
+import kotlinx.android.synthetic.main.activity_settings.checkBoxFullscreen
+import kotlinx.android.synthetic.main.activity_settings.imageViewFlag
 import kotlinx.android.synthetic.main.activity_settings.spinnerLang
+import kotlinx.android.synthetic.main.activity_settings.textViewExit
 
 class SettingsActivity :
     AppCompatActivity(),
@@ -61,53 +60,51 @@ class SettingsActivity :
          */
         var i = 0
         spinnerLang.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 i++
-                if (i > 1) {
-                    when (position) {
-                        INDEX_0 -> languageSpinnerPresenter.setLanguage(ENGLISH_IS_SELECTED)
-                        INDEX_1 -> languageSpinnerPresenter.setLanguage(ENGLISH_IS_NOT_SELECTED)
-                    }
+                if (i > 1) when (position) {
+                    INDEX_0 -> languageSpinnerPresenter.setLanguage(ENGLISH_IS_SELECTED)
+                    INDEX_1 -> languageSpinnerPresenter.setLanguage(ENGLISH_IS_NOT_SELECTED)
                 }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
 
-        cbFullscreen.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            val alertDialog: AlertDialog
-
-            val dialogOnPositiveClickListener: DialogInterface.OnClickListener =
-                DialogInterface.OnClickListener { _, _ ->
-                    fullscreenModeCheckboxPresenter.setFullscreenMode(cbFullscreen.isChecked)
-                    val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                        addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).addFlags(
-                            FLAG_ACTIVITY_CLEAR_TASK
-                        ).addFlags(FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    startActivity(intent)
+        checkBoxFullscreen.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setMessage(R.string.message_restart)
+                .setCancelable(CANCELLATION_PROHIBITED)
+                .setPositiveButton(R.string.label_restart) { _, _ ->
+                    fullscreenModeCheckboxPresenter.setFullscreenMode(checkBoxFullscreen.isChecked)
+                    startActivity(
+                        Intent(applicationContext, MainActivity::class.java).apply {
+                            addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).addFlags(
+                                FLAG_ACTIVITY_CLEAR_TASK
+                            ).addFlags(FLAG_ACTIVITY_NEW_TASK)
+                        }
+                    )
                 }
-
-            val dialogOnNegativeClickListener =
-                DialogInterface.OnClickListener { _, _ ->
+                .setNegativeButton(R.string.label_cancel) { _, _ ->
                     fullscreenModeCheckboxPresenter.setSelectedFullscreenMode()
                 }
-
-            builder.setMessage(R.string.message_restart).setCancelable(CANCELLATION_PROHIBITED)
-                .setPositiveButton(R.string.label_restart, dialogOnPositiveClickListener)
-                .setNegativeButton(R.string.label_cancel, dialogOnNegativeClickListener)
-
-            alertDialog = builder.create()
-            alertDialog.show()
+                .create()
+                .show()
         }
 
-        btnExit.setOnClickListener {
-            val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS).addFlags(FLAG_ACTIVITY_CLEAR_TASK)
-                    .addFlags(FLAG_ACTIVITY_NEW_TASK)
-            }
-            startActivity(intent)
+        textViewExit.setOnClickListener {
+            startActivity(
+                Intent(applicationContext, MainActivity::class.java).apply {
+                    addFlags(FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                    addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                    addFlags(FLAG_ACTIVITY_NEW_TASK)
+                }
+            )
         }
     }
 
@@ -117,7 +114,7 @@ class SettingsActivity :
 
     override fun setLanguage(isEnglishLanguageSelected: Boolean) {
         spinnerLang.setSelection(if (isEnglishLanguageSelected) INDEX_0 else INDEX_1)
-        imgLang.setImageDrawable(
+        imageViewFlag.setImageDrawable(
             ContextCompat.getDrawable(
                 applicationContext,
                 if (isEnglishLanguageSelected) R.drawable.england else R.drawable.russia
@@ -130,7 +127,7 @@ class SettingsActivity :
      */
 
     override fun setFullscreenModeCheckboxSelection(isFullscreenModeSelected: Boolean) {
-        cbFullscreen.isChecked = isFullscreenModeSelected
+        checkBoxFullscreen.isChecked = isFullscreenModeSelected
     }
 
     /**
