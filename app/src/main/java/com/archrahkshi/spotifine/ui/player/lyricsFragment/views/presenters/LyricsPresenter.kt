@@ -22,8 +22,13 @@ class LyricsPresenter(private val viewState: ILyrics) : Provider {
                 } else {
                     val targetLanguage = RUSSIAN
                     val identifiedLanguage = originalLyrics.identifyLanguage()
-                    if (identifiedLanguage == targetLanguage)
-                        setupLyrics(originalLyrics.split('\n'), null)
+                    if (identifiedLanguage == targetLanguage) {
+                        setupLyrics(
+                            originalLyrics.split('\n'),
+                            provider.getDefaultTranslateButtonText()
+                        )
+                        loaded(successfully = false)
+                    }
                     else {
                         if (!provider.getTranslatingSuccess())
                             setupLyrics(
@@ -50,8 +55,8 @@ class LyricsPresenter(private val viewState: ILyrics) : Provider {
                                     )
                             }
                         applyButtonTranslate(originalLyrics)
+                        loaded(successfully = true)
                     }
-                    loaded(successfully = true)
                 }
             }
         }
