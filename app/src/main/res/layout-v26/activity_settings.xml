@@ -22,13 +22,13 @@
                 android:src="@drawable/fullscreen_night"
                 android:scaleX="0.7"
                 android:scaleY="0.7"
-                android:contentDescription="@string/label_fullscreen_mode" />
+                android:contentDescription="@string/fullscreen" />
 
         <androidx.appcompat.widget.AppCompatTextView
                 app:autoSizeTextType="uniform"
                 app:autoSizeMinTextSize="@dimen/small_text_size"
                 app:autoSizeMaxTextSize="@dimen/standard_text_size_15"
-                android:text="@string/label_fullscreen_mode"
+                android:text="@string/fullscreen"
                 android:textColor="@color/text_color"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -56,7 +56,7 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/language_night"
-                android:contentDescription="@string/label_language" />
+                android:contentDescription="@string/language" />
 
         <TextView
                 android:id="@+id/textViewLanguage"
@@ -64,7 +64,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textStyle="bold"
-                android:text="@string/label_language"
+                android:text="@string/language"
                 android:gravity="center|start"
                 android:layout_weight="1" />
 
@@ -72,7 +72,7 @@
                 android:id="@+id/imageViewFlag"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/label_language" />
+                android:contentDescription="@string/language" />
 
         <Spinner
                 android:backgroundTint="@android:color/white"
@@ -95,11 +95,11 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/icon_exit"
-                android:contentDescription="@string/label_exit" />
+                android:contentDescription="@string/exit" />
 
         <TextView
                 android:background="@color/transparent"
-                android:text="@string/label_exit"
+                android:text="@string/exit"
                 android:textColor="@color/text_color"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

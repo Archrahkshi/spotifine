@@ -7,7 +7,7 @@ import com.archrahkshi.spotifine.ui.settings.SettingsActivity
 class ToolbarPresenter(private val activity: SettingsActivity, private val viewState: IToolbar) {
     fun setupToolbar() {
         with(viewState) {
-            setTitle(activity.getString(R.string.label_settings))
+            setTitle(activity.getString(R.string.settings))
             showBackButton(true)
             hideSettingsButton()
         }

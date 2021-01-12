@@ -102,7 +102,7 @@ class SettingsActivity :
             AlertDialog.Builder(this)
                 .setMessage(R.string.message_restart)
                 .setCancelable(CANCELLATION_PROHIBITED)
-                .setPositiveButton(R.string.label_restart) { _, _ ->
+                .setPositiveButton(R.string.restart) { _, _ ->
                     fullscreenModeCheckboxPresenter.setFullscreenMode(checkBoxFullscreen.isChecked)
                     startActivity(
                         Intent(applicationContext, MainActivity::class.java).apply {
@@ -112,7 +112,7 @@ class SettingsActivity :
                         }
                     )
                 }
-                .setNegativeButton(R.string.label_cancel) { _, _ ->
+                .setNegativeButton(R.string.cancel) { _, _ ->
                     fullscreenModeCheckboxPresenter.setSelectedFullscreenMode()
                 }
                 .create()
