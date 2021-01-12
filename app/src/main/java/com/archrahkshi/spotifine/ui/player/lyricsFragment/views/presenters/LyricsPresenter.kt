@@ -19,8 +19,7 @@ class LyricsPresenter(private val viewState: ILyrics) : Provider {
                 if (originalLyrics == null) {
                     setupLyrics(provider.getNoLyricsMessage(), null)
                     loaded(successfully = false)
-                }
-                else {
+                } else {
                     val targetLanguage = RUSSIAN
                     val identifiedLanguage = originalLyrics.identifyLanguage()
                     if (identifiedLanguage == targetLanguage)
