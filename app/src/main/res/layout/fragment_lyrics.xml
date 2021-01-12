@@ -50,7 +50,7 @@
             android:maxLines="1"
             android:alpha="0.9"
             android:background="@drawable/player_btn_back"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/buttonTranslate"

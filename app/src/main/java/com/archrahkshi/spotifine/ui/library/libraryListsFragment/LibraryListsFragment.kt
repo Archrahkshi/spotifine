@@ -38,7 +38,7 @@ import kotlin.coroutines.CoroutineContext
 class LibraryListsFragment(
     override val coroutineContext: CoroutineContext = Main.immediate
 ) : Fragment(), CoroutineScope, ITracksList, IToolbar {
-    private val toolbarPresenter by lazy { ToolbarPresenter(this) }
+    private val toolbarPresenter by lazy { ToolbarPresenter(this, this) }
     private val libraryListPresenter by lazy { LibraryListPresenter(this) }
 
     override fun onCreateView(
@@ -52,10 +52,12 @@ class LibraryListsFragment(
 
         LibraryListProviderFactory.provide(this)
 
-        toolbarPresenter.setupToolbar(
-            requireArguments().getString(NAME),
-            requireArguments().getString(LIST_TYPE) == ALBUMS
-        )
+        with(requireArguments()) {
+            toolbarPresenter.setupToolbar(
+                getString(NAME),
+                getString(LIST_TYPE) == ALBUMS
+            )
+        }
 
         libraryListPresenter.setupList(
             arguments?.getString(URL) ?: "me",
@@ -75,6 +77,8 @@ class LibraryListsFragment(
     override fun showBackButton(isShown: Boolean) {
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
+
+    override fun hideSettingsButton() {}
 
     /**
      * TracksList implementation

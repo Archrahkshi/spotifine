@@ -1,10 +1,12 @@
 package com.archrahkshi.spotifine.ui.settings
 
+import android.app.Instrumentation
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,11 +16,13 @@ import androidx.core.content.ContextCompat
 import com.archrahkshi.spotifine.R
 import com.archrahkshi.spotifine.ui.MainActivity
 import com.archrahkshi.spotifine.ui.commonViews.IFullscreenMode
+import com.archrahkshi.spotifine.ui.commonViews.IToolbar
 import com.archrahkshi.spotifine.ui.commonViews.presenters.FullscreenModePresenter
 import com.archrahkshi.spotifine.ui.settings.views.IFullscreenModeCheckbox
 import com.archrahkshi.spotifine.ui.settings.views.ILanguageSpinner
 import com.archrahkshi.spotifine.ui.settings.views.presenters.FullscreenModeCheckboxPresenter
 import com.archrahkshi.spotifine.ui.settings.views.presenters.LanguageSpinnerPresenter
+import com.archrahkshi.spotifine.ui.settings.views.presenters.ToolbarPresenter
 import com.archrahkshi.spotifine.util.CANCELLATION_PROHIBITED
 import com.archrahkshi.spotifine.util.ENGLISH_IS_NOT_SELECTED
 import com.archrahkshi.spotifine.util.ENGLISH_IS_SELECTED
@@ -30,15 +34,23 @@ import kotlinx.android.synthetic.main.activity_settings.checkBoxFullscreen
 import kotlinx.android.synthetic.main.activity_settings.imageViewFlag
 import kotlinx.android.synthetic.main.activity_settings.spinnerLang
 import kotlinx.android.synthetic.main.activity_settings.textViewExit
+import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.imageViewSettings
+import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SettingsActivity :
     AppCompatActivity(),
+    IToolbar,
     ILanguageSpinner,
     IFullscreenModeCheckbox,
     IFullscreenMode {
     private val languageSpinnerPresenter by lazy { LanguageSpinnerPresenter(this) }
     private val fullscreenModeCheckboxPresenter by lazy { FullscreenModeCheckboxPresenter(this) }
     private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
+    private val toolbarPresenter by lazy { ToolbarPresenter(this, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +65,13 @@ class SettingsActivity :
 
         languageSpinnerPresenter.setSelectedLanguage()
         fullscreenModeCheckboxPresenter.setSelectedFullscreenMode()
+        toolbarPresenter.setupToolbar()
+
+        imageViewBack.setOnClickListener {
+            CoroutineScope(Dispatchers.Default).launch {
+                Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+            }
+        }
 
         /**
          * Spinner bug: the list selects the zero position during initialization.
@@ -73,7 +92,7 @@ class SettingsActivity :
                 }
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         checkBoxFullscreen.setOnClickListener {
@@ -109,15 +128,29 @@ class SettingsActivity :
     }
 
     /**
+     * Toolbar implementation
+     */
+
+    override fun setTitle(title: String) {
+        textViewToolbarText.text = title
+    }
+
+    override fun showBackButton(isShown: Boolean) {}
+
+    override fun hideSettingsButton() {
+        imageViewSettings.visibility = View.GONE
+    }
+
+    /**
      * Language spinner implementation
      */
 
-    override fun setLanguage(isEnglishLanguageSelected: Boolean) {
-        spinnerLang.setSelection(if (isEnglishLanguageSelected) INDEX_0 else INDEX_1)
+    override fun setLanguage(isEnglishSelected: Boolean) {
+        spinnerLang.setSelection(if (isEnglishSelected) INDEX_0 else INDEX_1)
         imageViewFlag.setImageDrawable(
             ContextCompat.getDrawable(
                 applicationContext,
-                if (isEnglishLanguageSelected) R.drawable.england else R.drawable.russia
+                if (isEnglishSelected) R.drawable.england else R.drawable.russia
             )
         )
     }

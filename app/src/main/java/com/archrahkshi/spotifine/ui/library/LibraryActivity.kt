@@ -25,7 +25,6 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
 class LibraryActivity : AppCompatActivity(), IFullscreenMode {
-
     private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +32,6 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
         fullscreenModePresenter.setSelectionFullscreenMode()
         setContentView(R.layout.activity_library)
         TrackDataProviderFactory.provide()
-
-        fullscreenModePresenter.setSelectionFullscreenMode()
 
         if (savedInstanceState == null)
             replaceFragmentWith(PLAYLISTS)
