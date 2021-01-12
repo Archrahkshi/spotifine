@@ -4,5 +4,5 @@ interface ILyrics {
     fun setupLyrics(lyrics: List<String>, buttonText: String?)
     fun applyButtonTranslate(originalLyrics: String)
     fun loading()
-    fun loaded()
+    fun loaded(successfully: Boolean)
 }
