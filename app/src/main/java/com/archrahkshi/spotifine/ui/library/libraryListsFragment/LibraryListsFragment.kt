@@ -135,6 +135,7 @@ class LibraryListsFragment(
                     ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
                 }
             } catch (e: NullPointerException) {
+                // Important to prevent crash
             }
         }
     }

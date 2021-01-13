@@ -115,6 +115,7 @@ class LyricsFragment(
                 ).commit()
             }
         } catch (e: NullPointerException) {
+            // Important to prevent crash
         }
     }
 
