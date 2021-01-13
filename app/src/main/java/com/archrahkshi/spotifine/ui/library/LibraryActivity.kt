@@ -25,7 +25,6 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
 class LibraryActivity : AppCompatActivity(), IFullscreenMode {
-
     private val fullscreenModePresenter by lazy { FullscreenModePresenter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +32,6 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
         fullscreenModePresenter.setSelectionFullscreenMode()
         setContentView(R.layout.activity_library)
         TrackDataProviderFactory.provide()
-
-        fullscreenModePresenter.setSelectionFullscreenMode()
 
         if (savedInstanceState == null)
             replaceFragmentWith(PLAYLISTS)
@@ -51,9 +48,9 @@ class LibraryActivity : AppCompatActivity(), IFullscreenMode {
 
         navigationView.setOnNavigationItemSelectedListener {
             when (it.title) {
-                getString(R.string.library_artists) -> replaceFragmentWith(ARTISTS)
-                getString(R.string.library_albums) -> replaceFragmentWith(ALBUMS)
-                getString(R.string.library_playlists) -> replaceFragmentWith(PLAYLISTS)
+                getString(R.string.artists) -> replaceFragmentWith(ARTISTS)
+                getString(R.string.albums) -> replaceFragmentWith(ALBUMS)
+                getString(R.string.playlists) -> replaceFragmentWith(PLAYLISTS)
             }
             true
         }

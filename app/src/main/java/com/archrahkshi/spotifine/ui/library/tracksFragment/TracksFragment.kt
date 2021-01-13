@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine1
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine2
 import kotlinx.android.synthetic.main.fragment_tracks.textViewHeaderLine3
 import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.imageViewSettings
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -52,17 +53,19 @@ class TracksFragment(
 
     private val tracksListPresenter by lazy { TracksListPresenter(this) }
     private val tracksHeaderPresenter by lazy { TracksHeaderPresenter(this) }
-    private val toolbarPresenter by lazy { ToolbarPresenter(this) }
+    private val toolbarPresenter by lazy { ToolbarPresenter(this, this) }
 
     @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         TracksListProviderFactory.provide()
 
-        tracksListPresenter.setupList(
-            requireArguments().getString(URL)!!,
-            requireArguments().getString(ACCESS_TOKEN)
-        )
+        with(requireArguments()) {
+            tracksListPresenter.setupList(
+                getString(URL)!!,
+                getString(ACCESS_TOKEN)
+            )
+        }
 
         toolbarPresenter.setupToolbar()
 
@@ -110,18 +113,15 @@ class TracksFragment(
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
         withContext(Main) {
-            try {
-                recyclerViewTracks.adapter = TracksAdapter(list) {
-                    requireContext().startActivity(
-                        Intent(activity, PlayerActivity::class.java).apply {
-                            putExtra(ID, it.id)
-                            putExtra(DURATION, it.duration)
-                            putExtra(NAME, it.name)
-                            putExtra(ARTISTS, it.artists)
-                        }
-                    )
-                }
-            } catch (e: NullPointerException) {
+            recyclerViewTracks.adapter = TracksAdapter(list) {
+                requireContext().startActivity(
+                    Intent(activity, PlayerActivity::class.java).apply {
+                        putExtra(ID, it.id)
+                        putExtra(DURATION, it.duration)
+                        putExtra(NAME, it.name)
+                        putExtra(ARTISTS, it.artists)
+                    }
+                )
             }
         }
     }
@@ -136,5 +136,9 @@ class TracksFragment(
 
     override fun showBackButton(isShown: Boolean) {
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
+    }
+
+    override fun hideSettingsButton() {
+        requireActivity().imageViewSettings.visibility = View.VISIBLE
     }
 }

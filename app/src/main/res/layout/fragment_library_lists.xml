@@ -16,6 +16,7 @@
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="20"
-            tools:listitem="@layout/item_library_list" />
+            tools:listitem="@layout/item_library_list"
+            android:overScrollMode="never" />
 
 </FrameLayout>

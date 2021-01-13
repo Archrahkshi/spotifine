@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_lyrics.buttonTranslate
 import kotlinx.android.synthetic.main.fragment_lyrics.progressBar
 import kotlinx.android.synthetic.main.fragment_lyrics.recyclerViewLyrics
 import kotlinx.android.synthetic.main.toolbar.imageViewBack
+import kotlinx.android.synthetic.main.toolbar.imageViewSettings
 import kotlinx.android.synthetic.main.toolbar.textViewToolbarText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,19 +49,21 @@ class LyricsFragment(
         LyricsProviderFactory.provide(this)
 
         toolbarPresenter.setupToolbar(requireArguments().getString(NAME)!!)
+
         launch {
-            lyricsPresenter.load(
-                requireArguments().getString(ORIGINAL_LYRICS) ?: getOriginalLyrics(
-                    requireArguments().getString(NAME)!!,
-                    requireArguments().getString(ARTISTS)!!
+            with(requireArguments()) {
+                lyricsPresenter.load(
+                    getString(ORIGINAL_LYRICS) ?: getOriginalLyrics(
+                        getString(NAME)!!,
+                        getString(ARTISTS)!!
+                    )
                 )
-            )
+            }
         }
 
         requireActivity().imageViewBack.setOnClickListener {
             CoroutineScope(Dispatchers.Default).launch {
-                val inst = Instrumentation()
-                inst.sendKeyDownUpSync(KEYCODE_BACK)
+                Instrumentation().sendKeyDownUpSync(KEYCODE_BACK)
             }
         }
     }
@@ -77,58 +80,54 @@ class LyricsFragment(
         requireActivity().imageViewBack.visibility = if (isShown) View.VISIBLE else View.GONE
     }
 
+    override fun hideSettingsButton() {
+        requireActivity().imageViewSettings.visibility = View.GONE
+    }
+
     /**
      * Lyrics implementation
      */
 
     override fun applyButtonTranslate(originalLyrics: String) {
-        try {
-            buttonTranslate.setOnClickListener {
-                requireActivity().supportFragmentManager.beginTransaction().replace(
-                    R.id.frameLayoutPlayer,
-                    LyricsFragment().apply {
-                        arguments = Bundle().apply {
-                            putString(
-                                ARTISTS,
-                                TrackDataProviderFactory.instance!!.getArtists()
-                            )
-                            putBoolean(
-                                IS_LYRICS_TRANSLATED,
-                                !(arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
-                            )
-                            putString(
-                                NAME,
-                                TrackDataProviderFactory.instance!!.getName()
-                            )
-                            if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true)
-                                putString(ORIGINAL_LYRICS, originalLyrics)
-                        }
+        buttonTranslate.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction().replace(
+                R.id.frameLayoutPlayer,
+                LyricsFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(
+                            ARTISTS,
+                            TrackDataProviderFactory.instance!!.getArtists()
+                        )
+                        putBoolean(
+                            IS_LYRICS_TRANSLATED,
+                            !(arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
+                        )
+                        putString(
+                            NAME,
+                            TrackDataProviderFactory.instance!!.getName()
+                        )
+                        if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true)
+                            putString(ORIGINAL_LYRICS, originalLyrics)
                     }
-                ).commit()
-            }
-        } catch (e: Exception) { }
+                }
+            ).commit()
+        }
     }
 
     override fun setupLyrics(lyrics: List<String>, buttonText: String?) {
-        try {
-            recyclerViewLyrics.adapter = LyricsAdapter(lyrics)
-            buttonText?.let {
-                buttonTranslate.text = it
-            }
-        } catch (e: NullPointerException) { }
+        recyclerViewLyrics.adapter = LyricsAdapter(lyrics)
+        buttonText?.let {
+            buttonTranslate.text = it
+        }
     }
 
     override fun loading() {
-        try {
-            buttonTranslate.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
-        } catch (e: NullPointerException) { }
+        buttonTranslate.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun loaded(successfully: Boolean) {
-        try {
-            buttonTranslate.visibility = if (successfully) View.VISIBLE else View.GONE
-            progressBar.visibility = View.GONE
-        } catch (e: NullPointerException) { }
+        buttonTranslate.visibility = if (successfully) View.VISIBLE else View.GONE
+        progressBar.visibility = View.GONE
     }
 }

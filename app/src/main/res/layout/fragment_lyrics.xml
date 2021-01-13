@@ -18,7 +18,7 @@
     </ProgressBar>
 
     <androidx.core.widget.NestedScrollView
-        android:layout_marginTop="60dp"
+            android:layout_marginTop="60dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -37,7 +37,8 @@
                     android:scrollbars="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="50"
-                    tools:listitem="@layout/item_lyrics_line" />
+                    tools:listitem="@layout/item_lyrics_line"
+                    android:overScrollMode="never" />
 
             <View
                     android:layout_width="match_parent"
@@ -50,7 +51,7 @@
             android:maxLines="1"
             android:alpha="0.9"
             android:background="@drawable/player_btn_back"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="8dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/buttonTranslate"
