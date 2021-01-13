@@ -42,6 +42,7 @@ fun String.getLyrics() = try { // Forbidden dark magic
                 ?.split('\n')
                 ?.joinToString("\n") { it.trim() }
                 ?.cleanTags()
+                ?.replace("\n\n", "\n")
                 ?.replace(Regex("\n{2,}"), "\n\n")
                 ?.trimStart('\n')
         } else

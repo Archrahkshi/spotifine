@@ -125,6 +125,7 @@ class TracksFragment(
                     )
                 }
             } catch (e: NullPointerException) {
+                // Important to prevent crash
             }
         }
     }
