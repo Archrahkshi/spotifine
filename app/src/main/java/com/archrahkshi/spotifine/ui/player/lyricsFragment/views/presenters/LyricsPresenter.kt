@@ -1,6 +1,5 @@
 package com.archrahkshi.spotifine.ui.player.lyricsFragment.views.presenters
 
-import android.util.Log
 import com.archrahkshi.spotifine.data.factories.LyricsProviderFactory
 import com.archrahkshi.spotifine.data.providers.Provider
 import com.archrahkshi.spotifine.util.identifyLanguage
@@ -17,33 +16,33 @@ class LyricsPresenter(private val viewState: ILyrics) : Provider {
         CoroutineScope(Main).launch {
             var success = false
             viewState.loading()
-            if (originalLyrics == null) {
+            if (originalLyrics == null)
                 viewState.setupLyrics(provider.getNoLyricsMessage(), null)
-            } else {
+            else {
                 val language = originalLyrics.identifyLanguage()
-                if (language == RUSSIAN) {
+                if (language == RUSSIAN)
                     viewState.setupLyrics(originalLyrics.split('\n'), null)
-                } else {
+                else {
                     if (!provider.getTranslatingSuccess()) {
                         viewState.setupLyrics(
                             originalLyrics.split('\n'),
                             provider.getDefaultTranslateButtonText()
                         )
                         success = true
-                    } else {
+                    } else
                         with(originalLyrics.translateFromTo(language, RUSSIAN)) {
                             if (this != null) {
                                 success = true
-                                viewState.setupLyrics(this.split('\n'),
-                                    provider.getTranslateButtonText(true, language, RUSSIAN))
-                            } else {
                                 viewState.setupLyrics(
-                                    provider.getUnidentifiableLanguageMessage().
-                                    split('\n'), null
+                                    this.split('\n'),
+                                    provider.getTranslateButtonText(true, language, RUSSIAN)
                                 )
-                            }
+                            } else
+                                viewState.setupLyrics(
+                                    provider.getUnidentifiableLanguageMessage().split('\n'),
+                                    null
+                                )
                         }
-                    }
                     viewState.applyButtonTranslate(originalLyrics)
                 }
             }
