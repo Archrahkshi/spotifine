@@ -59,11 +59,6 @@ class PlayerActivity : AppCompatActivity(), IFullscreenMode {
     override fun onStart() {
         super.onStart()
 
-        val id = intent.getStringExtra(ID)
-        val duration = intent.getLongExtra(DURATION, 0)
-        Timber.wtf(id?.toString())
-        Timber.wtf(duration.toString())
-
         SpotifyAppRemote.connect(
             this,
             ConnectionParams.Builder(SPOTIFY_CLIENT_ID)
@@ -73,10 +68,8 @@ class PlayerActivity : AppCompatActivity(), IFullscreenMode {
             object : Connector.ConnectionListener {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                     this@PlayerActivity.spotifyAppRemote = spotifyAppRemote
-                    Timber.d("Connected! Yay!")
 
-                    val seekBar = findViewById<SeekBar>(R.id.seekBar)
-                    seekBar.max = duration.toInt()
+                    seekBar.max = intent.getLongExtra(DURATION, 0).toInt()
                     var flag = 0
                     // buttonPlay.text = getString(R.string.play)
                     seekBar.setOnSeekBarChangeListener(
@@ -86,30 +79,28 @@ class PlayerActivity : AppCompatActivity(), IFullscreenMode {
                                 i: Int,
                                 b: Boolean
                             ) {
-                                if (flag == 0) {
+                                if (flag == 0)
                                     seekBar.progress = 0
-                                } else {
+                                else
                                     spotifyAppRemote.playerApi.seekTo(seekBar.progress.toLong())
-                                }
                             }
 
                             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                                if (flag == 1) {
+                                if (flag == 1)
                                     spotifyAppRemote.playerApi.pause()
-                                }
                             }
 
                             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                                if (flag == 1) {
+                                if (flag == 1)
                                     spotifyAppRemote.playerApi.resume()
-                                }
                             }
                         }
                     )
                     buttonPlay.setOnClickListener {
                         when (flag) {
                             0 -> {
-                                spotifyAppRemote.playerApi.play("spotify:track:$id")
+                                spotifyAppRemote.playerApi
+                                    .play("spotify:track:${intent.getStringExtra(ID)}")
                                 flag = 1
                                 buttonPlay.setBackgroundResource(R.drawable.back_pause_btn)
                             }
@@ -129,7 +120,6 @@ class PlayerActivity : AppCompatActivity(), IFullscreenMode {
 
                 override fun onFailure(throwable: Throwable) {
                     Timber.e(throwable)
-
                     // Something went wrong when attempting to connect! Handle errors here
                 }
             }

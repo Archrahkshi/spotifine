@@ -89,49 +89,52 @@ class LibraryListsFragment(
 
     override suspend fun setupList(list: List<ListType>) {
         withContext(Main) {
-            recyclerViewLists.adapter = LibraryListsAdapter(list) { listType ->
-                requireActivity().supportFragmentManager.beginTransaction().replace(
-                    R.id.frameLayoutLibrary,
-                    when (listType) {
-                        is Playlist -> TracksFragment().apply {
-                            arguments = Bundle().apply {
-                                putString(
-                                    ACCESS_TOKEN,
-                                    TrackDataProviderFactory.instance!!.getAccessToken()
-                                )
-                                putString(IMAGE, listType.image)
-                                putString(NAME, listType.name)
-                                putInt(SIZE, listType.size)
-                                putString(URL, listType.url)
+            try {
+                recyclerViewLists.adapter = LibraryListsAdapter(list) { listType ->
+                    requireActivity().supportFragmentManager.beginTransaction().replace(
+                        R.id.frameLayoutLibrary,
+                        when (listType) {
+                            is Playlist -> TracksFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString(
+                                        ACCESS_TOKEN,
+                                        TrackDataProviderFactory.instance!!.getAccessToken()
+                                    )
+                                    putString(IMAGE, listType.image)
+                                    putString(NAME, listType.name)
+                                    putInt(SIZE, listType.size)
+                                    putString(URL, listType.url)
+                                }
+                            }
+                            is Artist -> LibraryListsFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString(
+                                        ACCESS_TOKEN,
+                                        TrackDataProviderFactory.instance!!.getAccessToken()
+                                    )
+                                    putString(IMAGE, listType.image)
+                                    putString(NAME, listType.name)
+                                    putString(LIST_TYPE, ALBUMS)
+                                    putString(URL, listType.url)
+                                }
+                            }
+                            is Album -> TracksFragment().apply {
+                                arguments = Bundle().apply {
+                                    putString(
+                                        ACCESS_TOKEN,
+                                        TrackDataProviderFactory.instance!!.getAccessToken()
+                                    )
+                                    putString(ARTISTS, listType.artists)
+                                    putString(IMAGE, listType.image)
+                                    putString(NAME, listType.name)
+                                    putInt(SIZE, listType.size)
+                                    putString(URL, listType.url)
+                                }
                             }
                         }
-                        is Artist -> LibraryListsFragment().apply {
-                            arguments = Bundle().apply {
-                                putString(
-                                    ACCESS_TOKEN,
-                                    TrackDataProviderFactory.instance!!.getAccessToken()
-                                )
-                                putString(IMAGE, listType.image)
-                                putString(NAME, listType.name)
-                                putString(LIST_TYPE, ALBUMS)
-                                putString(URL, listType.url)
-                            }
-                        }
-                        is Album -> TracksFragment().apply {
-                            arguments = Bundle().apply {
-                                putString(
-                                    ACCESS_TOKEN,
-                                    TrackDataProviderFactory.instance!!.getAccessToken()
-                                )
-                                putString(ARTISTS, listType.artists)
-                                putString(IMAGE, listType.image)
-                                putString(NAME, listType.name)
-                                putInt(SIZE, listType.size)
-                                putString(URL, listType.url)
-                            }
-                        }
-                    }
-                ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
+                    ).setTransition(TRANSIT_FRAGMENT_FADE).addToBackStack(null).commit()
+                }
+            } catch (e: NullPointerException) {
             }
         }
     }

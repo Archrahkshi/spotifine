@@ -89,28 +89,32 @@ class LyricsFragment(
      */
 
     override fun applyButtonTranslate(originalLyrics: String) {
-        buttonTranslate.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction().replace(
-                R.id.frameLayoutPlayer,
-                LyricsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(
-                            ARTISTS,
-                            TrackDataProviderFactory.instance!!.getArtists()
-                        )
-                        putBoolean(
-                            IS_LYRICS_TRANSLATED,
-                            !(arguments?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
-                        )
-                        putString(
-                            NAME,
-                            TrackDataProviderFactory.instance!!.getName()
-                        )
-                        if (arguments?.getBoolean(IS_LYRICS_TRANSLATED) == true)
-                            putString(ORIGINAL_LYRICS, originalLyrics)
+        try {
+            buttonTranslate.setOnClickListener {
+                val args = arguments
+                requireActivity().supportFragmentManager.beginTransaction().replace(
+                    R.id.frameLayoutPlayer,
+                    LyricsFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(
+                                ARTISTS,
+                                TrackDataProviderFactory.instance!!.getArtists()
+                            )
+                            putBoolean(
+                                IS_LYRICS_TRANSLATED,
+                                !(args?.getBoolean(IS_LYRICS_TRANSLATED) ?: false)
+                            )
+                            putString(
+                                NAME,
+                                TrackDataProviderFactory.instance!!.getName()
+                            )
+                            if (args?.getBoolean(IS_LYRICS_TRANSLATED) == true)
+                                putString(ORIGINAL_LYRICS, originalLyrics)
+                        }
                     }
-                }
-            ).commit()
+                ).commit()
+            }
+        } catch (e: NullPointerException) {
         }
     }
 

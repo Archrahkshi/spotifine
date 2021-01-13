@@ -113,15 +113,18 @@ class TracksFragment(
     @ExperimentalTime
     override suspend fun setupList(list: List<Track>) {
         withContext(Main) {
-            recyclerViewTracks.adapter = TracksAdapter(list) {
-                requireContext().startActivity(
-                    Intent(activity, PlayerActivity::class.java).apply {
-                        putExtra(ID, it.id)
-                        putExtra(DURATION, it.duration)
-                        putExtra(NAME, it.name)
-                        putExtra(ARTISTS, it.artists)
-                    }
-                )
+            try {
+                recyclerViewTracks.adapter = TracksAdapter(list) {
+                    requireContext().startActivity(
+                        Intent(activity, PlayerActivity::class.java).apply {
+                            putExtra(ID, it.id)
+                            putExtra(DURATION, it.duration)
+                            putExtra(NAME, it.name)
+                            putExtra(ARTISTS, it.artists)
+                        }
+                    )
+                }
+            } catch (e: NullPointerException) {
             }
         }
     }
